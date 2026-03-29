@@ -1,0 +1,12 @@
+{
+  "total_profiles_downloaded": 2000,
+  "total_listings_downloaded": 220,
+  "total_errors": 0,
+  "total_pages_in_archive": {
+    "profiles": 3142,
+    "videos": 23,
+    "countries": 91,
+    "cities": 129,
+    "regions": 76
+  }
+}
