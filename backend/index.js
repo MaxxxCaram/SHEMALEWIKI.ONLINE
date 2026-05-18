@@ -61,6 +61,113 @@ app.post('/api/upload', upload.single('media'), async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+// Secure endpoint to handle Profile Claim requests (bypasses anon RLS)
+app.post('/api/claims', async (req, res) => {
+    try {
+        const { name_on_site, email, phone, country, city, contact_details } = req.body;
+        if (!name_on_site || !email || !phone) {
+            return res.status(400).json({ error: 'Faltan campos obligatorios' });
+        }
+
+        const claimId = `claim_${Date.now()}`;
+        
+        const { data, error } = await supabase
+            .from('profiles')
+            .insert([{
+                id: claimId,
+                name: `Reclamación: ${name_on_site}`,
+                email,
+                phone,
+                location: 'CLAIM_REQUEST',
+                bio: `SOLICITUD DE RECLAMACIÓN DE PERFIL\n\nNombre en site: ${name_on_site}\nEmail: ${email}\nTeléfono: ${phone}\nPaís: ${country || ''}\nCiudad: ${city || ''}\nContacto adicional / Mensaje: ${contact_details || ''}`,
+                description: 'CLAIM_REQUEST_PENDING'
+            }])
+            .select();
+
+        if (error) throw error;
+        res.json({ message: 'Reclamación enviada con éxito', data });
+    } catch (err) {
+        console.error('Claim error:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Secure endpoint to handle multi-step Draft Profile creation (bypasses anon RLS)
+app.post('/api/drafts', async (req, res) => {
+    try {
+        const { 
+            name, email, phone, whatsapp, continent, country, city,
+            bio, age, height, weight, endowment, nationality, languages,
+            onlyfans, cam_chat, photoUrls, videoLinks 
+        } = req.body;
+
+        if (!name || !email || !phone || !country || !city) {
+            return res.status(400).json({ error: 'Faltan campos obligatorios' });
+        }
+
+        const profileId = `draft_${Date.now()}`;
+        const fullLocation = `DRAFT: ${continent || 'Europe'} | ${country} | ${city}`;
+
+        // 1. Insert Profile
+        const { error: profileError } = await supabase
+            .from('profiles')
+            .insert([{
+                id: profileId,
+                name,
+                email,
+                phone,
+                whatsapp: whatsapp || '',
+                location: fullLocation,
+                bio: bio || '',
+                age: age || '',
+                height: height || '',
+                weight: weight || '',
+                endowment: endowment || '',
+                nationality: nationality || '',
+                languages: languages || '',
+                onlyfans: onlyfans || '',
+                cam_chat: cam_chat || '',
+                description: 'DRAFT_PENDING_APPROVAL'
+            }]);
+
+        if (profileError) throw profileError;
+
+        // 2. Insert Photos
+        if (photoUrls && Array.isArray(photoUrls)) {
+            const validPhotos = photoUrls.filter(url => url.trim() !== '');
+            if (validPhotos.length > 0) {
+                const photoInserts = validPhotos.map(url => ({
+                    profile_id: profileId,
+                    photo_url: url.trim(),
+                    local_path: ''
+                }));
+                const { error: photoError } = await supabase.from('photos').insert(photoInserts);
+                if (photoError) console.error('Error inserting photos:', photoError);
+            }
+        }
+
+        // 3. Insert Videos
+        if (videoLinks && Array.isArray(videoLinks)) {
+            const validVideos = videoLinks.filter(url => url.trim() !== '');
+            if (validVideos.length > 0) {
+                const videoInserts = validVideos.map(url => ({
+                    profile_id: profileId,
+                    photo_url: url.trim(),
+                    local_path: ''
+                }));
+                const { error: videoError } = await supabase.from('photos').insert(videoInserts);
+                if (videoError) console.error('Error inserting video links:', videoError);
+            }
+        }
+
+        res.json({ message: 'Perfil borrador creado con éxito', profileId });
+    } catch (err) {
+        console.error('Draft error:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Fetch all profiles
 app.get('/api/profiles', async (req, res) => {
     const { page = 1, limit = 50, search = '' } = req.query;

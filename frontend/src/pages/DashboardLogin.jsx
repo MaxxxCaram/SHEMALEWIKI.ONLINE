@@ -57,6 +57,10 @@ export default function DashboardLogin() {
   const [createPhotoUrls, setCreatePhotoUrls] = useState(['', '', '']);
   const [createVideoLinks, setCreateVideoLinks] = useState(['']);
 
+  const API_BASE = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3001' 
+    : window.location.origin;
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginError('');
@@ -88,26 +92,28 @@ export default function DashboardLogin() {
 
   const handleClaim = async (e) => {
     e.preventDefault();
-    setClaimLoading(false);
     setLoginError('');
+    setClaimLoading(true);
 
     try {
-      setClaimLoading(true);
-      const claimId = `claim_${Date.now()}`;
-      
-      const { error } = await supabase
-        .from('profiles')
-        .insert([{
-          id: claimId,
-          name: `Reclamación: ${claimNameOnSite}`,
+      const response = await fetch(`${API_BASE}/api/claims`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name_on_site: claimNameOnSite,
           email: claimEmail,
           phone: claimPhone,
-          location: 'CLAIM_REQUEST',
-          bio: `SOLICITUD DE RECLAMACIÓN DE PERFIL\n\nNombre en site: ${claimNameOnSite}\nEmail: ${claimEmail}\nTeléfono: ${claimPhone}\nPaís: ${claimCountry}\nCiudad: ${claimCity}\nContacto adicional / Mensaje: ${claimContact}`,
-          description: 'CLAIM_REQUEST_PENDING'
-        }]);
+          country: claimCountry,
+          city: claimCity,
+          contact_details: claimContact
+        })
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit claim');
+      }
+
       setClaimSuccess(true);
     } catch (err) {
       console.error(err);
@@ -123,19 +129,17 @@ export default function DashboardLogin() {
     setCreateLoading(true);
 
     try {
-      const profileId = `draft_${Date.now()}`;
-      const fullLocation = `DRAFT: ${createContinent} | ${createCountry} | ${createCity}`;
-
-      // 1. Insert Profile
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert([{
-          id: profileId,
+      const response = await fetch(`${API_BASE}/api/drafts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           name: createName,
           email: createEmail,
           phone: createPhone,
           whatsapp: createWhatsapp,
-          location: fullLocation,
+          continent: createContinent,
+          country: createCountry,
+          city: createCity,
           bio: createBio,
           age: createAge,
           height: createHeight,
@@ -145,33 +149,14 @@ export default function DashboardLogin() {
           languages: createLanguages,
           onlyfans: createOnlyFans,
           cam_chat: createCamChat,
-          description: 'DRAFT_PENDING_APPROVAL'
-        }]);
+          photoUrls: createPhotoUrls,
+          videoLinks: createVideoLinks
+        })
+      });
 
-      if (profileError) throw profileError;
-
-      // 2. Insert Photos (only non-empty links)
-      const validPhotos = createPhotoUrls.filter(url => url.trim() !== '');
-      if (validPhotos.length > 0) {
-        const photoInserts = validPhotos.map(url => ({
-          profile_id: profileId,
-          photo_url: url.trim(),
-          local_path: ''
-        }));
-        const { error: photoError } = await supabase.from('photos').insert(photoInserts);
-        if (photoError) console.error('Error inserting photos:', photoError);
-      }
-
-      // 3. Insert Videos (only non-empty links)
-      const validVideos = createVideoLinks.filter(url => url.trim() !== '');
-      if (validVideos.length > 0) {
-        const videoInserts = validVideos.map(url => ({
-          profile_id: profileId,
-          photo_url: url.trim(), // Storing video links inside the photos table
-          local_path: ''
-        }));
-        const { error: videoError } = await supabase.from('photos').insert(videoInserts);
-        if (videoError) console.error('Error inserting video links:', videoError);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create profile');
       }
 
       setCreateSuccess(true);
