@@ -27,7 +27,7 @@ app.get('/', async (req, res) => {
 
         if (search) {
             // Simple text search on name or location
-            query = query.or(\`name.ilike.%\${search}%,location.ilike.%\${search}%,bio.ilike.%\${search}%\`);
+            query = query.or(`name.ilike.%${search}%,location.ilike.%${search}%,bio.ilike.%${search}%`);
         }
 
         const { data, count, error } = await query
