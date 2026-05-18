@@ -1,0 +1,210 @@
+/* ShemaleWiki recovery — static relaunch */
+:root {
+  --bg: #0f0f1a;
+  --panel: #16162a;
+  --accent: #e94560;
+  --text: #e8e8f0;
+  --muted: #9898a8;
+  --border: #2a2a42;
+  --success: #43a047;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topnav {
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.topnav h1 { font-size: 1.25rem; font-weight: 700; }
+.topnav h1 a { color: var(--accent); text-decoration: none; }
+.topnav nav { display: flex; gap: 1.25rem; font-size: 0.95rem; }
+.hero {
+  text-align: center;
+  padding: 2.5rem 1rem 1.5rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.hero h2 { font-size: 1.75rem; margin-bottom: 0.5rem; color: var(--text); }
+.hero p { color: var(--muted); font-size: 0.95rem; }
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+}
+.stats span { color: var(--muted); }
+.stats strong { color: var(--accent); font-size: 1.1rem; }
+.search-wrap {
+  max-width: 560px;
+  margin: 1.5rem auto 0;
+  padding: 0 1rem;
+}
+#q {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  font-size: 1rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.card {
+  background: var(--panel);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+.card a.block { display: block; color: inherit; text-decoration: none; }
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  background: #0a0a14;
+}
+.card .no-img {
+  height: 200px;
+  background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--border);
+  font-size: 2.5rem;
+}
+.card-body { padding: 1rem 1.1rem 1.25rem; }
+.card-body h3 {
+  font-size: 1.05rem;
+  color: var(--accent);
+  margin-bottom: 0.35rem;
+  line-height: 1.3;
+}
+.card-body .loc { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.35rem; }
+.card-body p { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+.profile-page { max-width: 920px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+.profile-page h1 {
+  font-size: 1.65rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.profile-page .loc { color: var(--muted); margin-bottom: 1rem; font-size: 0.95rem; }
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.65rem;
+  margin: 1.25rem 0;
+}
+.fact {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.85rem;
+}
+.fact .k { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
+.fact .v { color: var(--text); margin-top: 0.15rem; word-break: break-word; }
+.bio {
+  margin: 1.25rem 0;
+  color: var(--text);
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+}
+.services {
+  margin: 1rem 0;
+}
+.services h3 { font-size: 1rem; margin-bottom: 0.5rem; color: var(--text); }
+.services ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.services li {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+.services li.off { opacity: 0.45; }
+.contact-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+}
+.contact-box a { word-break: break-all; }
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.gallery img {
+  max-width: 280px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.reviews-section { margin-top: 2rem; }
+.reviews-section h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+.review-item {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+.review-item .title { font-weight: 600; color: var(--text); margin-bottom: 0.35rem; }
+.review-item .meta { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.35rem; }
+.stars { color: #ffc107; letter-spacing: 0.05em; }
+.footer-note {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.table-wrap { overflow-x: auto; margin: 1rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
+table.directory {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+table.directory th, table.directory td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+table.directory th { color: var(--muted); font-weight: 600; }
+.reviews-page .review-item { max-width: 900px; margin-left: auto; margin-right: auto; }
+.hidden { display: none !important; }

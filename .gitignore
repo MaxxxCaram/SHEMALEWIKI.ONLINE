@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.Python
+recovery.log
+.env
+.venv/
+venv/
+*.swp
+.DS_Store
+Thumbs.db
+
+.vercel
+
+node_modules/
+dist/
