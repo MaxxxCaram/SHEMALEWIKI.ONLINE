@@ -1,10 +1,11 @@
 export const getProxiedImageUrl = (url) => {
-  if (!url) return 'https://via.placeholder.com/300x400?text=No+Photo';
+  if (!url) return '/api/image?url=';
   
-  // Only proxy external-content.duckduckgo.com or other known blocked domains
-  if (url.includes('duckduckgo.com') || url.includes('bing.net')) {
-    return `/api/image?url=${encodeURIComponent(url)}`;
+  // If it is already a relative path, local resource, or base64 data URI, return it directly
+  if (url.startsWith('/') || url.startsWith('data:') || url.startsWith('blob:')) {
+    return url;
   }
   
-  return url;
+  // Route all external images through our secure, high-performance edge cached proxy
+  return `/api/image?url=${encodeURIComponent(url)}`;
 };

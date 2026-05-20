@@ -321,11 +321,14 @@ export default function DashboardLogin() {
             <form onSubmit={handleClaim} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               
               <div className="form-group">
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nombre con el que figuras en el sitio</label>
+                <label htmlFor="claimNameOnSite" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nombre con el que figuras en el sitio</label>
                 <div style={{ position: 'relative' }}>
                   <User style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                   <input 
                     type="text" 
+                    id="claimNameOnSite"
+                    name="claimNameOnSite"
+                    autoComplete="name"
                     className="search-input" 
                     style={{ width: '100%', paddingLeft: '3rem' }} 
                     placeholder="Ej. Maria Martinez" 
@@ -337,11 +340,14 @@ export default function DashboardLogin() {
               </div>
 
               <div className="form-group">
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Correo Electrónico (Mail)</label>
+                <label htmlFor="claimEmail" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Correo Electrónico (Mail)</label>
                 <div style={{ position: 'relative' }}>
                   <Mail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                   <input 
                     type="email" 
+                    id="claimEmail"
+                    name="claimEmail"
+                    autoComplete="email"
                     className="search-input" 
                     style={{ width: '100%', paddingLeft: '3rem' }} 
                     placeholder="tuemail@ejemplo.com" 
@@ -353,11 +359,14 @@ export default function DashboardLogin() {
               </div>
 
               <div className="form-group">
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Teléfono de Contacto</label>
+                <label htmlFor="claimPhone" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Teléfono de Contacto</label>
                 <div style={{ position: 'relative' }}>
                   <Phone style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                   <input 
                     type="text" 
+                    id="claimPhone"
+                    name="claimPhone"
+                    autoComplete="tel"
                     className="search-input" 
                     style={{ width: '100%', paddingLeft: '3rem' }} 
                     placeholder="+34 600 000 000" 
@@ -370,11 +379,14 @@ export default function DashboardLogin() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="form-group">
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>País</label>
+                  <label htmlFor="claimCountry" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>País</label>
                   <div style={{ position: 'relative' }}>
                     <Globe style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                     <input 
                       type="text" 
+                      id="claimCountry"
+                      name="claimCountry"
+                      autoComplete="country-name"
                       className="search-input" 
                       style={{ width: '100%', paddingLeft: '3rem' }} 
                       placeholder="Ej. España" 
@@ -385,11 +397,14 @@ export default function DashboardLogin() {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Ciudad</label>
+                  <label htmlFor="claimCity" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Ciudad</label>
                   <div style={{ position: 'relative' }}>
                     <MapPin style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                     <input 
                       type="text" 
+                      id="claimCity"
+                      name="claimCity"
+                      autoComplete="address-level2"
                       className="search-input" 
                       style={{ width: '100%', paddingLeft: '3rem' }} 
                       placeholder="Ej. Madrid" 
@@ -402,8 +417,10 @@ export default function DashboardLogin() {
               </div>
 
               <div className="form-group">
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Datos de contacto adicionales / Mensaje</label>
+                <label htmlFor="claimContact" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Datos de contacto adicionales / Mensaje</label>
                 <textarea 
+                  id="claimContact"
+                  name="claimContact"
                   className="search-input" 
                   style={{ width: '100%', minHeight: '100px', resize: 'vertical', padding: '0.75rem 1rem' }} 
                   placeholder="Escribe aquí cualquier dato adicional que nos ayude a verificar tu identidad..."
@@ -485,9 +502,12 @@ export default function DashboardLogin() {
                   <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Sparkles size={18} /> Datos de Contacto y Ubicación</h3>
                   
                   <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nombre Artístico</label>
+                    <label htmlFor="createName" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nombre Artístico</label>
                     <input 
                       type="text" 
+                      id="createName"
+                      name="createName"
+                      autoComplete="name"
                       className="search-input" 
                       style={{ width: '100%' }} 
                       placeholder="Ej. Isabella Rossini" 
@@ -498,9 +518,12 @@ export default function DashboardLogin() {
                   </div>
 
                   <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Correo Electrónico (Mail)</label>
+                    <label htmlFor="createEmail" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Correo Electrónico (Mail)</label>
                     <input 
                       type="email" 
+                      id="createEmail"
+                      name="createEmail"
+                      autoComplete="email"
                       className="search-input" 
                       style={{ width: '100%' }} 
                       placeholder="tuemail@ejemplo.com" 
@@ -512,9 +535,12 @@ export default function DashboardLogin() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Teléfono</label>
+                      <label htmlFor="createPhone" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Teléfono</label>
                       <input 
                         type="text" 
+                        id="createPhone"
+                        name="createPhone"
+                        autoComplete="tel"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="+34 600 000 000" 
@@ -524,9 +550,11 @@ export default function DashboardLogin() {
                       />
                     </div>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>WhatsApp</label>
+                      <label htmlFor="createWhatsapp" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>WhatsApp</label>
                       <input 
                         type="text" 
+                        id="createWhatsapp"
+                        name="createWhatsapp"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="+34 600 000 000" 
@@ -537,8 +565,10 @@ export default function DashboardLogin() {
                   </div>
 
                   <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Continente</label>
+                    <label htmlFor="createContinent" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Continente</label>
                     <select 
+                      id="createContinent"
+                      name="createContinent"
                       className="search-input" 
                       style={{ width: '100%', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', height: '48px', borderRadius: '0.5rem', padding: '0 1rem' }}
                       value={createContinent}
@@ -556,9 +586,11 @@ export default function DashboardLogin() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>País</label>
+                      <label htmlFor="createCountry" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>País</label>
                       <input 
                         type="text" 
+                        id="createCountry"
+                        name="createCountry"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="Ej. España" 
@@ -568,9 +600,11 @@ export default function DashboardLogin() {
                       />
                     </div>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Ciudad</label>
+                      <label htmlFor="createCity" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Ciudad</label>
                       <input 
                         type="text" 
+                        id="createCity"
+                        name="createCity"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="Ej. Madrid" 
@@ -604,8 +638,10 @@ export default function DashboardLogin() {
                   <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Sparkles size={18} /> Datos Físicos y del Anuncio</h3>
 
                   <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Biografía / Presentación</label>
+                    <label htmlFor="createBio" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Biografía / Presentación</label>
                     <textarea 
+                      id="createBio"
+                      name="createBio"
                       className="search-input" 
                       style={{ width: '100%', minHeight: '120px', resize: 'vertical', padding: '0.75rem 1rem' }} 
                       placeholder="Cuéntanos un poco sobre ti, tus servicios, tarifas, etc..."
@@ -617,9 +653,11 @@ export default function DashboardLogin() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Edad</label>
+                      <label htmlFor="createAge" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Edad</label>
                       <input 
                         type="text" 
+                        id="createAge"
+                        name="createAge"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="Ej. 24" 
@@ -628,9 +666,11 @@ export default function DashboardLogin() {
                       />
                     </div>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Altura (cm)</label>
+                      <label htmlFor="createHeight" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Altura (cm)</label>
                       <input 
                         type="text" 
+                        id="createHeight"
+                        name="createHeight"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="Ej. 175" 
@@ -639,9 +679,11 @@ export default function DashboardLogin() {
                       />
                     </div>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Peso (kg)</label>
+                      <label htmlFor="createWeight" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Peso (kg)</label>
                       <input 
                         type="text" 
+                        id="createWeight"
+                        name="createWeight"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="Ej. 62" 
@@ -653,9 +695,11 @@ export default function DashboardLogin() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Medida (🍆 cm)</label>
+                      <label htmlFor="createEndowment" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Medida (🍆 cm)</label>
                       <input 
                         type="text" 
+                        id="createEndowment"
+                        name="createEndowment"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="Ej. 18" 
@@ -664,9 +708,11 @@ export default function DashboardLogin() {
                       />
                     </div>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nacionalidad</label>
+                      <label htmlFor="createNationality" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nacionalidad</label>
                       <input 
                         type="text" 
+                        id="createNationality"
+                        name="createNationality"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="Ej. Brasileña" 
@@ -675,9 +721,11 @@ export default function DashboardLogin() {
                       />
                     </div>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Idiomas</label>
+                      <label htmlFor="createLanguages" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Idiomas</label>
                       <input 
                         type="text" 
+                        id="createLanguages"
+                        name="createLanguages"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="Español, Inglés" 
@@ -689,9 +737,11 @@ export default function DashboardLogin() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>OnlyFans Link</label>
+                      <label htmlFor="createOnlyFans" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>OnlyFans Link</label>
                       <input 
                         type="url" 
+                        id="createOnlyFans"
+                        name="createOnlyFans"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="https://onlyfans.com/..." 
@@ -700,9 +750,11 @@ export default function DashboardLogin() {
                       />
                     </div>
                     <div className="form-group">
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Cam Chat Link</label>
+                      <label htmlFor="createCamChat" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Cam Chat Link</label>
                       <input 
                         type="url" 
+                        id="createCamChat"
+                        name="createCamChat"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="https://..." 
@@ -746,12 +798,14 @@ export default function DashboardLogin() {
 
                   {/* Photo URLs */}
                   <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Enlaces de tus Fotos (URLs Directas)</label>
+                    <label htmlFor="createPhoto_0" style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Enlaces de tus Fotos (URLs Directas)</label>
                     {createPhotoUrls.map((url, index) => (
                       <div key={index} style={{ position: 'relative' }}>
                         <Camera style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                         <input 
                           type="url" 
+                          id={`createPhoto_${index}`}
+                          name={`createPhoto_${index}`}
                           className="search-input" 
                           style={{ width: '100%', paddingLeft: '3rem' }} 
                           placeholder={`Enlace de Foto ${index + 1} (https://...)`} 
@@ -772,12 +826,14 @@ export default function DashboardLogin() {
 
                   {/* Video Links */}
                   <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Enlaces de Vídeos (OnlyFans, Pornhub, xHamster, etc.)</label>
+                    <label htmlFor="createVideo_0" style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Enlaces de Vídeos (OnlyFans, Pornhub, xHamster, etc.)</label>
                     {createVideoLinks.map((url, index) => (
                       <div key={index} style={{ position: 'relative' }}>
                         <Video style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                         <input 
                           type="url" 
+                          id={`createVideo_${index}`}
+                          name={`createVideo_${index}`}
                           className="search-input" 
                           style={{ width: '100%', paddingLeft: '3rem' }} 
                           placeholder={`Enlace de Vídeo ${index + 1} (https://...)`} 
@@ -850,11 +906,14 @@ export default function DashboardLogin() {
 
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div className="form-group">
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Usuario o Correo Electrónico</label>
+              <label htmlFor="loginIdentifier" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Usuario o Correo Electrónico</label>
               <div style={{ position: 'relative' }}>
                 <User style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                 <input 
                   type="text" 
+                  id="loginIdentifier"
+                  name="loginIdentifier"
+                  autoComplete="username"
                   className="search-input" 
                   style={{ width: '100%', paddingLeft: '3rem' }} 
                   placeholder="Introduce tu usuario o mail" 
@@ -866,11 +925,14 @@ export default function DashboardLogin() {
             </div>
 
             <div className="form-group">
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Contraseña</label>
+              <label htmlFor="loginPassword" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Contraseña</label>
               <div style={{ position: 'relative' }}>
                 <Lock style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                 <input 
                   type="password" 
+                  id="loginPassword"
+                  name="loginPassword"
+                  autoComplete="current-password"
                   className="search-input" 
                   style={{ width: '100%', paddingLeft: '3rem' }} 
                   placeholder="Introduce tu contraseña" 

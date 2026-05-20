@@ -2,6 +2,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
+    { "source": "/api/image", "destination": "/api/image.js" },
+    { "source": "/api/claims", "destination": "/api/claims.js" },
+    { "source": "/api/drafts", "destination": "/api/drafts.js" },
     { "source": "/api/(.*)", "destination": "/api/profiles.js" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
