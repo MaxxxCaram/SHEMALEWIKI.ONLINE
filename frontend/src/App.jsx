@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { Search } from 'lucide-react';
 import Continents from './pages/Continents';
 import Countries from './pages/Countries';
@@ -6,6 +7,7 @@ import ProfilesList from './pages/ProfilesList';
 import Profile from './pages/Profile';
 import DashboardLogin from './pages/DashboardLogin';
 import Dashboard from './pages/Dashboard';
+import AgeVerification, { useAgeVerified } from './components/AgeVerification';
 import './index.css';
 import logo from './assets/logosw.png';
 
@@ -25,7 +27,13 @@ function Navbar() {
   );
 }
 
-function App() {
+function AppContent() {
+  const { verified, verify } = useAgeVerified();
+
+  if (!verified) {
+    return <AgeVerification onVerify={verify} />;
+  }
+
   return (
     <Router>
       <Navbar />
@@ -40,6 +48,14 @@ function App() {
         </Routes>
       </main>
     </Router>
+  );
+}
+
+function App() {
+  return (
+    <HelmetProvider>
+      <AppContent />
+    </HelmetProvider>
   );
 }
 

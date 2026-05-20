@@ -5,6 +5,7 @@ import {
   MapPin, Globe, Camera, Video, Plus, Send, 
   CheckCircle2, Sparkles, UserCheck, PlusCircle
 } from 'lucide-react';
+import SEO from '../components/SEO';
 import { supabase } from '../supabase';
 
 export default function DashboardLogin() {
@@ -193,7 +194,13 @@ export default function DashboardLogin() {
   };
 
   return (
-    <div className="container" style={{ padding: '3rem 0', display: 'flex', justifyContent: 'center', minHeight: '80vh', alignItems: 'center' }}>
+    <>
+      <SEO 
+        title="Trans Dashboard"
+        description="ShemaleWiki Online — Dashboard portal for trans escorts. Claim your profile, create a new listing, or log in to manage your account."
+        canonicalPath="/dashboard/login"
+      />
+      <div className="container" style={{ padding: '3rem 0', display: 'flex', justifyContent: 'center', minHeight: '80vh', alignItems: 'center' }}>
       {/* 1. SELECTION PORTAL */}
       {view === 'options' && (
         <div style={{ maxWidth: '900px', width: '100%', padding: '0 1rem' }}>
@@ -890,5 +897,6 @@ export default function DashboardLogin() {
         </div>
       )}
     </div>
+    </>
   );
 }
