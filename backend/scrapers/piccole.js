@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 async function scrapePiccole(name) {
     try {
         console.log(`Searching piccoletrasgressioni.it for ${name}...`);
-        const slug = name.toLowerCase().replace(/\\s+/g, '-');
+        const slug = name.toLowerCase().replace(/\s+/g, '-');
         const url = `https://www.piccoletrasgressioni.it/trans/${slug}`;
         
         try {

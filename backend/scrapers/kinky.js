@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 async function scrapeKinky(name) {
     try {
         console.log(`Searching kinky.nl/shemales for ${name}...`);
-        const slug = name.toLowerCase().replace(/\\s+/g, '-');
+        const slug = name.toLowerCase().replace(/\s+/g, '-');
         const url = `https://www.kinky.nl/shemales/${slug}`;
         
         try {

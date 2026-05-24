@@ -44,11 +44,14 @@ async function runBatch() {
          console.error('Error fetching photos to check state:', photoError);
     }
     
+    // Check if the --all or --force flag is passed
+    const forceAll = process.argv.includes('--all') || process.argv.includes('--force');
+
     const enrichedProfileIds = new Set((existingPhotos || []).map(p => p.profile_id));
     
-    const profilesToEnrich = allProfiles.filter(p => !enrichedProfileIds.has(p.id));
+    const profilesToEnrich = forceAll ? allProfiles : allProfiles.filter(p => !enrichedProfileIds.has(p.id));
 
-    console.log(`Found ${enrichedProfileIds.size} profiles already enriched. Proceeding with ${profilesToEnrich.length} profiles...`);
+    console.log(`Found ${enrichedProfileIds.size} profiles already enriched. Proceeding with ${profilesToEnrich.length} profiles (Force All: ${forceAll})...`);
 
     const BATCH_SIZE = 5;
     for (let i = 0; i < profilesToEnrich.length; i += BATCH_SIZE) {

@@ -39,6 +39,13 @@ async function enrichProfile(profileId, name, phone) {
     }
 
     if (updatedPhotos.length > 0) {
+        // Clear out old photos to refresh them with fresh premium quality photos
+        console.log(`Clearing out old photos for profile ${profileId}...`);
+        const { error: deleteError } = await supabase.from('photos').delete().eq('profile_id', profileId);
+        if (deleteError) {
+            console.error('Error clearing old photos:', deleteError.message);
+        }
+
         const photoInserts = updatedPhotos.map(photo => ({
             profile_id: profileId,
             photo_url: photo,
@@ -46,9 +53,9 @@ async function enrichProfile(profileId, name, phone) {
         }));
         const { error } = await supabase.from('photos').insert(photoInserts);
         if (!error) {
-            console.log(`Inserted ${updatedPhotos.length} new photos for ${name}`);
+            console.log(`Inserted ${updatedPhotos.length} new premium photos for ${name}`);
         } else {
-            console.error('Error inserting photos:', error.message);
+            console.error('Error inserting premium photos:', error.message);
         }
     }
 
