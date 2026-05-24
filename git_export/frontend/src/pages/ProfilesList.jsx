@@ -95,7 +95,7 @@ export default function ProfilesList() {
                 src={getProxiedImageUrl(profile.photos?.find(p => !p.photo_url.includes('archive.org'))?.photo_url || profile.photos?.[0]?.photo_url)} 
                 alt={profile.name} 
                 className="profile-card-img"
-                onError={(e) => { e.target.onerror = null; e.target.src = '/api/image?url='; }}
+                onError={(e) => { e.target.onerror = null; e.target.src = getProxiedImageUrl(null); }}
               />
               <div className="profile-card-content">
                 <h3 className="profile-card-title">{profile.name}</h3>

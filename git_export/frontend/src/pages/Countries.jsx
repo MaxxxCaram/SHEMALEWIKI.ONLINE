@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { MapPin, ArrowLeft } from 'lucide-react';
+import SEO from '../components/SEO';
 import { supabase } from '../supabase';
 
 export default function Countries() {
@@ -46,51 +47,61 @@ export default function Countries() {
     fetchCountries();
   }, [displayContinent]);
 
+  const seoTitle = `Trans Escorts in ${displayContinent}`;
+  const seoDesc = `Find trans, shemale and ladyboy escorts in ${displayContinent}. Browse verified profiles by country — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' and more' : ''}.`;
+
   return (
-    <div className="container" style={{ padding: '3rem 0' }}>
-      <button 
-        onClick={() => navigate('/')}
-        className="back-btn"
-      >
-        <ArrowLeft className="back-icon" />
-        Back to Continents
-      </button>
+    <>
+      <SEO 
+        title={seoTitle}
+        description={seoDesc}
+        canonicalPath={`/${continent}`}
+      />
+      <div className="container" style={{ padding: '3rem 0' }}>
+        <button 
+          onClick={() => navigate('/')}
+          className="back-btn"
+        >
+          <ArrowLeft className="back-icon" />
+          Back to Continents
+        </button>
 
-      <div className="page-header">
-        <h1 className="page-title">
-          Escorts in {displayContinent}
-        </h1>
-        <p className="page-subtitle">
-          Select a country to view profiles
-        </p>
+        <div className="page-header">
+          <h1 className="page-title">
+            Escorts in {displayContinent}
+          </h1>
+          <p className="page-subtitle">
+            Select a country to view profiles
+          </p>
+        </div>
+
+        {loading ? (
+          <div className="loading-container">
+            <div className="spinner"></div>
+          </div>
+        ) : countries.length === 0 ? (
+          <div className="empty-state">
+            No profiles found for {displayContinent} yet.
+          </div>
+        ) : (
+          <div className="countries-grid">
+            {countries.map((country) => (
+              <Link
+                key={country}
+                to={`/${continent}/${country.toLowerCase()}`}
+                className="country-card"
+              >
+                <div className="country-icon-wrapper">
+                  <MapPin className="country-icon" />
+                </div>
+                <span className="country-name">
+                  {country}
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
-
-      {loading ? (
-        <div className="loading-container">
-          <div className="spinner"></div>
-        </div>
-      ) : countries.length === 0 ? (
-        <div className="empty-state">
-          No profiles found for {displayContinent} yet.
-        </div>
-      ) : (
-        <div className="countries-grid">
-          {countries.map((country) => (
-            <Link
-              key={country}
-              to={`/${continent}/${country.toLowerCase()}`}
-              className="country-card"
-            >
-              <div className="country-icon-wrapper">
-                <MapPin className="country-icon" />
-              </div>
-              <span className="country-name">
-                {country}
-              </span>
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   );
 }
