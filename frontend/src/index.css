@@ -571,3 +571,112 @@ h1, h2, h3, h4, h5, h6 {
 .country-card:hover .country-name {
   color: white;
 }
+
+/* City Guide Styles */
+.city-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.breadcrumb-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb-link:hover {
+  color: var(--accent-primary);
+}
+
+.breadcrumb-sep {
+  color: var(--text-secondary);
+  margin: 0 0.25rem;
+}
+
+.breadcrumb-current {
+  color: var(--accent-primary);
+  font-weight: 500;
+}
+
+.city-hero {
+  text-align: center;
+}
+
+.city-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.city-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+}
+
+.city-content h2 {
+  font-size: 1.75rem;
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+
+.city-content h3 {
+  font-size: 1.35rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #e2e8f0;
+}
+
+.city-content p {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-size: 1.05rem;
+  margin-bottom: 1.25rem;
+}
+
+.city-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.city-faq-item {
+  padding: 1rem 1.25rem;
+  background: rgba(236, 72, 153, 0.05);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.city-link-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+@media (max-width: 768px) {
+  .city-stats {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .city-hero {
+    padding: 1.5rem !important;
+  }
+
+  .city-content {
+    padding: 1.5rem !important;
+  }
+
+  .city-breadcrumb {
+    font-size: 0.8rem;
+  }
+}

@@ -5,6 +5,7 @@ import Continents from './pages/Continents';
 import Countries from './pages/Countries';
 import ProfilesList from './pages/ProfilesList';
 import Profile from './pages/Profile';
+import CityGuide from './pages/CityGuide';
 import DashboardLogin from './pages/DashboardLogin';
 import Dashboard from './pages/Dashboard';
 import AgeVerification, { useAgeVerified } from './components/AgeVerification';
@@ -44,6 +45,7 @@ function AppContent() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/:continent" element={<Countries />} />
           <Route path="/:continent/:country" element={<ProfilesList />} />
+          <Route path="/:continent/:country/:city" element={<CityGuide />} />
           <Route path="/profile/:id" element={<Profile />} />
         </Routes>
       </main>
