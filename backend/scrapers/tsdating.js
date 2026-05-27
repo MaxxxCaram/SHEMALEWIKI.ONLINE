@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 async function scrapeTsDating(name) {
     try {
         console.log(`Searching ts-dating.com for ${name}...`);
-        const slug = name.toLowerCase().replace(/\\s+/g, '-');
+        const slug = name.toLowerCase().replace(/\s+/g, '-');
         const url = `https://ts-dating.com/escort/${slug}`;
         
         try {

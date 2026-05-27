@@ -6,7 +6,7 @@ async function scrapeDistintas(name) {
         console.log(`Searching distintas.net for ${name}...`);
         // We do a simple Google search or directly search their site.
         // Assuming they have a search endpoint or we format the name to a URL slug.
-        const slug = name.toLowerCase().replace(/\\s+/g, '-');
+        const slug = name.toLowerCase().replace(/\s+/g, '-');
         const url = `https://www.distintas.net/escorts-trans/${slug}`;
         
         try {

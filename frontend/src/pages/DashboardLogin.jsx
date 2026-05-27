@@ -5,7 +5,6 @@ import {
   MapPin, Globe, Camera, Video, Plus, Send, 
   CheckCircle2, Sparkles, UserCheck, PlusCircle
 } from 'lucide-react';
-import SEO from '../components/SEO';
 import { supabase } from '../supabase';
 
 export default function DashboardLogin() {
@@ -194,13 +193,7 @@ export default function DashboardLogin() {
   };
 
   return (
-    <>
-      <SEO 
-        title="Trans Dashboard"
-        description="ShemaleWiki Online — Dashboard portal for trans escorts. Claim your profile, create a new listing, or log in to manage your account."
-        canonicalPath="/dashboard/login"
-      />
-      <div className="container" style={{ padding: '3rem 0', display: 'flex', justifyContent: 'center', minHeight: '80vh', alignItems: 'center' }}>
+    <div className="container" style={{ padding: '3rem 0', display: 'flex', justifyContent: 'center', minHeight: '80vh', alignItems: 'center' }}>
       {/* 1. SELECTION PORTAL */}
       {view === 'options' && (
         <div style={{ maxWidth: '900px', width: '100%', padding: '0 1rem' }}>
@@ -591,6 +584,7 @@ export default function DashboardLogin() {
                         type="text" 
                         id="createCountry"
                         name="createCountry"
+                        autoComplete="country-name"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="Ej. España" 
@@ -605,6 +599,7 @@ export default function DashboardLogin() {
                         type="text" 
                         id="createCity"
                         name="createCity"
+                        autoComplete="address-level2"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="Ej. Madrid" 
@@ -726,6 +721,7 @@ export default function DashboardLogin() {
                         type="text" 
                         id="createLanguages"
                         name="createLanguages"
+                        autoComplete="off"
                         className="search-input" 
                         style={{ width: '100%' }} 
                         placeholder="Español, Inglés" 
@@ -959,6 +955,5 @@ export default function DashboardLogin() {
         </div>
       )}
     </div>
-    </>
   );
 }

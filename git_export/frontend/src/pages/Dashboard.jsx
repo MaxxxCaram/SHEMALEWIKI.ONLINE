@@ -185,27 +185,27 @@ export default function Dashboard() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
                   <div className="form-group">
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Name</label>
-                    <input type="text" name="name" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={profile.name || ''} onChange={handleChange} required />
+                    <input type="text" name="name" id="name" autoComplete="name" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={profile.name || ''} onChange={handleChange} required />
                   </div>
                   <div className="form-group">
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Email</label>
-                    <input type="email" name="email" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={profile.email || ''} onChange={handleChange} required />
+                    <input type="email" name="email" id="email" autoComplete="email" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={profile.email || ''} onChange={handleChange} required />
                   </div>
                   <div className="form-group">
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Phone</label>
-                    <input type="text" name="phone" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={profile.phone || ''} onChange={handleChange} />
+                    <input type="text" name="phone" id="phone" autoComplete="tel" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={profile.phone || ''} onChange={handleChange} />
                   </div>
                   <div className="form-group">
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>WhatsApp</label>
-                    <input type="text" name="whatsapp" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={profile.whatsapp || ''} onChange={handleChange} />
+                    <input type="text" name="whatsapp" id="whatsapp" autoComplete="tel" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={profile.whatsapp || ''} onChange={handleChange} />
                   </div>
                   <div className="form-group">
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Country</label>
-                    <input type="text" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={country} onChange={(e) => handleLocationChange(1, e.target.value)} />
+                    <input type="text" name="country" id="country" autoComplete="country-name" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={country} onChange={(e) => handleLocationChange(1, e.target.value)} />
                   </div>
                   <div className="form-group">
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>City</label>
-                    <input type="text" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={city} onChange={(e) => handleLocationChange(2, e.target.value)} />
+                    <input type="text" name="city" id="city" autoComplete="address-level2" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={city} onChange={(e) => handleLocationChange(2, e.target.value)} />
                   </div>
                 </div>
               </div>

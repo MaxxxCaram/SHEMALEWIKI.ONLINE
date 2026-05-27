@@ -13,3 +13,9 @@ Thumbs.db
 
 node_modules/
 dist/
+
+# Local env files
+.env.production.local
+.env.local
+.env.development.local
+*.local
