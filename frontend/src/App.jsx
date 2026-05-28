@@ -47,6 +47,22 @@ function AppContent() {
           <Route path="/:continent/:country" element={<ProfilesList />} />
           <Route path="/:continent/:country/:city" element={<CityGuide />} />
           <Route path="/profile/:id" element={<Profile />} />
+          {/* Language-prefixed routes (SEO-friendly: /en/, /es/, /pt/) */}
+          <Route path="/en" element={<Continents />} />
+          <Route path="/en/:continent" element={<Countries />} />
+          <Route path="/en/:continent/:country" element={<ProfilesList />} />
+          <Route path="/en/:continent/:country/:city" element={<CityGuide />} />
+          <Route path="/en/profile/:id" element={<Profile />} />
+          <Route path="/es" element={<Continents />} />
+          <Route path="/es/:continent" element={<Countries />} />
+          <Route path="/es/:continent/:country" element={<ProfilesList />} />
+          <Route path="/es/:continent/:country/:city" element={<CityGuide />} />
+          <Route path="/es/profile/:id" element={<Profile />} />
+          <Route path="/pt" element={<Continents />} />
+          <Route path="/pt/:continent" element={<Countries />} />
+          <Route path="/pt/:continent/:country" element={<ProfilesList />} />
+          <Route path="/pt/:continent/:country/:city" element={<CityGuide />} />
+          <Route path="/pt/profile/:id" element={<Profile />} />
         </Routes>
       </main>
     </Router>

@@ -12,7 +12,7 @@ const cityContent = {
     displayName: 'Amsterdam',
     country: 'Netherlands',
     continent: 'europe',
-    intro: `Amsterdam is one of Europe's most vibrant and inclusive destinations for trans escorts and shemale companionship. Known worldwide for its progressive attitudes, liberal culture, and legendary Red Light District, Amsterdam offers a uniquely welcoming environment for the transgender community. The city's famous tolerance and open-mindedness make it a premier destination for those seeking authentic connections with beautiful trans women, shemale escorts, and ladyboy companions.`,
+    intro: `Amsterdam is one of Europe's most vibrant and inclusive destinations for trans escorts and shemale companionship. Known worldwide for its progressive attitudes, liberal culture, and legendary Red Light District, Amsterdam offers a uniquely welcoming environment for the transgender community. The city’s famous tolerance and open-mindedness make it a premier destination for those seeking authentic connections with beautiful trans women, shemale escorts, and ladyboy companions.`,
     scene: `The trans escort scene in Amsterdam is remarkably diverse and professional. From the historic canal-lined streets of De Wallen to the trendy neighborhoods of De Pijp and Jordaan, independent trans escorts operate throughout the city. Amsterdam's legal framework for sex work provides greater safety and professionalism than most cities worldwide. Many trans escorts in Amsterdam offer incall services in well-appointed private apartments near the city center, while others provide outcall services to upscale hotels and residences.`,
     districts: `Popular districts for trans escort encounters include the Centrum area near Dam Square, the fashionable Oud-Zuid district, and the rapidly developing Noord area across the IJ river. The Leidseplein and Rembrandtplein entertainment districts are also hotspots where many escorts arrange meetings. For those preferring discretion, the leafy residential neighborhoods of Oud-Zuid and Amstelveen offer privacy while remaining well-connected by Amsterdam's excellent tram network.`,
     tips: `When booking a trans escort in Amsterdam, communication is key. Most escorts speak excellent English alongside Dutch. It's customary to book in advance, especially during major events like Amsterdam Pride and King's Day. Rates typically range from €150-300 per hour for independent escorts. Always verify profiles and read reviews before booking. The city's excellent public transport and abundance of boutique hotels make logistics easy for both incall and outcall arrangements.`,
@@ -81,6 +81,96 @@ const cityContent = {
       { q: 'Is escorting legal in Buenos Aires?', a: 'Yes, sex work between consenting adults is legal in Argentina. Buenos Aires has a well-established and professional adult services industry.' },
       { q: 'What are the best neighborhoods for meeting trans escorts in Buenos Aires?', a: 'Palermo (Soho, Hollywood, and Chico) is the top district. Recoleta offers elegance and discretion, while Puerto Madero provides the most luxurious settings.' },
       { q: 'Should I pay in pesos or dollars in Buenos Aires?', a: 'Many escorts prefer payment in US dollars or euros due to currency stability. Discuss payment currency when booking to avoid misunderstandings.' },
+    ]
+  },
+  rotterdam: {
+    displayName: 'Rotterdam',
+    country: 'Netherlands',
+    continent: 'europe',
+    intro: `Rotterdam is the Netherlands’ second-largest city and a rising star in the trans escort scene. Known for its cutting-edge modern architecture, massive port, and multicultural energy, Rotterdam offers a distinctly different experience from Amsterdam — edgier, more diverse, and full of surprises. The city's large international community and progressive Dutch attitudes make it an excellent destination for those seeking trans escorts and shemale companionship.`,
+    scene: `Rotterdam's trans escort scene reflects the city's character: modern, diverse, and refreshingly straightforward. The city's status as Europe's largest port brings a constant flow of international visitors, creating steady demand for professional trans escorts. Rotterdam's trans women are known for their independence and professionalism, offering services ranging from intimate incall encounters in stylish apartments to upscale outcall arrangements at the city's best hotels and residences.`,
+    districts: `The city center around the Markthal and Cube Houses is a prime location for trans escort encounters, with excellent transport links and plenty of discreet meeting spots. The trendy Witte de Withstraat area offers a vibrant cultural scene for pre-meeting drinks and dining. The Kop van Zuid district, with its stunning skyline views and luxury hotels like Hotel New York, provides upscale settings. The Kralingen and Hillegersberg neighborhoods offer more residential discretion while remaining well-connected.`,
+    tips: `Rotterdam trans escort rates typically range from €130-280 per hour. Most escorts speak excellent English alongside Dutch, with many also speaking Turkish, Arabic, or Papiamento reflecting the city's diversity. Rotterdam's excellent metro and tram network makes any neighborhood easily accessible. Book in advance during major events like the International Film Festival Rotterdam and North Sea Jazz Festival when demand peaks.`,
+    keywords: ['trans escorts Rotterdam', 'shemale escorts Rotterdam', 'ladyboy Rotterdam', 'Rotterdam trans escorts', 'ts escorts Netherlands', 'travestis Rotterdam'],
+    faq: [
+      { q: 'Is escorting legal in Rotterdam?', a: 'Yes, escorting is legal and regulated in the Netherlands. Rotterdam has the same legal framework as Amsterdam, with independent escorts operating legally throughout the city.' },
+      { q: 'How does Rotterdam compare to Amsterdam for trans escorts?', a: 'Rotterdam offers a more modern, less touristy atmosphere than Amsterdam. Escorts here often cater to business travelers and locals, with rates slightly lower than Amsterdam on average.' },
+      { q: 'What areas are best for meeting trans escorts in Rotterdam?', a: 'The Centrum (city center), Kop van Zuid, and the Witte de Withstraat area are prime locations. The area around Rotterdam Centraal station also offers excellent accessibility.' },
+    ]
+  },
+  'den-haag': {
+    displayName: 'The Hague (Den Haag)',
+    country: 'Netherlands',
+    continent: 'europe',
+    intro: `The Hague (Den Haag) is the political heart of the Netherlands and a sophisticated destination for trans escort encounters. Home to the Dutch government, royal family, and international courts, Den Haag attracts diplomats, professionals, and discerning visitors who appreciate the finer things. The city's elegant architecture, seaside location, and international character create a uniquely refined environment for shemale escorts and trans companions.`,
+    scene: `The trans escort scene in The Hague is characterized by discretion and sophistication. The city's diplomatic and professional clientele expect the highest standards of service and confidentiality. Den Haag's trans escorts are known for their elegance, education, and ability to blend seamlessly into the city's refined social fabric. The scene operates with a level of professionalism that reflects The Hague's status as a city of international justice and diplomacy.`,
+    districts: `The Statenkwartier and Archipelbuurt neighborhoods are The Hague's most prestigious areas, with stunning 19th-century mansions providing elegant settings for upscale encounters. The Zeeheldenkwartier offers a more bohemian vibe with excellent dining and nightlife. For seaside romance, the Scheveningen beach district combines luxury hotels with stunning North Sea views. The city center around the Binnenhof and Lange Voorhout provides classic Dutch elegance in the shadow of parliament.`,
+    tips: `The Hague trans escort rates typically range from €150-300 per hour, reflecting the city’s upscale clientele. Most escorts speak excellent English and many speak French given the international legal community. The city's compact size and excellent tram network make logistics easy. The Kurhaus Hotel in Scheveningen is a legendary venue for high-end encounters. Book discreetly — The Hague values privacy above all.`,
+    keywords: ['trans escorts The Hague', 'shemale escorts Den Haag', 'ladyboy The Hague', 'Den Haag trans escorts', 'ts escorts Netherlands', 'travestis Den Haag'],
+    faq: [
+      { q: 'Is escorting legal in The Hague?', a: 'Yes, sex work is legal and regulated in the Netherlands. The Hague has the same progressive legal framework, with independent escorts operating freely.' },
+      { q: 'What type of clients do trans escorts in The Hague serve?', a: 'Given the city’s international institutions, many clients are diplomats, legal professionals, and business travelers. Escorts here are accustomed to discretion and sophisticated clientele.' },
+      { q: 'Is Scheveningen a good area for trans escort meetings?', a: 'Absolutely. The Scheveningen beach district offers luxury hotels with sea views, fine dining, and a resort atmosphere just 15 minutes from the city center. It is an ideal setting for memorable encounters.' },
+    ]
+  },
+  paris: {
+    displayName: 'Paris',
+    country: 'France',
+    continent: 'europe',
+    intro: `Paris needs no introduction as the world’s city of love, but its trans escort scene is a hidden gem waiting to be discovered. The French capital's legendary elegance, world-class gastronomy, and romantic ambiance create an unparalleled backdrop for encounters with shemale escorts and trans companions. From the cobblestone streets of Montmartre to the chic avenues of the Champs-Élysées, Paris elevates every meeting into an affair to remember.`,
+    scene: `The trans escort scene in Paris is sophisticated, discreet, and distinctly French in its approach to pleasure. The city's long tradition of courtesans and sophisticated companionship lives on in its modern trans escort community. Parisian trans women are renowned for their style, charm, and the unmistakable French art de vivre. The scene caters to an international clientele including business travelers, tourists seeking authentic Parisian experiences, and local connoisseurs of beauty.`,
+    districts: `The Marais district is Paris’s LGBTQ+ heart and a natural hub for trans escort activity, with its historic architecture and vibrant nightlife. The Opéra and Madeleine area offers classic Parisian elegance with grand hotels like the Ritz and Le Meurice. The Champs-Élysées and 8th arrondissement provide the ultimate in luxury, while Saint-Germain-des-Prés combines intellectual cachet with discreet charm. The 16th arrondissement near the Eiffel Tower offers residential privacy in one of Paris's most prestigious quarters.`,
+    tips: `Paris trans escort rates typically range from €200-500 per hour, with elite companions commanding significantly more. French is highly appreciated but many escorts speak English. The city's luxury hotels — from the Ritz to Le Bristol — are escort-friendly with appropriate discretion. Avoid the tourist-trap areas around Pigalle; the true Parisian escort scene operates with far more sophistication. Book well in advance during Fashion Week (February/March, September/October) when demand soars.`,
+    keywords: ['trans escorts Paris', 'shemale escorts Paris', 'ladyboy Paris', 'Paris trans escorts', 'ts escorts France', 'travestis Paris'],
+    faq: [
+      { q: 'Is escorting legal in Paris?', a: 'Yes, sex work between consenting adults is legal in France, though solicitation in public is restricted. Independent escorts operate freely and the industry is well-established.' },
+      { q: 'Where in Paris has the best trans escort scene?', a: 'The Marais (4th arrondissement) is the LGBTQ+ hub. The 8th and 16th arrondissements offer luxury and discretion, while Saint-Germain-des-Prés provides sophisticated charm.' },
+      { q: 'Do trans escorts in Paris speak English?', a: 'Many do, particularly those catering to international clients. However, some French phrases are always appreciated and add to the Parisian experience.' },
+    ]
+  },
+  london: {
+    displayName: 'London',
+    country: 'United Kingdom',
+    continent: 'europe',
+    intro: `London is one of the world’s truly global cities and a premier destination for trans escort encounters. The British capital's incredible diversity, unmatched cultural scene, and sophisticated adult services industry create exceptional opportunities for those seeking shemale escorts and trans companions. From the historic streets of Westminster to the trendy enclaves of Shoreditch, London offers endless possibilities for memorable meetings.`,
+    scene: `London's trans escort scene is among the most diverse and professional globally. The city's status as a financial and cultural capital attracts escorts from across the UK, Europe, Asia, and Latin America. London trans escorts are known for their professionalism, education, and ability to navigate the city's sophisticated social landscape. The scene ranges from high-end companions serving Mayfair's elite to independent escorts operating throughout the city's diverse boroughs.`,
+    districts: `Mayfair and Knightsbridge are London’s luxury heartlands, with five-star hotels like Claridge's and The Dorchester setting the stage for premium encounters. Soho has long been London's entertainment district and remains a hub for adult services. The City of London and Canary Wharf cater to financial professionals seeking discretion. Shoreditch and Dalston offer a more alternative, creative scene popular with younger clients and escorts. Kensington and Chelsea provide classic London elegance.`,
+    tips: `London trans escort rates typically range from £150-400 per hour, with elite companions in central London commanding premium rates. English is universal. London's extensive Tube network makes any area accessible, though booking escorts near your location saves significant time given the city's size. The escort scene is most active in Zones 1-2. Book in advance, especially during London Fashion Week and major events at the O2 or Wembley.`,
+    keywords: ['trans escorts London', 'shemale escorts London', 'ladyboy London', 'ts escorts London', 'trans escorts UK', 'shemale London'],
+    faq: [
+      { q: 'Is escorting legal in London?', a: 'Yes, sex work between consenting adults is legal in the UK. Independent escorts operate legally, though certain activities like street solicitation and brothel-keeping are restricted.' },
+      { q: 'What is the best area in London for trans escorts?', a: 'Mayfair and Knightsbridge offer luxury and discretion. Soho is the historic entertainment hub. The City and Canary Wharf are ideal for business travelers.' },
+      { q: 'How do I verify a trans escort in London?', a: 'Look for profiles with verified photos, consistent reviews across platforms, and professional communication. ShemaleWiki profiles provide a trusted starting point.' },
+    ]
+  },
+  'rio-de-janeiro': {
+    displayName: 'Rio de Janeiro',
+    country: 'Brazil',
+    continent: 'americas',
+    intro: `Rio de Janeiro pulses with sensuality as Brazil's most iconic city and a legendary destination for trans escort encounters. Framed by stunning beaches, dramatic mountains, and the famous Christ the Redeemer statue, Rio's natural beauty is matched only by the beauty of its people. The city’s famous Carioca spirit — warm, welcoming, and uninhibited — creates an electric atmosphere for those seeking shemale escorts and trans companions.`,
+    scene: `The trans escort scene in Rio de Janeiro is vibrant, diverse, and deeply woven into the city’s famous beach culture. Brazil's celebration of beauty and sensuality reaches its peak in Rio, where trans women are among the city's most sought-after companions. The scene ranges from high-end escorts serving Copacabana's luxury hotels to independent companions operating throughout the Zona Sul. Rio's trans escorts are famous for their stunning beauty, warm personality, and the passionate Brazilian way of connecting.`,
+    districts: `Copacabana and Ipanema are Rio's most famous beach neighborhoods and prime areas for trans escort activity, with iconic hotels like the Copacabana Palace setting the stage for luxury encounters. Leblon offers the city's most exclusive residential setting for discreet, upscale meetings. The Lapa district provides a more bohemian, nightlife-oriented scene. Barra da Tijuca offers a more modern, spacious alternative popular with longer-term visitors. The Santa Teresa neighborhood provides a romantic, artistic atmosphere with stunning bay views.`,
+    tips: `Rio trans escort rates typically range from R$300-700 per hour, with premium escorts in Zona Sul commanding higher rates. Portuguese is essential — English is less common than in São Paulo. The Zona Sul (South Zone) beaches are the safest and best-serviced area. Rio's notorious traffic means booking escorts near your location saves considerable time. During Carnival and Reveillon (New Year's), demand skyrockets and advance booking is absolutely essential. Always prioritize safety and stick to reputable profiles.`,
+    keywords: ['trans escorts Rio de Janeiro', 'shemale escorts Rio', 'travestis Rio de Janeiro', 'ladyboy Rio', 'ts escorts Brazil', 'acompanhantes trans Rio'],
+    faq: [
+      { q: 'Is escorting legal in Rio de Janeiro?', a: 'Yes, sex work between consenting adults is legal in Brazil. Rio de Janeiro has a well-established adult services industry integrated into its tourism economy.' },
+      { q: 'Is Rio safe for meeting trans escorts?', a: 'The Zona Sul (Copacabana, Ipanema, Leblon) is generally safe for tourists. Book escorts with verified profiles, arrange meetings at reputable hotels, and exercise normal urban precautions.' },
+      { q: 'When is the best time to find trans escorts in Rio?', a: 'Year-round availability is excellent, but Carnival (February/March) and Reveillon (New Year’s Eve) bring the highest demand. Book weeks in advance during these peak periods.' },
+    ]
+  },
+  brussels: {
+    displayName: 'Brussels',
+    country: 'Belgium',
+    continent: 'europe',
+    intro: `Brussels is Europe’s diplomatic capital and an underrated gem for trans escort encounters. The Belgian capital's international character, world-famous cuisine, and surprising nightlife create a unique environment for those seeking shemale escorts and trans companions. As the headquarters of the EU and NATO, Brussels attracts a sophisticated, multilingual clientele who appreciate quality, discretion, and the city's uniquely Belgian blend of cultures.`,
+    scene: `The trans escort scene in Brussels reflects the city's position at the crossroads of Europe. With a diverse population drawing from Belgium's French and Flemish communities plus a massive international workforce, Brussels offers remarkable variety. Trans escorts here tend to be multilingual, well-educated, and accustomed to serving discerning clients from diplomatic and business circles. The scene is more discreet than Amsterdam but equally professional.`,
+    districts: `The European Quarter around Schuman and Place du Luxembourg is the heart of Brussels's international community and a prime area for escort activity. The Ixelles and Saint-Gilles neighborhoods offer a trendy, multicultural atmosphere with excellent dining and discreet meeting spots. The historic Grand Place area provides stunning backdrops for luxury encounters at hotels like the Amigo. The Uccle and Woluwe areas offer residential privacy for longer arrangements.`,
+    tips: `Brussels trans escort rates typically range from €150-350 per hour. French, Dutch, and English are all widely used — multilingual escorts are the norm here. The city's compact center is walkable, with excellent metro links to outer districts. Brussels's famous gastronomy — from Michelin-starred restaurants to the best chocolate in the world — makes it ideal for extended dinner-date arrangements.`,
+    keywords: ['trans escorts Brussels', 'shemale escorts Brussels', 'ladyboy Brussels', 'ts escorts Belgium', 'trans escorts Belgium', 'travestis Brussels'],
+    faq: [
+      { q: 'Is escorting legal in Brussels?', a: 'Yes, sex work between consenting adults is legal in Belgium. Brussels has a well-regulated and professional adult services sector.' },
+      { q: 'What languages do trans escorts in Brussels speak?', a: 'Most escorts speak French and many speak Dutch and English. Given the international character of the city, multilingualism is the norm rather than the exception.' },
+      { q: 'Where is the best area in Brussels for escort encounters?', a: 'The European Quarter, Ixelles, and the area around the Grand Place are the prime locations, offering a mix of luxury hotels, fine dining, and discreet settings.' },
     ]
   }
 };
