@@ -86,7 +86,7 @@ export default function Profile() {
       <div style={{ paddingBottom: '4rem' }}>
         <div className="profile-header">
           <img 
-            src={getProxiedImageUrl(profile.photos?.find(p => !p.photo_url.includes('archive.org'))?.photo_url || profile.photos?.[0]?.photo_url)} 
+            src={getProxiedImageUrl(profile.photos?.[0]?.photo_url)} 
             alt={profile.name} 
             className="profile-hero-img" 
             onError={(e) => { e.target.onerror = null; e.target.src = getProxiedImageUrl(null); }}
@@ -168,7 +168,7 @@ export default function Profile() {
           <>
             <h3 style={{ marginTop: '3rem' }}>Gallery</h3>
             <div className="gallery-grid">
-              {profile.photos.filter(p => !p.photo_url.includes('archive.org')).map((photo, index) => (
+              {profile.photos.map((photo, index) => (
                 <img 
                   key={index} 
                   src={getProxiedImageUrl(photo.photo_url)} 

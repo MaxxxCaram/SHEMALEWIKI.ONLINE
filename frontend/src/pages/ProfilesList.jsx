@@ -92,7 +92,7 @@ export default function ProfilesList() {
           {profiles.map(profile => (
             <Link to={`/profile/${profile.id}`} key={profile.id} className="glass-card">
               <img
-                src={getProxiedImageUrl(profile.photos?.find(p => !p.photo_url.includes('archive.org'))?.photo_url || profile.photos?.[0]?.photo_url)} 
+                src={getProxiedImageUrl(profile.photos?.[0]?.photo_url)} 
                 alt={profile.name} 
                 className="profile-card-img"
                 onError={(e) => { e.target.onerror = null; e.target.src = getProxiedImageUrl(null); }}
