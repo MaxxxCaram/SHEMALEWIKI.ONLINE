@@ -3,23 +3,29 @@ echo =============================================
 echo KINKY.NL PHOTO SCRAPER — ShemaleWiki
 echo =============================================
 echo.
-echo This script downloads photos from kinky.nl
-echo profiles and uploads them to the site.
-echo.
-echo Requirements:
-echo   - Python 3 installed (https://python.org)
-echo   - pip install requests
-echo.
-echo Press any key to start (first 20 profiles)...
-pause > nul
+echo Verificando Python...
 
-python kinky_photo_scraper.py --limit 20 --delay 3
+python --version >nul 2>&1
+if errorlevel 1 (
+    echo ERROR: Python no encontrado.
+    echo Instalalo de https://python.org
+    echo IMPORTANTE: tilda "Add Python to PATH" al instalar
+    pause
+    exit /b 1
+)
+
+echo Python OK. Instalando dependencias...
+pip install requests --quiet 2>nul
+
+echo.
+echo Ejecutando scraper (5 perfiles de prueba)...
+echo.
+python kinky_photo_scraper.py --limit 5 --delay 3
 
 echo.
 echo =============================================
-echo DONE! Check the output above for results.
-echo.
-echo To process ALL profiles, run:
-echo   python kinky_photo_scraper.py --delay 3
+echo LISTO.
+echo Si funciono, edita este .bat y cambia --limit 5
+echo por --limit 0 para procesar TODOS los perfiles.
 echo =============================================
 pause

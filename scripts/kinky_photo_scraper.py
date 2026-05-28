@@ -1,272 +1,216 @@
-#!/usr/bin/env python3
 """
-Kinky.nl Photo Scraper — Cross-platform (Windows/Linux/Mac)
-Downloads photos from kinky.nl escort profiles and uploads to Supabase Storage.
+Kinky.nl Photo Scraper for ShemaleWiki
+v2 — Robusto, con key completa
 
-Usage:
-  python kinky_photo_scraper.py [--limit 10] [--delay 2]
-
-Requirements:
-  pip install requests supabase
-
-Windows: save this file anywhere, double-click or run from CMD
+Uso: python kinky_photo_scraper.py --limit 5 --delay 3
 """
 
-import os, sys, json, time, hashlib, argparse
+import os, sys, time, hashlib, argparse, re
 import requests
-from pathlib import Path
 
-# === CONFIGURATION ===
+# === CONFIG (key completa) ===
 SUPABASE_URL = "https://qtuzpswxzengqoqqwtpt.supabase.co"
 SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0dXpwc3d4emVuZ3FvcXF3dHB0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODc3NjEwOSwiZXhwIjoyMDk0MzUyMTA5fQ.uWpUtFDsYFqDwndAbAEzbnQIOnKDfzS6V5_Xsrsbv1E"
 BUCKET = "profile-photos"
-HEADERS = {
-    "apikey": SERVICE_KEY,
-    "Authorization": f"Bearer {SERVICE_KEY}",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-}
 
-def get_kinky_profiles(limit=None):
-    """Fetch kinky.nl profiles from Supabase that don't have photos yet"""
+UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+
+def headers(extra=None):
+    h = {"apikey": SERVICE_KEY, "Authorization": f"Bearer {SERVICE_KEY}", "User-Agent": UA}
+    if extra:
+        h.update(extra)
+    return h
+
+def get_profiles(limit=None):
+    """Obtener perfiles kinky.nl de Supabase"""
+    print("[1/3] Obteniendo perfiles...")
+    profiles = []
     offset = 0
-    all_profiles = []
-    
     while True:
-        resp = requests.get(
+        r = requests.get(
             f"{SUPABASE_URL}/rest/v1/profiles",
-            headers=HEADERS,
-            params={
-                "select": "id,name,url",
-                "url": "ilike.*kinky.nl*",
-                "limit": 500,
-                "offset": offset,
-                "order": "created_at.desc"
-            }
+            headers=headers(),
+            params={"select": "id,name,url", "url": "ilike.*kinky.nl*", "limit": 500, "offset": offset, "order": "created_at.desc"},
+            timeout=15
         )
-        if resp.status_code != 200:
-            print(f"  Error fetching profiles: {resp.status_code}")
+        if r.status_code != 200:
+            print(f"  ERROR HTTP {r.status_code}: {r.text[:200]}")
             break
-        
-        batch = resp.json()
+        batch = r.json()
         if not batch:
             break
-        
-        all_profiles.extend(batch)
+        profiles.extend(batch)
         offset += 500
-        if limit and len(all_profiles) >= limit:
-            all_profiles = all_profiles[:limit]
+        if limit and len(profiles) >= limit:
+            profiles = profiles[:limit]
             break
-        
-        print(f"  Fetched {len(all_profiles)} profiles so far...")
         if len(batch) < 500:
             break
+    print(f"  {len(profiles)} perfiles listos")
+    return profiles
+
+def extract_photos(html):
+    """Extraer URLs de fotos del HTML de kinky.nl"""
+    found = set()
+    # Patrones principales de kinky.nl
+    patterns = [
+        r'https?://[^"\'\\s<>]+?\.(?:jpg|jpeg|png|webp)\b',
+        r'//[^"\'\\s<>]+?\.(?:jpg|jpeg|png|webp)\b',
+        r'(?:src|data-src|data-lazy|content)=["\']([^"\']*?\.(?:jpg|jpeg|png|webp))["\']',
+    ]
+    for pat in patterns:
+        for m in re.findall(pat, html, re.IGNORECASE):
+            if isinstance(m, tuple):
+                m = m[0]
+            if m.startswith("//"):
+                m = "https:" + m
+            if not m.startswith("http"):
+                continue
+            # Filtrar cosas que claramente no son fotos de perfil
+            low = m.lower()
+            if any(x in low for x in ["icon", "logo", "avatar_small", "flag", "banner_ad", "pixel", "1x1", "tracking"]):
+                continue
+            found.add(m.split("?")[0])  # quitar query params
+    return list(found)
+
+def download_upload(profile_id, photo_urls, temp_dir):
+    """Descarga y sube las fotos"""
+    uploaded = []
+    for idx, url in enumerate(photo_urls):
+        # Generar nombre
+        ext = os.path.splitext(url)[1]
+        if ext not in (".jpg", ".jpeg", ".png", ".webp"):
+            ext = ".jpg"
+        
+        local = os.path.join(temp_dir, f"{idx:03d}{ext}")
+        remote = f"kinky/{profile_id}/{idx:03d}{ext}"
+        
+        # 1. Descargar
+        try:
+            r = requests.get(url, headers({"User-Agent": UA}), timeout=20)
+            if r.status_code != 200:
+                continue
+            os.makedirs(os.path.dirname(local), exist_ok=True)
+            with open(local, "wb") as f:
+                f.write(r.content)
+        except Exception as e:
+            print(f"    ✗ descarga: {e}")
+            continue
+        
+        # 2. Subir a Supabase Storage
+        ext_map = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp"}
+        ct = ext_map.get(ext, "image/jpeg")
+        
+        try:
+            with open(local, "rb") as f:
+                r2 = requests.post(
+                    f"{SUPABASE_URL}/storage/v1/object/{BUCKET}/{remote}",
+                    headers=headers({"Content-Type": ct}),
+                    data=f,
+                    timeout=60
+                )
+            if r2.status_code in (200, 201):
+                pub_url = f"{SUPABASE_URL}/storage/v1/object/public/{BUCKET}/{remote}"
+                
+                # 3. Insertar en tabla photos
+                pid = hashlib.md5(f"{profile_id}_{idx}".encode()).hexdigest()
+                requests.post(
+                    f"{SUPABASE_URL}/rest/v1/photos",
+                    headers=headers({"Prefer": "return=minimal"}),
+                    json={"id": pid, "profile_id": profile_id, "photo_url": pub_url, "order_index": idx},
+                    timeout=10
+                )
+                uploaded.append(pub_url)
+            else:
+                print(f"    ✗ upload HTTP {r2.status_code}")
+        except Exception as e:
+            print(f"    ✗ upload: {e}")
+        
+        # Limpiar
+        if os.path.exists(local):
+            os.remove(local)
     
-    return all_profiles
-
-def check_existing_photos(profile_id):
-    """Check if profile already has photos in storage"""
-    resp = requests.get(
-        f"{SUPABASE_URL}/storage/v1/object/list/{BUCKET}",
-        headers=HEADERS,
-        params={"prefix": f"kinky/{profile_id}/", "limit": 1}
-    )
-    if resp.status_code == 200:
-        data = resp.json()
-        return len(data) > 0
-    return False
-
-def extract_photos_from_page(url):
-    """Extract photo URLs from a kinky.nl profile page"""
-    try:
-        resp = requests.get(url, headers=HEADERS, timeout=20)
-        if resp.status_code != 200:
-            print(f"    HTTP {resp.status_code}")
-            return []
-        
-        html = resp.text
-        
-        # kinky.nl stores photos in various patterns. Try these:
-        photos = set()
-        
-        # Pattern 1: data-src or src attributes with image URLs
-        import re
-        for pattern in [
-            r'(?:data-src|src)=["\']([^"\']*?(?:img\.kinky\.nl|kinky\.nl.*?\.jpg|kinky\.nl.*?\.jpeg|kinky\.nl.*?\.png|kinky\.nl.*?\.webp))["\']',
-            r'https?://[^"\'\s]+?kinky\.nl[^"\'\s]*?\.(?:jpg|jpeg|png|webp)',
-            r'https?://img\.kinky\.nl[^"\'\s]+',
-        ]:
-            matches = re.findall(pattern, html, re.IGNORECASE)
-            for m in matches:
-                if isinstance(m, tuple):
-                    m = m[0]
-                if m.startswith("//"):
-                    m = "https:" + m
-                photos.add(m)
-        
-        print(f"    Found {len(photos)} photo URLs")
-        return list(photos)[:50]  # Max 50 photos per profile
-        
-    except Exception as e:
-        print(f"    Error: {e}")
-        return []
-
-def download_photo(url, save_path):
-    """Download a single photo"""
-    try:
-        resp = requests.get(url, headers=HEADERS, timeout=30)
-        if resp.status_code == 200:
-            os.makedirs(os.path.dirname(save_path), exist_ok=True)
-            with open(save_path, "wb") as f:
-                f.write(resp.content)
-            return True
-    except Exception as e:
-        print(f"      Download error: {e}")
-    return False
-
-def upload_to_supabase(local_path, storage_path):
-    """Upload photo to Supabase Storage"""
-    # Determine content type
-    ext = os.path.splitext(local_path)[1].lower()
-    content_types = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", 
-                     ".png": "image/png", ".webp": "image/webp"}
-    content_type = content_types.get(ext, "image/jpeg")
-    
-    with open(local_path, "rb") as f:
-        resp = requests.post(
-            f"{SUPABASE_URL}/storage/v1/object/{BUCKET}/{storage_path}",
-            headers={**HEADERS, "Content-Type": content_type},
-            data=f,
-            timeout=60
-        )
-    
-    if resp.status_code in (200, 201):
-        return f"{SUPABASE_URL}/storage/v1/object/public/{BUCKET}/{storage_path}"
-    else:
-        print(f"      Upload error: {resp.status_code} {resp.text[:100]}")
-        return None
-
-def insert_photo_record(profile_id, photo_url, order_index):
-    """Insert photo reference into photos table"""
-    # Check if photos table exists and insert
-    photo_id = hashlib.md5(f"{profile_id}_{order_index}".encode()).hexdigest()
-    resp = requests.post(
-        f"{SUPABASE_URL}/rest/v1/photos",
-        headers={**HEADERS, "Prefer": "return=minimal"},
-        json={
-            "id": photo_id,
-            "profile_id": profile_id,
-            "photo_url": photo_url,
-            "order_index": order_index
-        }
-    )
-    return resp.status_code in (200, 201, 204, 409)  # 409 = already exists
+    return uploaded
 
 def main():
-    parser = argparse.ArgumentParser(description="Scrape photos from kinky.nl")
-    parser.add_argument("--limit", type=int, default=None, help="Max profiles to process")
-    parser.add_argument("--delay", type=float, default=2.0, help="Delay between requests (seconds)")
-    parser.add_argument("--temp-dir", default="./kinky_photos_temp", help="Temp directory for downloads")
-    args = parser.parse_args()
+    p = argparse.ArgumentParser()
+    p.add_argument("--limit", type=int, default=5, help="Perfiles a procesar (0=todos)")
+    p.add_argument("--delay", type=float, default=3.0, help="Delay entre perfiles")
+    args = p.parse_args()
     
-    print("=" * 60)
-    print("KINKY.NL PHOTO SCRAPER")
-    print("=" * 60)
+    limit = None if args.limit == 0 else args.limit
     
-    # Get profiles
-    print("\n[1/4] Fetching kinky.nl profiles from Supabase...")
-    profiles = get_kinky_profiles(limit=args.limit)
-    print(f"  Total: {len(profiles)} profiles")
+    print("=" * 55)
+    print("  KINKY.NL PHOTO SCRAPER v2")
+    print("=" * 55)
     
-    # Filter: skip profiles that already have photos
-    print("\n[2/4] Checking for existing photos...")
-    to_process = []
-    skipped = 0
-    for p in profiles:
-        if check_existing_photos(p["id"]):
-            skipped += 1
-        else:
-            to_process.append(p)
+    profiles = get_profiles(limit)
+    if not profiles:
+        print("\nERROR: No se pudieron obtener perfiles.")
+        print("¿Tenés conexión a Internet?")
+        sys.exit(1)
     
-    print(f"  Already have photos: {skipped}")
-    print(f"  Need photos: {len(to_process)}")
+    # Test rápido: ¿podemos acceder a kinky.nl?
+    print("\n[2/3] Verificando acceso a kinky.nl...")
+    try:
+        test = requests.get("https://www.kinky.nl", headers({"User-Agent": UA}), timeout=10)
+        print(f"  kinky.nl → HTTP {test.status_code}")
+    except Exception as e:
+        print(f"  kinky.nl → ERROR: {e}")
+        print("\n  ⚠️  kinky.nl no es accesible desde esta PC con requests.")
+        print("  Posible bloqueo Cloudflare. Probá abrir kinky.nl en tu navegador.")
+        print("  Si abre en el navegador, hay que usar Selenium/Playwright en vez de requests.")
+        sys.exit(1)
     
-    # Process
-    print(f"\n[3/4] Scraping photos (delay={args.delay}s)...")
-    success = 0
-    fail = 0
-    total_photos = 0
+    print(f"\n[3/3] Procesando {len(profiles)} perfiles...")
+    total = 0
+    ok = 0
     
-    for i, profile in enumerate(to_process):
-        pid = profile["id"]
-        name = profile["name"]
-        url = profile.get("url", "")
+    for i, prof in enumerate(profiles):
+        pid = prof["id"]
+        name = prof["name"]
+        url = prof.get("url", "")
         
-        print(f"\n  [{i+1}/{len(to_process)}] {name} ({pid})")
-        print(f"    URL: {url}")
+        print(f"\n  [{i+1}/{len(profiles)}] {name}")
         
         if not url:
-            print("    No URL, skipping")
-            fail += 1
+            print("    Sin URL — skip")
             continue
         
-        # Extract photo URLs
-        photo_urls = extract_photos_from_page(url)
-        
-        if not photo_urls:
-            print("    No photos found")
-            fail += 1
+        # Obtener página
+        try:
+            r = requests.get(url, headers({"User-Agent": UA}), timeout=20)
+            if r.status_code != 200:
+                print(f"    HTTP {r.status_code}")
+                continue
+        except Exception as e:
+            print(f"    Error: {e}")
             continue
         
-        # Download and upload each photo
-        downloaded = 0
-        for j, photo_url in enumerate(photo_urls):
-            # Generate filename
-            ext = os.path.splitext(photo_url.split("?")[0])[1] or ".jpg"
-            if ext not in (".jpg", ".jpeg", ".png", ".webp"):
-                ext = ".jpg"
-            
-            local_path = os.path.join(args.temp_dir, pid, f"{j:03d}{ext}")
-            storage_path = f"kinky/{pid}/{j:03d}{ext}"
-            
-            # Download
-            if download_photo(photo_url, local_path):
-                # Upload to Supabase
-                public_url = upload_to_supabase(local_path, storage_path)
-                if public_url:
-                    # Insert DB record
-                    insert_photo_record(pid, public_url, j)
-                    downloaded += 1
-                    total_photos += 1
-            
-            # Clean up local file
-            if os.path.exists(local_path):
-                os.remove(local_path)
-            
-            time.sleep(args.delay * 0.5)  # Small delay between photos
+        # Extraer fotos
+        photos = extract_photos(r.text)
+        print(f"    {len(photos)} URLs detectadas")
         
-        if downloaded > 0:
-            print(f"    ✅ Downloaded {downloaded}/{len(photo_urls)} photos")
-            success += 1
+        if not photos:
+            # Mostrar snippet del HTML para debug
+            print(f"    HTML snippet: {r.text[500:800]}")
+            continue
+        
+        # Descargar y subir
+        uploaded = download_upload(pid, photos[:30], f"./temp_{pid}")
+        if uploaded:
+            print(f"    ✅ {len(uploaded)} fotos subidas")
+            total += len(uploaded)
+            ok += 1
         else:
-            print(f"    ❌ Failed to download any photos")
-            fail += 1
+            print(f"    ❌ 0 fotos subidas")
         
         time.sleep(args.delay)
     
-    # Summary
-    print(f"\n{'='*60}")
-    print(f"[4/4] COMPLETE")
-    print(f"  Profiles processed: {len(to_process)}")
-    print(f"  Success: {success}")
-    print(f"  Failed: {fail}")
-    print(f"  Total photos uploaded: {total_photos}")
-    print(f"{'='*60}")
-    
-    # Clean temp dir
-    try:
-        os.rmdir(args.temp_dir)
-    except:
-        pass
+    print(f"\n{'='*55}")
+    print(f"  RESULTADO: {ok}/{len(profiles)} perfiles OK")
+    print(f"  Total fotos: {total}")
+    print(f"{'='*55}")
 
 if __name__ == "__main__":
     main()
