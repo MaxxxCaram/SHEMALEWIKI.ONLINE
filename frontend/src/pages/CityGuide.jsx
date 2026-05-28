@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { MapPin, ArrowLeft, Building2, Users, Star } from 'lucide-react';
 import SEO from '../components/SEO';
 import { supabase } from '../supabase';
+import LazyImage from '../components/LazyImage';
 import { getProxiedImageUrl } from '../utils';
 
 // City guide content data — rich SEO text for each supported city
@@ -275,11 +276,10 @@ export default function CityGuide() {
             <div className="profiles-grid">
               {profiles.map(profile => (
                 <Link to={`/profile/${profile.id}`} key={profile.id} className="glass-card">
-                  <img
-                    src={getProxiedImageUrl(profile.photos?.[0]?.photo_url)}
+                  <LazyImage
+                    src={profile.photos?.[0]?.photo_url}
                     alt={profile.name}
                     className="profile-card-img"
-                    onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/300x400?text=No+Photo'; }}
                   />
                   <div className="profile-card-content">
                     <h3 className="profile-card-title">{profile.name}</h3>

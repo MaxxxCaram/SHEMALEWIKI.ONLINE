@@ -2,29 +2,24 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Phone, Mail, MessageCircle, MapPin, Lock } from 'lucide-react';
 import SEO from '../components/SEO';
+import Lightbox from '../components/Lightbox';
+import LazyImage from '../components/LazyImage';
 import { supabase } from '../supabase';
 import { getProxiedImageUrl } from '../utils';
 
 /**
  * Obfuscate phone numbers: show last 4 digits, mask the rest.
- * Example: "(+31) 633455867" → "(+31) ****5867"
  */
 function obfuscatePhone(phone) {
   if (!phone) return null;
-  // Keep country code visible, mask middle digits, show last 4
   const cleaned = phone.replace(/[\s\-\(\)]/g, '');
   if (cleaned.length <= 4) return phone;
   const last4 = cleaned.slice(-4);
   const prefix = cleaned.slice(0, cleaned.length - 4);
   const masked = prefix.replace(/\d/g, '*');
-  // Reconstruct with original formatting hints
   return masked + last4;
 }
 
-/**
- * Obfuscate email: show first char + domain, mask middle.
- * Example: "shemale.aaliyah@gmail.com" → "s*******.a*******@gmail.com"
- */
 function obfuscateEmail(email) {
   if (!email) return null;
   const [localPart, domain] = email.split('@');
@@ -39,6 +34,8 @@ export default function Profile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showContact, setShowContact] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   useEffect(() => {
     fetchProfile();
@@ -63,10 +60,22 @@ export default function Profile() {
     setLoading(false);
   };
 
-  if (loading) return <div style={{ textAlign: 'center', marginTop: '3rem' }}><h3>Loading Profile...</h3></div>;
+  const openLightbox = (index) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
+  if (loading) return (
+    <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+      <div className="profile-skeleton">
+        <div className="skeleton-hero" />
+        <div className="skeleton-line" style={{width:'60%'}} />
+        <div className="skeleton-line" style={{width:'40%'}} />
+      </div>
+    </div>
+  );
   if (!profile || profile.error) return <div style={{ textAlign: 'center', marginTop: '3rem' }}><h3>Profile Not Found</h3></div>;
 
-  // Extract city from location (e.g. "Europe | Netherlands | Amsterdam")
   const locationParts = profile.location ? profile.location.split(' | ').map(p => p.trim()) : [];
   const city = locationParts[2] || '';
   const country = locationParts[1] || '';
@@ -75,6 +84,10 @@ export default function Profile() {
   const seoDesc = profile.bio 
     ? profile.bio.substring(0, 155).replace(/<[^>]*>/g, '') + '...'
     : `${profile.name} — trans escort in ${city || country}. ${profile.age ? `Age: ${profile.age}. ` : ''}${profile.endowment ? `Endowment: ${profile.endowment}cm. ` : ''}View profile, photos and services.`;
+
+  // Collect all real image URLs for the lightbox
+  const galleryPhotos = profile.photos || [];
+  const heroPhoto = galleryPhotos[0];
 
   return (
     <>
@@ -85,12 +98,22 @@ export default function Profile() {
       />
       <div style={{ paddingBottom: '4rem' }}>
         <div className="profile-header">
-          <img 
-            src={getProxiedImageUrl(profile.photos?.[0]?.photo_url)} 
-            alt={profile.name} 
-            className="profile-hero-img" 
-            onError={(e) => { e.target.onerror = null; e.target.src = getProxiedImageUrl(null); }}
-          />
+          <div 
+            className="profile-hero-wrapper"
+            onClick={() => heroPhoto && openLightbox(0)}
+            style={{ cursor: heroPhoto ? 'pointer' : 'default' }}
+          >
+            <LazyImage 
+              src={heroPhoto?.photo_url}
+              alt={profile.name}
+              className="profile-hero-img"
+            />
+            {heroPhoto && (
+              <div className="hero-img-overlay">
+                <span>🔍 View Gallery</span>
+              </div>
+            )}
+          </div>
           
           <div className="profile-info">
             <h1 className="text-gradient" style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{profile.name}</h1>
@@ -99,6 +122,11 @@ export default function Profile() {
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <MapPin size={18} /> {profile.location || 'Unknown Location'}
               </span>
+              {profile.age && (
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  🎂 {profile.age} years
+                </span>
+              )}
             </div>
 
             <div className="glass" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
@@ -164,23 +192,47 @@ export default function Profile() {
           })}
         </div>
 
-        {profile.photos && profile.photos.length > 1 && (
+        {galleryPhotos.length > 1 && (
           <>
-            <h3 style={{ marginTop: '3rem' }}>Gallery</h3>
+            <h3 style={{ marginTop: '3rem' }}>Gallery · {galleryPhotos.length} photos</h3>
             <div className="gallery-grid">
-              {profile.photos.map((photo, index) => (
-                <img 
-                  key={index} 
-                  src={getProxiedImageUrl(photo.photo_url)} 
-                  alt={`Gallery ${index}`} 
-                  className="gallery-img" 
-                  onError={(e) => { e.target.onerror = null; e.target.src = getProxiedImageUrl(null); }}
-                />
+              {galleryPhotos.map((photo, index) => (
+                <div 
+                  key={index}
+                  className="gallery-item"
+                  onClick={() => openLightbox(index)}
+                >
+                  <LazyImage 
+                    src={photo.photo_url}
+                    alt={`Gallery ${index + 1}`}
+                    className="gallery-img"
+                  />
+                  <div className="gallery-item-overlay">
+                    <span>🔍</span>
+                  </div>
+                </div>
               ))}
             </div>
           </>
         )}
+
+        {galleryPhotos.length === 1 && profile.description && (
+          <div className="enrich-section glass" style={{ marginTop: '3rem', padding: '2rem', textAlign: 'center' }}>
+            <p style={{ color: 'var(--text-secondary)' }}>
+              📸 This profile has limited photos. Check back soon for more!
+            </p>
+          </div>
+        )}
       </div>
+
+      {lightboxOpen && (
+        <Lightbox
+          images={galleryPhotos}
+          currentIndex={lightboxIndex}
+          onClose={() => setLightboxOpen(false)}
+          onNavigate={setLightboxIndex}
+        />
+      )}
     </>
   );
 }

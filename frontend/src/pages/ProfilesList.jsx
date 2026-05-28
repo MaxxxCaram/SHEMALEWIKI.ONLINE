@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Search, MapPin, ArrowLeft } from 'lucide-react';
 import { supabase } from '../supabase';
-import { getProxiedImageUrl } from '../utils';
+import LazyImage from '../components/LazyImage';
 
 export default function ProfilesList() {
   const { continent, country } = useParams();
@@ -13,9 +13,8 @@ export default function ProfilesList() {
 
   useEffect(() => {
     fetchProfiles();
-  }, [country]); // Re-fetch if country changes
+  }, [country]);
 
-  // Format country from URL (e.g. united-kingdom -> United Kingdom)
   const displayCountry = country.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
   const fetchProfiles = async (searchQuery = '') => {
@@ -90,19 +89,21 @@ export default function ProfilesList() {
       ) : (
         <div className="profiles-grid">
           {profiles.map(profile => (
-            <Link to={`/profile/${profile.id}`} key={profile.id} className="glass-card">
-              <img
-                src={getProxiedImageUrl(profile.photos?.[0]?.photo_url)} 
-                alt={profile.name} 
+            <Link to={`/profile/${profile.id}`} key={profile.id} className="glass-card profile-card">
+              <LazyImage
+                src={profile.photos?.[0]?.photo_url}
+                alt={profile.name}
                 className="profile-card-img"
-                onError={(e) => { e.target.onerror = null; e.target.src = getProxiedImageUrl(null); }}
               />
+              <div className="profile-card-gradient" />
               <div className="profile-card-content">
                 <h3 className="profile-card-title">{profile.name}</h3>
                 <div className="profile-card-meta">
-                  <span>📍 {profile.location || 'Unknown'}</span>
-                  {profile.age && <span>🎂 Age: {profile.age}</span>}
-                  {profile.endowment && <span>🍆 {profile.endowment} cm</span>}
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <MapPin size={14} /> {profile.location || 'Unknown'}
+                  </span>
+                  {profile.age && <span>🎂 {profile.age} years</span>}
+                  {profile.endowment && <span>🍆 {profile.endowment}cm</span>}
                 </div>
               </div>
             </Link>
