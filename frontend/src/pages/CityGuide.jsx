@@ -172,6 +172,36 @@ const cityContent = {
       { q: 'What languages do trans escorts in Brussels speak?', a: 'Most escorts speak French and many speak Dutch and English. Given the international character of the city, multilingualism is the norm rather than the exception.' },
       { q: 'Where is the best area in Brussels for escort encounters?', a: 'The European Quarter, Ixelles, and the area around the Grand Place are the prime locations, offering a mix of luxury hotels, fine dining, and discreet settings.' },
     ]
+  },
+  berlin: {
+    displayName: 'Berlin',
+    country: 'Germany',
+    continent: 'europe',
+    intro: `Berlin is Europe\\u2019s undisputed capital of cool — a city where alternative culture, world-class nightlife, and progressive attitudes converge to create one of the continent\\u2019s most exciting trans escort destinations. Germany\\u2019s capital is legendary for its sexual openness, thriving LGBTQ+ community, and anything-goes spirit. For those seeking shemale escorts and trans companions, Berlin offers an authentic, unpretentious, and remarkably diverse experience.`,
+    scene: `The trans escort scene in Berlin is as diverse as the city itself. Berlin\\u2019s long tradition of sexual liberation and its status as a global party destination attract escorts from across Europe, Asia, and Latin America. The scene ranges from high-end companions serving business travelers near Potsdamer Platz to edgy, artistic escorts operating from the city\\u2019s famous alternative neighborhoods. German professionalism meets Berlin creativity — expect punctuality, clear communication, and a refreshing lack of judgment.`,
+    districts: `Schöneberg has been Berlin\\u2019s LGBTQ+ heart for over a century and remains a prime area for trans escort encounters. The trendy Friedrichshain and Kreuzberg neighborhoods offer a more alternative, youthful vibe with countless bars, clubs, and discreet apartments. Charlottenburg provides a more upscale, classic Berlin atmosphere with luxury hotels. Mitte is the central district where many business travelers stay — ideal for high-end outcall arrangements. Prenzlauer Berg offers a more residential, family-friendly atmosphere with excellent dining for extended dinner-date encounters.`,
+    tips: `Berlin trans escort rates typically range from €120-300 per hour. Most escorts speak excellent English alongside German, with many also speaking Russian, Turkish, or Arabic. Berlin\\u2019s excellent U-Bahn and S-Bahn network makes any neighborhood accessible 24/7. The city\\u2019s party culture means late-night and early-morning bookings are common. Book in advance during major events like Berlin Pride (Christopher Street Day) and the Berlinale film festival.`,
+    keywords: ['trans escorts Berlin', 'shemale escorts Berlin', 'ladyboy Berlin', 'ts escorts Germany', 'trans escorts Germany', 'travestis Berlin'],
+    faq: [
+      { q: 'Is escorting legal in Berlin?', a: 'Yes, sex work is legal and regulated in Germany. Berlin has a long-established legal framework that protects both escorts and clients.' },
+      { q: 'What is the best area in Berlin for trans escorts?', a: 'Schöneberg is the historic LGBTQ+ district and a top area. Friedrichshain, Kreuzberg, and Charlottenburg are also popular for their mix of hotels, nightlife, and discretion.' },
+      { q: 'What languages do trans escorts in Berlin speak?', a: 'Most escorts speak German and English. Many also speak Russian, Turkish, Polish, or Arabic reflecting Berlin\\u2019s international character.' },
+    ]
+  },
+  lisbon: {
+    displayName: 'Lisbon',
+    country: 'Portugal',
+    continent: 'europe',
+    intro: `Lisbon is Europe\\u2019s sun-drenched Atlantic capital — a city of seven hills, pastel-colored buildings, and a surprisingly vibrant trans escort scene. Portugal\\u2019s progressive social attitudes, affordable luxury, and booming tourism make Lisbon an increasingly popular destination for those seeking shemale escorts and trans companions. From the cobblestone streets of Alfama to the stylish avenues of Chiado, Lisbon offers old-world charm with a modern, open-minded spirit.`,
+    scene: `The trans escort scene in Lisbon has grown significantly alongside the city\\u2019s tourism boom. Portugal decriminalized all drugs in 2001 and has consistently ranked among Europe\\u2019s most progressive countries on LGBTQ+ issues. Lisbon\\u2019s trans escorts include both Portuguese locals and a growing Brazilian community — Portuguese is the shared language, creating a distinctive Lusophone dynamic. The scene operates with discretion but without stigma, reflecting Portugal\\u2019s laid-back Mediterranean attitudes.`,
+    districts: `Príncipe Real is Lisbon\\u2019s LGBTQ+ hub and the natural center for the trans escort scene, filled with stylish bars, boutique hotels, and a vibrant nightlife. The neighboring Bairro Alto district transforms from sleepy daytime streets to one of Europe\\u2019s liveliest nightlife zones after dark. Chiado offers sophisticated dining and luxury shopping — ideal for upscale encounters. The Parque das Nações district provides modern, waterfront settings near the casino and major hotels. Belém offers more residential privacy while remaining connected by Lisbon\\u2019s efficient tram network.`,
+    tips: `Lisbon trans escort rates typically range from €100-250 per hour. Portuguese is the primary language; English is common among escorts serving tourists but less universal than in Northern Europe. Lisbon\\u2019s hills mean comfortable shoes and taxis/Uber are your friends. Book in advance during summer (June-September) and major events like Lisbon Pride and Web Summit when the city fills with visitors. The city\\u2019s famous pastéis de nata and port wine make for excellent icebreakers during extended encounters.`,
+    keywords: ['trans escorts Lisbon', 'shemale escorts Lisbon', 'ladyboy Lisbon', 'ts escorts Portugal', 'trans escorts Portugal', 'travestis Lisboa'],
+    faq: [
+      { q: 'Is escorting legal in Lisbon?', a: 'Yes, sex work between consenting adults is legal in Portugal. Lisbon has a tolerant and professional adult services environment.' },
+      { q: 'What is the best area in Lisbon for trans escorts?', a: 'Príncipe Real is the LGBTQ+ heart of Lisbon and the top area. Bairro Alto, Chiado, and Parque das Nações are also popular for their hotels, dining, and nightlife.' },
+      { q: 'What languages do trans escorts in Lisbon speak?', a: 'Portuguese is the primary language. English is common, and many escorts from Brazil add a distinctive Lusophone flavor to the scene.' },
+    ]
   }
 };
 
