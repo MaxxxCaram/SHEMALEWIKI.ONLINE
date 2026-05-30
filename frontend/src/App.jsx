@@ -62,6 +62,7 @@ function Navbar() {
         </Link>
         <div className="nav-links">
           <Link to={bt ? "/es/" : "/"}>Continents</Link>
+          <Link to="/advertise" style={{ color: 'var(--accent-secondary)' }}>Advertise</Link>
         </div>
       </div>
     </nav>
