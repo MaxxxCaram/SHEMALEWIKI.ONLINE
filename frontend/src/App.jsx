@@ -88,7 +88,7 @@ function RootRedirect() {
   if (isBuscaTrans()) {
     return <Navigate to="/es/" replace />;
   }
-  return <Home />;
+  return <Continents />;
 }
 
 function AppContent() {
@@ -122,19 +122,19 @@ function AppContent() {
           <Route path="/profile/:id" element={<Profile />} />
 
           {/* Language-prefixed routes */}
-          <Route path="/en" element={<Home />} />
+          <Route path="/en" element={<Continents />} />
           <Route path="/en/:continent" element={<Countries />} />
           <Route path="/en/:continent/:country" element={<ProfilesList />} />
           <Route path="/en/:continent/:country/:city" element={<CityGuide />} />
           <Route path="/en/profile/:id" element={<Profile />} />
 
-          <Route path="/es" element={<Home />} />
+          <Route path="/es" element={<Continents />} />
           <Route path="/es/:continent" element={<Countries />} />
           <Route path="/es/:continent/:country" element={<ProfilesList />} />
           <Route path="/es/:continent/:country/:city" element={<CityGuide />} />
           <Route path="/es/profile/:id" element={<Profile />} />
 
-          <Route path="/pt" element={<Home />} />
+          <Route path="/pt" element={<Continents />} />
           <Route path="/pt/:continent" element={<Countries />} />
           <Route path="/pt/:continent/:country" element={<ProfilesList />} />
           <Route path="/pt/:continent/:country/:city" element={<CityGuide />} />

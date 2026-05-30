@@ -242,7 +242,12 @@ export default function CityGuide() {
 
         if (error) throw error;
         if (data) {
-          setProfiles(data);
+          // Filter out watermarked shemalewiki.com photos
+          const cleaned = data.map(p => ({
+            ...p,
+            photos: (p.photos || []).filter(ph => !(ph.photo_url || '').includes('shemalewiki.com'))
+          }));
+          setProfiles(cleaned);
           // Get total count separately
           const { count } = await supabase
             .from('profiles')

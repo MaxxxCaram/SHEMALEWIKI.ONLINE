@@ -32,7 +32,12 @@ export default function ProfilesList() {
       
       if (error) throw error;
       if (data) {
-        setProfiles(data);
+        // Filter out watermarked shemalewiki.com photos
+        const cleaned = data.map(p => ({
+          ...p,
+          photos: (p.photos || []).filter(ph => !(ph.photo_url || '').includes('shemalewiki.com'))
+        }));
+        setProfiles(cleaned);
       }
     } catch (error) {
       console.error("Error fetching profiles", error);

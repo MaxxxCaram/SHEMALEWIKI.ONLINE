@@ -26,9 +26,12 @@ export default function Profile() {
       const { data: photos } = await supabase.from('photos').select('*').eq('profile_id', id);
       const { data: services } = await supabase.from('services').select('*').eq('profile_id', id);
       
+      // Filter out watermarked shemalewiki.com photos
+      const cleanPhotos = (photos || []).filter(p => !(p.photo_url || '').includes('shemalewiki.com'));
+      
       setProfile({
         ...profileData,
-        photos: photos || [],
+        photos: cleanPhotos,
         services: services || []
       });
     } catch (error) {
