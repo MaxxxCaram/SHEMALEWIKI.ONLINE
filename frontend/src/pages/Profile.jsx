@@ -1,39 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Phone, Mail, MessageCircle, MapPin, Lock } from 'lucide-react';
+import { Phone, Mail, MessageCircle, MapPin, Globe } from 'lucide-react';
 import SEO from '../components/SEO';
 import Lightbox from '../components/Lightbox';
 import LazyImage from '../components/LazyImage';
 import { supabase } from '../supabase';
 import { getProxiedImageUrl } from '../utils';
 
-/**
- * Obfuscate phone numbers: show last 4 digits, mask the rest.
- */
-function obfuscatePhone(phone) {
-  if (!phone) return null;
-  const cleaned = phone.replace(/[\s\-\(\)]/g, '');
-  if (cleaned.length <= 4) return phone;
-  const last4 = cleaned.slice(-4);
-  const prefix = cleaned.slice(0, cleaned.length - 4);
-  const masked = prefix.replace(/\d/g, '*');
-  return masked + last4;
-}
-
-function obfuscateEmail(email) {
-  if (!email) return null;
-  const [localPart, domain] = email.split('@');
-  if (!domain) return email;
-  const parts = localPart.split('.');
-  const masked = parts.map(p => p[0] + '*'.repeat(Math.max(0, p.length - 1))).join('.');
-  return `${masked}@${domain}`;
-}
-
 export default function Profile() {
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showContact, setShowContact] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
@@ -130,40 +107,37 @@ export default function Profile() {
             </div>
 
             <div className="glass" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-              <h3 style={{ marginBottom: '1rem' }}>Contact Info</h3>
-              {!showContact ? (
-                <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-                  <p style={{ color: '#94a3b8', marginBottom: '1rem', fontSize: '0.9rem' }}>
-                    Contact details are hidden for privacy. Click below to reveal.
-                  </p>
-                  <button 
-                    onClick={() => setShowContact(true)}
-                    className="btn btn-primary"
-                    style={{ gap: '0.5rem' }}
-                  >
-                    <Lock size={16} />
-                    Show Contact Info
-                  </button>
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  {profile.phone && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <Phone size={18} className="text-gradient" /> {obfuscatePhone(profile.phone)}
-                    </div>
-                  )}
-                  {profile.whatsapp && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <MessageCircle size={18} style={{ color: '#25D366' }} /> {obfuscatePhone(profile.whatsapp)}
-                    </div>
-                  )}
-                  {profile.email && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <Mail size={18} className="text-gradient" /> {obfuscateEmail(profile.email)}
-                    </div>
-                  )}
-                </div>
-              )}
+              <h3 style={{ marginBottom: '1rem' }}>📞 Contact Info</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {profile.phone && (
+                  <a href={`tel:${profile.phone.replace(/\s/g, '')}`} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'inherit', textDecoration: 'none' }}>
+                    <Phone size={18} style={{ color: '#4ade80' }} /> {profile.phone}
+                  </a>
+                )}
+                {profile.whatsapp && (
+                  <a href={`https://wa.me/${profile.whatsapp.replace(/[\s\+\(\)\-]/g, '')}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#25D366', textDecoration: 'none' }}>
+                    <MessageCircle size={18} /> WhatsApp: {profile.whatsapp}
+                  </a>
+                )}
+                {profile.email && (
+                  <a href={`mailto:${profile.email}`} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'inherit', textDecoration: 'none' }}>
+                    <Mail size={18} style={{ color: '#60a5fa' }} /> {profile.email}
+                  </a>
+                )}
+                {profile.cam_chat && (
+                  <a href={profile.cam_chat} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#f472b6', textDecoration: 'none' }}>
+                    <Globe size={18} /> Cam Chat
+                  </a>
+                )}
+                {profile.onlyfans && (
+                  <a href={profile.onlyfans} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#f472b6', textDecoration: 'none' }}>
+                    <Globe size={18} /> OnlyFans
+                  </a>
+                )}
+                {!profile.phone && !profile.whatsapp && !profile.email && !profile.cam_chat && !profile.onlyfans && (
+                  <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>No contact info provided yet.</p>
+                )}
+              </div>
             </div>
 
             <div className="tags-container">

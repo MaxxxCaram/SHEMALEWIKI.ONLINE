@@ -8,17 +8,26 @@
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://shemalewiki.online/" />
     <title>ShemaleWiki Online — Trans Escort Directory</title>
+
+    <!-- Google Fonts: both brands -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
     <script>
-      // Dual-brand: swap meta for BuscaTrans before React mounts
+      // Dual-brand: swap meta before React mounts
       (function() {
         var host = window.location.hostname;
         if (host.indexOf('buscatrans') !== -1) {
           document.documentElement.lang = 'es';
+          document.documentElement.setAttribute('data-brand', 'buscatrans');
           document.title = 'BuscaTrans — Directorio de Escorts Trans';
           var meta = document.querySelector('meta[name="description"]');
           if (meta) meta.content = 'BuscaTrans — El directorio de escorts trans, shemale y travestis más completo en español. Encontrá acompañantes trans verificadas en tu ciudad.';
           var link = document.querySelector('link[rel="canonical"]');
           if (link) link.href = 'https://buscatrans.com/';
+        } else {
+          document.documentElement.setAttribute('data-brand', 'shemalewiki');
         }
       })();
     </script>

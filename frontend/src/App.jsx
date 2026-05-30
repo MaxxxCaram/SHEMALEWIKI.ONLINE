@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { Search } from 'lucide-react';
+import Home from './pages/Home';
 import Continents from './pages/Continents';
 import Countries from './pages/Countries';
 import ProfilesList from './pages/ProfilesList';
@@ -9,6 +9,7 @@ import CityGuide from './pages/CityGuide';
 import DashboardLogin from './pages/DashboardLogin';
 import Dashboard from './pages/Dashboard';
 import Advertise from './pages/Advertise';
+import Register from './pages/Register';
 import AgeVerification, { useAgeVerified } from './components/AgeVerification';
 import './index.css';
 import logoSw from './assets/logosw.png';
@@ -16,8 +17,7 @@ import logoSw from './assets/logosw.png';
 /* ── Domain detection ── */
 const isBuscaTrans = () => {
   if (typeof window === 'undefined') return false;
-  const host = window.location.hostname;
-  return host.includes('buscatrans');
+  return window.location.hostname.includes('buscatrans');
 };
 
 const getBrand = () => isBuscaTrans() ? 'buscatrans' : 'shemalewiki';
@@ -30,39 +30,51 @@ if (typeof document !== 'undefined') {
 /* ── Navbar ── */
 function Navbar() {
   const bt = isBuscaTrans();
+  const brand = bt ? 'buscatrans' : 'shemalewiki';
 
   return (
     <nav className="navbar">
       <div className="container">
-        <Link to={bt ? "/es/" : "/"} className="nav-brand" style={{ display: 'flex', alignItems: 'center' }}>
+        <Link to={bt ? "/es/" : "/"} className="nav-brand">
           {bt ? (
             <>
               <span style={{
-                fontSize: '1.8rem',
+                fontSize: '1.6rem',
                 fontWeight: 900,
                 letterSpacing: '-0.02em',
-                color: '#c9a84c',
-                marginRight: '8px'
+                color: '#e040a0',
+                marginRight: '6px',
+                fontFamily: 'var(--font-display)',
               }}>⚲</span>
               <span style={{
-                background: 'linear-gradient(135deg, #c2185b, #c9a84c)',
+                background: 'linear-gradient(135deg, #c026d3, #e040a0)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                fontWeight: 900,
+                fontFamily: 'var(--font-display)',
+                fontWeight: 700,
                 fontSize: '1.3rem',
-                letterSpacing: '-0.01em'
+                letterSpacing: '-0.01em',
               }}>BUSCATRANS</span>
             </>
           ) : (
             <>
-              <img src={logoSw} alt="ShemaleWiki Online" style={{ height: '40px', marginRight: '10px' }} />
-              <span className="text-gradient">SHEMALEWIKI</span> ONLINE
+              <img src={logoSw} alt="ShemaleWiki Online" style={{ height: '36px', marginRight: '8px' }} />
+              <span className="text-gradient" style={{ fontFamily: 'var(--font-display)', letterSpacing: '0.02em' }}>SHEMALEWIKI</span>
             </>
           )}
         </Link>
         <div className="nav-links">
-          <Link to={bt ? "/es/" : "/"}>Continents</Link>
-          <Link to="/advertise" style={{ color: 'var(--accent-secondary)' }}>Advertise</Link>
+          <Link to={bt ? "/es/" : "/"}>{bt ? 'Inicio' : 'Browse'}</Link>
+          <Link to="/advertise" style={{ color: 'var(--accent-secondary)' }}>{bt ? 'Anunciar' : 'Advertise'}</Link>
+          {bt ? (
+            <Link to="/registro" className="btn btn-primary" style={{ fontSize: '0.85rem', padding: '0.5rem 1.2rem' }}>
+              Registrarse
+            </Link>
+          ) : (
+            <Link to="/register" className="btn btn-primary" style={{ fontSize: '0.85rem', padding: '0.5rem 1.2rem' }}>
+              List your profile
+            </Link>
+          )}
         </div>
       </div>
     </nav>
@@ -74,7 +86,7 @@ function RootRedirect() {
   if (isBuscaTrans()) {
     return <Navigate to="/es/" replace />;
   }
-  return <Continents />;
+  return <Home />;
 }
 
 function AppContent() {
@@ -89,27 +101,36 @@ function AppContent() {
       <Navbar />
       <main>
         <Routes>
-          {/* Root: redirects to /es/ on BuscaTrans, shows Continents on ShemaleWiki */}
+          {/* Root: redirects / → /es/ on BuscaTrans, shows Home on ShemaleWiki */}
           <Route path="/" element={<RootRedirect />} />
+
+          {/* Static pages */}
           <Route path="/dashboard/login" element={<DashboardLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/advertise" element={<Advertise />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/registro" element={<Register />} />
+
+          {/* Legacy continent routes */}
           <Route path="/:continent" element={<Countries />} />
           <Route path="/:continent/:country" element={<ProfilesList />} />
           <Route path="/:continent/:country/:city" element={<CityGuide />} />
           <Route path="/profile/:id" element={<Profile />} />
-          {/* Language-prefixed routes (SEO-friendly: /en/, /es/, /pt/) */}
-          <Route path="/en" element={<Continents />} />
+
+          {/* Language-prefixed routes */}
+          <Route path="/en" element={<Home />} />
           <Route path="/en/:continent" element={<Countries />} />
           <Route path="/en/:continent/:country" element={<ProfilesList />} />
           <Route path="/en/:continent/:country/:city" element={<CityGuide />} />
           <Route path="/en/profile/:id" element={<Profile />} />
-          <Route path="/es" element={<Continents />} />
+
+          <Route path="/es" element={<Home />} />
           <Route path="/es/:continent" element={<Countries />} />
           <Route path="/es/:continent/:country" element={<ProfilesList />} />
           <Route path="/es/:continent/:country/:city" element={<CityGuide />} />
           <Route path="/es/profile/:id" element={<Profile />} />
-          <Route path="/pt" element={<Continents />} />
+
+          <Route path="/pt" element={<Home />} />
           <Route path="/pt/:continent" element={<Countries />} />
           <Route path="/pt/:continent/:country" element={<ProfilesList />} />
           <Route path="/pt/:continent/:country/:city" element={<CityGuide />} />
