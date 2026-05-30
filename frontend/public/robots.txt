@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /dashboard/
-Disallow: /api/
-
 Sitemap: https://shemalewiki.online/sitemap.xml
+
+# Disallow dashboard/admin pages from indexing
+Disallow: /dashboard
+Disallow: /dashboard/*
