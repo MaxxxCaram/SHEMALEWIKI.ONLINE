@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import CityGuide from './pages/CityGuide';
 import DashboardLogin from './pages/DashboardLogin';
 import Dashboard from './pages/Dashboard';
+import Advertise from './pages/Advertise';
 import AgeVerification, { useAgeVerified } from './components/AgeVerification';
 import './index.css';
 import logoSw from './assets/logosw.png';
@@ -91,6 +92,7 @@ function AppContent() {
           <Route path="/" element={<RootRedirect />} />
           <Route path="/dashboard/login" element={<DashboardLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/advertise" element={<Advertise />} />
           <Route path="/:continent" element={<Countries />} />
           <Route path="/:continent/:country" element={<ProfilesList />} />
           <Route path="/:continent/:country/:city" element={<CityGuide />} />
