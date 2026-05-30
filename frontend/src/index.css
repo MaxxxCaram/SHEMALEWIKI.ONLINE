@@ -1,3 +1,4 @@
+/* ===== SHEMALEWIKI THEME (default) ===== */
 :root {
   --bg-primary: #0f172a;
   --bg-secondary: #1e293b;
@@ -11,6 +12,23 @@
   --radius-md: 0.75rem;
   --radius-lg: 1.5rem;
   --transition: all 0.3s ease;
+}
+
+/* ===== BUSCATRANS THEME (activated by data-brand="buscatrans") ===== */
+[data-brand="buscatrans"] {
+  --bg-primary: #1a0533;
+  --bg-secondary: #2d1052;
+  --text-primary: #f5f0ff;
+  --text-secondary: #b8a0d8;
+  --accent-primary: #c2185b;
+  --accent-secondary: #c9a84c;
+  --glass-bg: rgba(45, 16, 82, 0.7);
+  --glass-border: rgba(201, 168, 76, 0.15);
+  font-family: 'Playfair Display', 'Georgia', serif;
+}
+[data-brand="buscatrans"] body,
+[data-brand="buscatrans"] {
+  font-family: 'Inter', 'Playfair Display', sans-serif;
 }
 
 * {

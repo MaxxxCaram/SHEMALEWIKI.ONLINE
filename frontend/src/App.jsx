@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Search } from 'lucide-react';
 import Continents from './pages/Continents';
@@ -10,22 +10,69 @@ import DashboardLogin from './pages/DashboardLogin';
 import Dashboard from './pages/Dashboard';
 import AgeVerification, { useAgeVerified } from './components/AgeVerification';
 import './index.css';
-import logo from './assets/logosw.png';
+import logoSw from './assets/logosw.png';
 
+/* ── Domain detection ── */
+const isBuscaTrans = () => {
+  if (typeof window === 'undefined') return false;
+  const host = window.location.hostname;
+  return host.includes('buscatrans');
+};
+
+const getBrand = () => isBuscaTrans() ? 'buscatrans' : 'shemalewiki';
+
+// Apply data-brand to <html> early
+if (typeof document !== 'undefined') {
+  document.documentElement.setAttribute('data-brand', getBrand());
+}
+
+/* ── Navbar ── */
 function Navbar() {
+  const bt = isBuscaTrans();
+
   return (
     <nav className="navbar">
       <div className="container">
-        <Link to="/" className="nav-brand" style={{ display: 'flex', alignItems: 'center' }}>
-          <img src={logo} alt="ShemaleWiki Online" style={{ height: '40px', marginRight: '10px' }} />
-          <span className="text-gradient">SHEMALEWIKI</span> ONLINE
+        <Link to={bt ? "/es/" : "/"} className="nav-brand" style={{ display: 'flex', alignItems: 'center' }}>
+          {bt ? (
+            <>
+              <span style={{
+                fontSize: '1.8rem',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                color: '#c9a84c',
+                marginRight: '8px'
+              }}>⚲</span>
+              <span style={{
+                background: 'linear-gradient(135deg, #c2185b, #c9a84c)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontWeight: 900,
+                fontSize: '1.3rem',
+                letterSpacing: '-0.01em'
+              }}>BUSCATRANS</span>
+            </>
+          ) : (
+            <>
+              <img src={logoSw} alt="ShemaleWiki Online" style={{ height: '40px', marginRight: '10px' }} />
+              <span className="text-gradient">SHEMALEWIKI</span> ONLINE
+            </>
+          )}
         </Link>
         <div className="nav-links">
-          <Link to="/">Continents</Link>
+          <Link to={bt ? "/es/" : "/"}>Continents</Link>
         </div>
       </div>
     </nav>
   );
+}
+
+/* ── RootRedirect: buscatrans.com / → /es/ ── */
+function RootRedirect() {
+  if (isBuscaTrans()) {
+    return <Navigate to="/es/" replace />;
+  }
+  return <Continents />;
 }
 
 function AppContent() {
@@ -40,7 +87,8 @@ function AppContent() {
       <Navbar />
       <main>
         <Routes>
-          <Route path="/" element={<Continents />} />
+          {/* Root: redirects to /es/ on BuscaTrans, shows Continents on ShemaleWiki */}
+          <Route path="/" element={<RootRedirect />} />
           <Route path="/dashboard/login" element={<DashboardLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/:continent" element={<Countries />} />
