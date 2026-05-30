@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import logoSw from '../assets/logosw.png';
 
 const STORAGE_KEY = 'sw_age_verified';
@@ -237,9 +236,9 @@ export default function AgeVerification({ onVerify }) {
           marginBottom: '1.5rem',
         }}>
           {txt.moreInfo}{' '}
-          <Link to="/terms" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>
+          <a href="/terms" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>
             {lang === 'es' ? 'Términos y Condiciones' : lang === 'pt' ? 'Termos e Condições' : 'Terms and Conditions'}
-          </Link>.
+          </a>.
         </p>
 
         {/* Form */}
