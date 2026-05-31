@@ -243,10 +243,6 @@ export default function Dashboard() {
                     <input type="text" name="weight" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={profile.weight || ''} onChange={handleChange} />
                   </div>
                   <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Endowment (cm)</label>
-                    <input type="text" name="endowment" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={profile.endowment || ''} onChange={handleChange} />
-                  </div>
-                  <div className="form-group">
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Nationality</label>
                     <input type="text" name="nationality" className="search-input" style={{ width: '100%', padding: '0.75rem 1rem' }} value={profile.nationality || ''} onChange={handleChange} />
                   </div>

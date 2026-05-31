@@ -18,7 +18,7 @@ const cityContent = {
     tips: `When booking a trans escort in Amsterdam, communication is key. Most escorts speak excellent English alongside Dutch. It's customary to book in advance, especially during major events like Amsterdam Pride and King's Day. Rates typically range from €150-300 per hour for independent escorts. Always verify profiles and read reviews before booking. The city's excellent public transport and abundance of boutique hotels make logistics easy for both incall and outcall arrangements.`,
     keywords: ['trans escorts Amsterdam', 'shemale escorts Amsterdam', 'ladyboy Amsterdam', 'Amsterdam trans escorts', 'ts escorts Netherlands'],
     faq: [
-      { q: 'Is escorting legal in Amsterdam?', a: 'Yes, sex work is legal and regulated in the Netherlands. Independent escorts operate legally, and Amsterdam has specific zones and regulations to ensure safety for both escorts and clients.' },
+      { q: 'Is companionship work legal in Amsterdam?', a: 'Yes, companionship services between consenting adults are legal in the Netherlands. Independent companions operate legally throughout Amsterdam and the country.' },
       { q: 'What areas of Amsterdam have the most trans escorts?', a: 'The Centrum (city center), De Pijp, Oud-Zuid, and areas near the Red Light District have the highest concentration of trans escorts, though many operate throughout greater Amsterdam.' },
       { q: 'How do I verify a trans escort profile in Amsterdam?', a: 'Look for profiles with multiple verified photos, detailed service descriptions, and positive reviews. ShemaleWiki profiles include verification indicators and real photos.' },
     ]
@@ -33,7 +33,7 @@ const cityContent = {
     tips: `Barcelona's trans escort market reflects the city's cosmopolitan character. Rates typically range from €120-250 per hour. Summer months (June-September) see increased demand due to tourism, so advance booking is recommended. The city's excellent metro system makes any neighborhood easily accessible. Many escorts offer both incall and outcall services, with popular meeting spots near Plaça Catalunya, Passeig de Gràcia, and the beachfront areas.`,
     keywords: ['trans escorts Barcelona', 'shemale escorts Barcelona', 'ladyboy Barcelona', 'Barcelona trans escorts', 'ts escorts Spain', 'travestis Barcelona'],
     faq: [
-      { q: 'Is escorting legal in Barcelona?', a: 'Escorting is legal in Spain, though street solicitation is restricted. Independent escorts operate freely in Barcelona, and the city has a well-established adult services sector.' },
+      { q: 'Is companionship work legal in Barcelona?', a: 'Escorting is legal in Spain, though street solicitation is restricted. Independent escorts operate freely in Barcelona, and the city has a well-established adult services sector.' },
       { q: 'Where is the best area to meet trans escorts in Barcelona?', a: 'The Eixample (Gaixample) district is the LGBTQ+ hub and a prime area. Other popular zones include the Gothic Quarter, Barceloneta, and the areas around Plaça Catalunya.' },
       { q: 'What languages do trans escorts in Barcelona speak?', a: 'Most escorts in Barcelona speak Spanish and many speak English. Catalan, Portuguese, Italian, and French are also common given the city\'s international character.' },
     ]
@@ -48,7 +48,7 @@ const cityContent = {
     tips: `Madrid's trans escort rates typically range from €120-250 per hour, with premium escorts commanding higher rates. The city's world-class hotel infrastructure means excellent options for both incall and outcall arrangements. Madrid's metro is one of Europe's best, making any neighborhood accessible. The best times to visit are spring (March-May) and fall (September-November) when the weather is perfect and the city's cultural calendar is at its peak.`,
     keywords: ['trans escorts Madrid', 'shemale escorts Madrid', 'ladyboy Madrid', 'Madrid trans escorts', 'ts escorts Spain', 'travestis Madrid'],
     faq: [
-      { q: 'Is escorting legal in Madrid?', a: 'Yes, escorting between consenting adults is legal in Spain. Madrid has a sophisticated adult services scene with independent escorts operating freely throughout the city.' },
+      { q: 'Is companionship work legal in Madrid?', a: 'Yes, companionship between consenting adults is legal in Spain. Madrid has a sophisticated adult services scene with companions operating freely throughout the city.' },
       { q: 'Which neighborhoods are best for meeting trans escorts in Madrid?', a: 'Chueca is the LGBTQ+ heart of Madrid and a top area. Salamanca offers upscale discretion, and the Gran Vía/Puerta del Sol area provides central convenience for tourists.' },
       { q: 'How does Madrid compare to Barcelona for trans escorts?', a: 'Both cities have excellent scenes. Madrid offers more of a business-oriented, energetic vibe with a larger local scene, while Barcelona has more of a beach-resort atmosphere with a higher proportion of tourist-oriented escorts.' },
     ]
@@ -63,7 +63,7 @@ const cityContent = {
     tips: `São Paulo's trans escort rates typically range from R$300-800 per hour, with premium escorts commanding significantly more. Portuguese is essential, though many escorts in upscale areas speak some English. The city's notorious traffic means you should plan logistics carefully — booking escorts near your location or hotel saves significant time. São Paulo has excellent luxury hotels in Jardins, Itaim, and along Avenida Paulista that are escort-friendly and discreet.`,
     keywords: ['trans escorts São Paulo', 'shemale escorts São Paulo', 'travestis São Paulo', 'acompanhantes trans SP', 'ladyboy São Paulo', 'ts escorts Brazil'],
     faq: [
-      { q: 'Is escorting legal in São Paulo?', a: 'Yes, sex work between consenting adults is legal in Brazil. São Paulo has a well-established adult services industry with escorts operating independently throughout the city.' },
+      { q: 'Is companionship work legal in São Paulo?', a: 'Yes, sex work between consenting adults is legal in Brazil. São Paulo has a well-established adult services industry with escorts operating independently throughout the city.' },
       { q: 'What languages do trans escorts in São Paulo speak?', a: 'Portuguese is the primary language. English is spoken by escorts catering to international clients, particularly in upscale areas like Jardins and Itaim Bibi. Spanish is also common.' },
       { q: 'What are the best areas to find trans escorts in São Paulo?', a: 'Jardins, Avenida Paulista, Itaim Bibi, and Moema are the prime districts. These areas combine luxury accommodations, discretion, and the highest concentration of quality escorts.' },
     ]
@@ -78,7 +78,7 @@ const cityContent = {
     tips: `Buenos Aires trans escort rates typically range from ARS $40,000-100,000 per hour (approximately $100-250 USD at informal rates). Many escorts prefer dollars or euros due to Argentina's currency fluctuations. Spanish is essential; English is less common than in European cities. Palermo and Recoleta offer the best combination of quality escorts, excellent hotels, and vibrant dining/nightlife. The city's late-night culture — dinner at 10 PM, clubs at 2 AM — means encounters often extend into the early morning hours.`,
     keywords: ['trans escorts Buenos Aires', 'shemale escorts Buenos Aires', 'travestis Buenos Aires', 'ladyboy Buenos Aires', 'ts escorts Argentina', 'acompañantes trans Buenos Aires'],
     faq: [
-      { q: 'Is escorting legal in Buenos Aires?', a: 'Yes, sex work between consenting adults is legal in Argentina. Buenos Aires has a well-established and professional adult services industry.' },
+      { q: 'Is companionship work legal in Buenos Aires?', a: 'Yes, sex work between consenting adults is legal in Argentina. Buenos Aires has a well-established and professional adult services industry.' },
       { q: 'What are the best neighborhoods for meeting trans escorts in Buenos Aires?', a: 'Palermo (Soho, Hollywood, and Chico) is the top district. Recoleta offers elegance and discretion, while Puerto Madero provides the most luxurious settings.' },
       { q: 'Should I pay in pesos or dollars in Buenos Aires?', a: 'Many escorts prefer payment in US dollars or euros due to currency stability. Discuss payment currency when booking to avoid misunderstandings.' },
     ]
@@ -93,7 +93,7 @@ const cityContent = {
     tips: `Rotterdam trans escort rates typically range from €130-280 per hour. Most escorts speak excellent English alongside Dutch, with many also speaking Turkish, Arabic, or Papiamento reflecting the city's diversity. Rotterdam's excellent metro and tram network makes any neighborhood easily accessible. Book in advance during major events like the International Film Festival Rotterdam and North Sea Jazz Festival when demand peaks.`,
     keywords: ['trans escorts Rotterdam', 'shemale escorts Rotterdam', 'ladyboy Rotterdam', 'Rotterdam trans escorts', 'ts escorts Netherlands', 'travestis Rotterdam'],
     faq: [
-      { q: 'Is escorting legal in Rotterdam?', a: 'Yes, escorting is legal and regulated in the Netherlands. Rotterdam has the same legal framework as Amsterdam, with independent escorts operating legally throughout the city.' },
+      { q: 'Is companionship work legal in Rotterdam?', a: 'Yes, escorting is legal and regulated in the Netherlands. Rotterdam has the same legal framework as Amsterdam, with independent escorts operating legally throughout the city.' },
       { q: 'How does Rotterdam compare to Amsterdam for trans escorts?', a: 'Rotterdam offers a more modern, less touristy atmosphere than Amsterdam. Escorts here often cater to business travelers and locals, with rates slightly lower than Amsterdam on average.' },
       { q: 'What areas are best for meeting trans escorts in Rotterdam?', a: 'The Centrum (city center), Kop van Zuid, and the Witte de Withstraat area are prime locations. The area around Rotterdam Centraal station also offers excellent accessibility.' },
     ]
@@ -108,7 +108,7 @@ const cityContent = {
     tips: `The Hague trans escort rates typically range from €150-300 per hour, reflecting the city’s upscale clientele. Most escorts speak excellent English and many speak French given the international legal community. The city's compact size and excellent tram network make logistics easy. The Kurhaus Hotel in Scheveningen is a legendary venue for high-end encounters. Book discreetly — The Hague values privacy above all.`,
     keywords: ['trans escorts The Hague', 'shemale escorts Den Haag', 'ladyboy The Hague', 'Den Haag trans escorts', 'ts escorts Netherlands', 'travestis Den Haag'],
     faq: [
-      { q: 'Is escorting legal in The Hague?', a: 'Yes, sex work is legal and regulated in the Netherlands. The Hague has the same progressive legal framework, with independent escorts operating freely.' },
+      { q: 'Is companionship work legal in The Hague?', a: 'Yes, sex work is legal and regulated in the Netherlands. The Hague has the same progressive legal framework, with independent escorts operating freely.' },
       { q: 'What type of clients do trans escorts in The Hague serve?', a: 'Given the city’s international institutions, many clients are diplomats, legal professionals, and business travelers. Escorts here are accustomed to discretion and sophisticated clientele.' },
       { q: 'Is Scheveningen a good area for trans escort meetings?', a: 'Absolutely. The Scheveningen beach district offers luxury hotels with sea views, fine dining, and a resort atmosphere just 15 minutes from the city center. It is an ideal setting for memorable encounters.' },
     ]
@@ -123,7 +123,7 @@ const cityContent = {
     tips: `Paris trans escort rates typically range from €200-500 per hour, with elite companions commanding significantly more. French is highly appreciated but many escorts speak English. The city's luxury hotels — from the Ritz to Le Bristol — are escort-friendly with appropriate discretion. Avoid the tourist-trap areas around Pigalle; the true Parisian escort scene operates with far more sophistication. Book well in advance during Fashion Week (February/March, September/October) when demand soars.`,
     keywords: ['trans escorts Paris', 'shemale escorts Paris', 'ladyboy Paris', 'Paris trans escorts', 'ts escorts France', 'travestis Paris'],
     faq: [
-      { q: 'Is escorting legal in Paris?', a: 'Yes, sex work between consenting adults is legal in France, though solicitation in public is restricted. Independent escorts operate freely and the industry is well-established.' },
+      { q: 'Is companionship work legal in Paris?', a: 'Yes, sex work between consenting adults is legal in France, though solicitation in public is restricted. Independent escorts operate freely and the industry is well-established.' },
       { q: 'Where in Paris has the best trans escort scene?', a: 'The Marais (4th arrondissement) is the LGBTQ+ hub. The 8th and 16th arrondissements offer luxury and discretion, while Saint-Germain-des-Prés provides sophisticated charm.' },
       { q: 'Do trans escorts in Paris speak English?', a: 'Many do, particularly those catering to international clients. However, some French phrases are always appreciated and add to the Parisian experience.' },
     ]
@@ -138,7 +138,7 @@ const cityContent = {
     tips: `London trans escort rates typically range from £150-400 per hour, with elite companions in central London commanding premium rates. English is universal. London's extensive Tube network makes any area accessible, though booking escorts near your location saves significant time given the city's size. The escort scene is most active in Zones 1-2. Book in advance, especially during London Fashion Week and major events at the O2 or Wembley.`,
     keywords: ['trans escorts London', 'shemale escorts London', 'ladyboy London', 'ts escorts London', 'trans escorts UK', 'shemale London'],
     faq: [
-      { q: 'Is escorting legal in London?', a: 'Yes, sex work between consenting adults is legal in the UK. Independent escorts operate legally, though certain activities like street solicitation and brothel-keeping are restricted.' },
+      { q: 'Is companionship work legal in London?', a: 'Yes, sex work between consenting adults is legal in the UK. Independent escorts operate legally, though certain activities like street solicitation and brothel-keeping are restricted.' },
       { q: 'What is the best area in London for trans escorts?', a: 'Mayfair and Knightsbridge offer luxury and discretion. Soho is the historic entertainment hub. The City and Canary Wharf are ideal for business travelers.' },
       { q: 'How do I verify a trans escort in London?', a: 'Look for profiles with verified photos, consistent reviews across platforms, and professional communication. ShemaleWiki profiles provide a trusted starting point.' },
     ]
@@ -153,7 +153,7 @@ const cityContent = {
     tips: `Rio trans escort rates typically range from R$300-700 per hour, with premium escorts in Zona Sul commanding higher rates. Portuguese is essential — English is less common than in São Paulo. The Zona Sul (South Zone) beaches are the safest and best-serviced area. Rio's notorious traffic means booking escorts near your location saves considerable time. During Carnival and Reveillon (New Year's), demand skyrockets and advance booking is absolutely essential. Always prioritize safety and stick to reputable profiles.`,
     keywords: ['trans escorts Rio de Janeiro', 'shemale escorts Rio', 'travestis Rio de Janeiro', 'ladyboy Rio', 'ts escorts Brazil', 'acompanhantes trans Rio'],
     faq: [
-      { q: 'Is escorting legal in Rio de Janeiro?', a: 'Yes, sex work between consenting adults is legal in Brazil. Rio de Janeiro has a well-established adult services industry integrated into its tourism economy.' },
+      { q: 'Is companionship work legal in Rio de Janeiro?', a: 'Yes, companionship between consenting adults is legal in Brazil. Rio de Janeiro has well-established adult services integrated into its tourism economy.' },
       { q: 'Is Rio safe for meeting trans escorts?', a: 'The Zona Sul (Copacabana, Ipanema, Leblon) is generally safe for tourists. Book escorts with verified profiles, arrange meetings at reputable hotels, and exercise normal urban precautions.' },
       { q: 'When is the best time to find trans escorts in Rio?', a: 'Year-round availability is excellent, but Carnival (February/March) and Reveillon (New Year’s Eve) bring the highest demand. Book weeks in advance during these peak periods.' },
     ]
@@ -168,7 +168,7 @@ const cityContent = {
     tips: `Brussels trans escort rates typically range from €150-350 per hour. French, Dutch, and English are all widely used — multilingual escorts are the norm here. The city's compact center is walkable, with excellent metro links to outer districts. Brussels's famous gastronomy — from Michelin-starred restaurants to the best chocolate in the world — makes it ideal for extended dinner-date arrangements.`,
     keywords: ['trans escorts Brussels', 'shemale escorts Brussels', 'ladyboy Brussels', 'ts escorts Belgium', 'trans escorts Belgium', 'travestis Brussels'],
     faq: [
-      { q: 'Is escorting legal in Brussels?', a: 'Yes, sex work between consenting adults is legal in Belgium. Brussels has a well-regulated and professional adult services sector.' },
+      { q: 'Is companionship work legal in Brussels?', a: 'Yes, companionship between consenting adults is legal in Belgium. Brussels has a well-regulated professional adult services sector.' },
       { q: 'What languages do trans escorts in Brussels speak?', a: 'Most escorts speak French and many speak Dutch and English. Given the international character of the city, multilingualism is the norm rather than the exception.' },
       { q: 'Where is the best area in Brussels for escort encounters?', a: 'The European Quarter, Ixelles, and the area around the Grand Place are the prime locations, offering a mix of luxury hotels, fine dining, and discreet settings.' },
     ]
@@ -183,7 +183,7 @@ const cityContent = {
     tips: `Berlin trans escort rates typically range from €120-300 per hour. Most escorts speak excellent English alongside German, with many also speaking Russian, Turkish, or Arabic. Berlin\\u2019s excellent U-Bahn and S-Bahn network makes any neighborhood accessible 24/7. The city\\u2019s party culture means late-night and early-morning bookings are common. Book in advance during major events like Berlin Pride (Christopher Street Day) and the Berlinale film festival.`,
     keywords: ['trans escorts Berlin', 'shemale escorts Berlin', 'ladyboy Berlin', 'ts escorts Germany', 'trans escorts Germany', 'travestis Berlin'],
     faq: [
-      { q: 'Is escorting legal in Berlin?', a: 'Yes, sex work is legal and regulated in Germany. Berlin has a long-established legal framework that protects both escorts and clients.' },
+      { q: 'Is companionship work legal in Berlin?', a: 'Yes, companionship is legal and regulated in Germany. Berlin has a long-established legal framework that protects both companions and clients.' },
       { q: 'What is the best area in Berlin for trans escorts?', a: 'Schöneberg is the historic LGBTQ+ district and a top area. Friedrichshain, Kreuzberg, and Charlottenburg are also popular for their mix of hotels, nightlife, and discretion.' },
       { q: 'What languages do trans escorts in Berlin speak?', a: 'Most escorts speak German and English. Many also speak Russian, Turkish, Polish, or Arabic reflecting Berlin\\u2019s international character.' },
     ]
@@ -198,7 +198,7 @@ const cityContent = {
     tips: `Lisbon trans escort rates typically range from €100-250 per hour. Portuguese is the primary language; English is common among escorts serving tourists but less universal than in Northern Europe. Lisbon\\u2019s hills mean comfortable shoes and taxis/Uber are your friends. Book in advance during summer (June-September) and major events like Lisbon Pride and Web Summit when the city fills with visitors. The city\\u2019s famous pastéis de nata and port wine make for excellent icebreakers during extended encounters.`,
     keywords: ['trans escorts Lisbon', 'shemale escorts Lisbon', 'ladyboy Lisbon', 'ts escorts Portugal', 'trans escorts Portugal', 'travestis Lisboa'],
     faq: [
-      { q: 'Is escorting legal in Lisbon?', a: 'Yes, sex work between consenting adults is legal in Portugal. Lisbon has a tolerant and professional adult services environment.' },
+      { q: 'Is companionship work legal in Lisbon?', a: 'Yes, companionship between consenting adults is legal in Portugal. Lisbon has a tolerant and professional environment.' },
       { q: 'What is the best area in Lisbon for trans escorts?', a: 'Príncipe Real is the LGBTQ+ heart of Lisbon and the top area. Bairro Alto, Chiado, and Parque das Nações are also popular for their hotels, dining, and nightlife.' },
       { q: 'What languages do trans escorts in Lisbon speak?', a: 'Portuguese is the primary language. English is common, and many escorts from Brazil add a distinctive Lusophone flavor to the scene.' },
     ]
@@ -265,10 +265,10 @@ export default function CityGuide() {
     fetchProfiles();
   }, [displayCity]);
 
-  const seoTitle = `Trans Escorts in ${displayCity} — Shemale & Ladyboy ${displayCity}`;
+  const seoTitle = `Trans Companions in ${displayCity} — Verified Profiles`;
   const seoDesc = content
-    ? `Find ${profileCount} verified trans escorts, shemale and ladyboy companions in ${displayCity}, ${displayCountry}. Browse profiles with photos, services, and contact info. ${content.keywords.slice(0, 3).join(', ')}.`
-    : `Find verified trans escorts, shemale and ladyboy companions in ${displayCity}, ${displayCountry}. Browse ${profileCount} active profiles with photos, services, and contact info.`;
+    ? `Find ${profileCount} verified trans companions in ${displayCity}, ${displayCountry}. Browse profiles with photos and contact info. ${content.keywords.slice(0, 3).join(', ')}.`
+    : `Find verified trans companions in ${displayCity}, ${displayCountry}. Browse ${profileCount} active profiles with photos and contact info.`;
 
   return (
     <>
@@ -304,10 +304,10 @@ export default function CityGuide() {
         {/* Hero Section */}
         <div className="city-hero glass" style={{ padding: '2.5rem', marginBottom: '2rem' }}>
           <h1 className="page-title" style={{ marginBottom: '0.5rem' }}>
-            Trans Escorts in {displayCity}
+            Trans Community in {displayCity}
           </h1>
           <p className="page-subtitle" style={{ fontSize: '1.2rem', marginBottom: '1.5rem' }}>
-            Your guide to shemale escorts, trans companions, and ladyboys in {displayCity}, {displayCountry}
+            Your guide to trans companions and verified profiles in {displayCity}, {displayCountry}
           </p>
           <div className="city-stats" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
             <div className="city-stat">
@@ -324,16 +324,16 @@ export default function CityGuide() {
         {/* City Guide Content */}
         {content && (
           <div className="city-content glass" style={{ padding: '2.5rem', marginBottom: '2rem' }}>
-            <h2>About Trans Escorts in {displayCity}</h2>
+            <h2>About Trans Community in {displayCity}</h2>
             <p>{content.intro}</p>
 
-            <h3>The Trans Escort Scene</h3>
+            <h3>The Trans Community</h3>
             <p>{content.scene}</p>
 
             <h3>Popular Districts & Areas</h3>
             <p>{content.districts}</p>
 
-            <h3>Tips for Booking Trans Escorts in {displayCity}</h3>
+            <h3>Tips for Booking Trans Community in {displayCity}</h3>
             <p>{content.tips}</p>
 
             {/* FAQ Section */}
@@ -372,7 +372,7 @@ export default function CityGuide() {
           >
             <Building2 size={24} style={{ color: 'var(--accent-primary)' }} />
             <div>
-              <strong>View all trans escorts in {displayCountry}</strong>
+              <strong>View all members in {displayCountry}</strong>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
                 Browse the complete {displayCountry} directory including other cities
               </p>
@@ -382,7 +382,7 @@ export default function CityGuide() {
 
         {/* Profile Cards */}
         <h2 style={{ marginBottom: '1.5rem', fontSize: '1.75rem' }}>
-          Featured Trans Escorts in {displayCity}
+          Featured Trans Community in {displayCity}
         </h2>
 
         {loading ? (
@@ -393,7 +393,7 @@ export default function CityGuide() {
           <div className="empty-state">
             <p>No profiles found in {displayCity} yet.</p>
             <Link to={`/${continent}/${country}`} className="btn btn-primary" style={{ marginTop: '1rem' }}>
-              Browse all {displayCountry} escorts
+              Browse all {displayCountry} members
             </Link>
           </div>
         ) : (
@@ -411,7 +411,6 @@ export default function CityGuide() {
                     <div className="profile-card-meta">
                       <span>📍 {profile.location || 'Unknown'}</span>
                       {profile.age && <span>🎂 Age: {profile.age}</span>}
-                      {profile.endowment && <span>🍆 {profile.endowment} cm</span>}
                     </div>
                   </div>
                 </Link>
@@ -425,7 +424,7 @@ export default function CityGuide() {
                 className="btn btn-primary"
                 style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}
               >
-                View All {displayCountry} Escorts
+                View All {displayCountry} Members
               </Link>
             </div>
           </>

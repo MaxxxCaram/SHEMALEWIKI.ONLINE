@@ -14,7 +14,7 @@ export default function SEO({
   const baseUrl = 'https://shemalewiki.online';
   const fullTitle = title 
     ? `${title} | ShemaleWiki Online` 
-    : 'ShemaleWiki Online — Trans Escort Directory';
+    : 'ShemaleWiki Online — Trans Community Directory';
   const fullCanonical = canonicalPath ? `${baseUrl}${canonicalPath}` : baseUrl;
 
   return (

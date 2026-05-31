@@ -60,10 +60,10 @@ export default function Profile() {
   const city = locationParts[2] || '';
   const country = locationParts[1] || '';
 
-  const seoTitle = `${profile.name} — Trans Escort in ${city || country || 'Your City'}`;
+  const seoTitle = `${profile.name} — Trans Companion in {profile.name} — Trans Escort in ${city || country || 'Your City'}`;
   const seoDesc = profile.bio 
     ? profile.bio.substring(0, 155).replace(/<[^>]*>/g, '') + '...'
-    : `${profile.name} — trans escort in ${city || country}. ${profile.age ? `Age: ${profile.age}. ` : ''}${profile.endowment ? `Endowment: ${profile.endowment}cm. ` : ''}View profile, photos and services.`;
+    : `${profile.name} — trans companion in ${city || country}. ${profile.age ? `Age: ${profile.age}. ` : ''}View profile, photos and services.`;
 
   // Collect all real image URLs for the lightbox
   const galleryPhotos = profile.photos || [];
@@ -158,12 +158,12 @@ export default function Profile() {
 
         <h3 style={{ marginTop: '3rem' }}>Personal Facts</h3>
         <div className="facts-grid">
-          {['nationality', 'languages', 'age', 'height', 'weight', 'endowment'].map(fact => {
+          {['nationality', 'languages', 'age', 'height', 'weight'].map(fact => {
             if (!profile[fact]) return null;
             return (
               <div key={fact} className="fact-item">
                 <div className="fact-label">{fact}</div>
-                <div className="fact-value">{profile[fact]} {fact === 'height' ? 'cm' : fact === 'weight' ? 'kg' : fact === 'endowment' ? 'cm' : ''}</div>
+                <div className="fact-value">{profile[fact]} {fact === 'height' ? 'cm' : fact === 'weight' ? 'kg' : ''}</div>
               </div>
             );
           })}

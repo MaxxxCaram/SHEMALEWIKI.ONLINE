@@ -9,8 +9,8 @@ const isBT = () => typeof window !== 'undefined' && window.location.hostname.inc
 /* ── Content per brand ── */
 const t = {
   shemalewiki: {
-    eyebrow: 'International TS Escort Directory',
-    heading: 'Find verified TS escorts',
+    eyebrow: 'International Trans Community Directory',
+    heading: 'Discover verified trans profiles',
     highlight: 'worldwide.',
     subtitle: '10,000+ profiles · 80 countries · Updated daily',
     searchPlaceholder: 'City, country or region...',
@@ -56,9 +56,9 @@ const featuredProfiles = {
     { name: 'Camila', location: 'Miami, US', badge: { label: 'Online', type: 'live' }, tag: 'New' },
   ],
   buscatrans: [
-    { name: 'Valentina', location: 'Buenos Aires', badge: { label: 'Verificada', type: 'verified' }, price: 'desde $80/h' },
-    { name: 'Daniela', location: 'Ciudad de México', badge: { label: 'Premium', type: 'premium' }, price: 'desde $120/h' },
-    { name: 'Sofía', location: 'Madrid', badge: { label: 'Nueva', type: 'new' }, price: 'desde $95/h' },
+    { name: 'Valentina', location: 'Buenos Aires', badge: { label: 'Verificada', type: 'verified' } },
+    { name: 'Daniela', location: 'Ciudad de México', badge: { label: 'Premium', type: 'premium' } },
+    { name: 'Sofía', location: 'Madrid', badge: { label: 'Nueva', type: 'new' } },
   ],
 };
 
@@ -76,7 +76,7 @@ export default function Home() {
   return (
     <>
       <SEO
-        title={siteName === 'BuscaTrans' ? 'BuscaTrans — Directorio de Escorts Trans' : 'Trans Escort Directory'}
+        title={siteName === 'BuscaTrans' ? 'BuscaTrans — Comunidad Global de Mujeres Trans Verificadas' : 'Trans Community Directory'}
         description={content.subtitle}
         canonicalPath={canonPath}
         lang={lang}
@@ -142,7 +142,6 @@ export default function Home() {
                 </div>
                 <div className="profile-card-meta">
                   <span><MapPin size={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />{p.location}</span>
-                  {p.price && <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{p.price}</span>}
                 </div>
                 <span className={`profile-card-badge badge-${p.badge.type}`}>{p.badge.label}</span>
               </div>

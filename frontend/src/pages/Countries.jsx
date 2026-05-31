@@ -47,8 +47,8 @@ export default function Countries() {
     fetchCountries();
   }, [displayContinent]);
 
-  const seoTitle = `Trans Escorts in ${displayContinent}`;
-  const seoDesc = `Find trans, shemale and ladyboy escorts in ${displayContinent}. Browse verified profiles by country — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' and more' : ''}.`;
+  const seoTitle = `Trans Community in ${displayContinent}`;
+  const seoDesc = `Find trans companions and verified profiles in ${displayContinent}. Browse by country — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' and more' : ''}.`;
 
   return (
     <>
@@ -68,7 +68,7 @@ export default function Countries() {
 
         <div className="page-header">
           <h1 className="page-title">
-            Escorts in {displayContinent}
+            Community in {displayContinent}
           </h1>
           <p className="page-subtitle">
             Select a country to view profiles

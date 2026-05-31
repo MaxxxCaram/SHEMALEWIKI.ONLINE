@@ -61,7 +61,7 @@ export default function ProfilesList() {
       </button>
 
       <div className="page-header" style={{ textAlign: 'left', marginBottom: '2rem' }}>
-        <h1 className="page-title">Escorts in {displayCountry}</h1>
+        <h1 className="page-title">Community in {displayCountry}</h1>
         <p className="page-subtitle">Find the perfect companion</p>
       </div>
 
@@ -108,7 +108,6 @@ export default function ProfilesList() {
                     <MapPin size={14} /> {profile.location || 'Unknown'}
                   </span>
                   {profile.age && <span>🎂 {profile.age} years</span>}
-                  {profile.endowment && <span>🍆 {profile.endowment}cm</span>}
                 </div>
               </div>
             </Link>

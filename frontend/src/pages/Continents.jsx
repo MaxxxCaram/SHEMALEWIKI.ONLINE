@@ -25,9 +25,9 @@ const continents = [
 const content = {
   en: {
     title: 'Trans Escort Directory — ShemaleWiki',
-    desc: "Browse the world's largest multilingual directory of trans, shemale and ladyboy escorts. Search by continent and country to find verified profiles near you.",
+    desc: "Browse the world's largest multilingual directory of trans companions and profiles. Search by continent and country to find verified members near you.",
     heroEyebrow: 'INTERNATIONAL TS ESCORT DIRECTORY',
-    heroHeading: 'Find verified TS escorts worldwide.',
+    heroHeading: 'Discover verified trans profiles worldwide.',
     heroSub: '10,000+ profiles · 80+ countries · Updated daily',
     searchPlaceholder: 'City, country or continent...',
     featuredTitle: 'Browse by Continent',
@@ -36,8 +36,8 @@ const content = {
     backLabel: '← Back to home',
   },
   es: {
-    title: 'Directorio de Escorts Trans — BuscaTrans',
-    desc: 'Explorá el directorio multilingüe más grande de escorts trans, travestis y shemales. Buscá por continente y país para encontrar perfiles verificados cerca tuyo.',
+    title: 'Directorio de Perfiles Trans — BuscaTrans',
+    desc: 'Explorá el directorio multilingüe más grande de perfiles trans verificados. Buscá por continente y país para encontrar miembros verificados cerca tuyo.',
     heroEyebrow: 'EL DIRECTORIO QUE TE VE COMO SOS',
     heroHeading: 'Encontrá tu conexión perfecta.',
     heroSub: 'Perfiles verificados · Discreto · Seguro',
@@ -48,10 +48,10 @@ const content = {
     backLabel: '← Volver al inicio',
   },
   pt: {
-    title: 'Diretório de Escorts Trans — ShemaleWiki',
-    desc: 'Explore o maior diretório multilíngue de escorts trans, travestis e shemales. Pesquise por continente e país para encontrar perfis verificados perto de você.',
+    title: 'Diretório de Perfis Trans — ShemaleWiki',
+    desc: 'Explore o maior diretório multilíngue de perfis trans verificados. Pesquise por continente e país para encontrar membros verificados perto de você.',
     heroEyebrow: 'DIRETÓRIO INTERNACIONAL DE ESCORTS TS',
-    heroHeading: 'Encontre escorts TS verificadas no mundo todo.',
+    heroHeading: 'Encontre perfis trans verificados no mundo todo.',
     heroSub: '10.000+ perfis · 80+ países · Atualizado diariamente',
     searchPlaceholder: 'Cidade, país ou continente...',
     featuredTitle: 'Explorar por Continente',

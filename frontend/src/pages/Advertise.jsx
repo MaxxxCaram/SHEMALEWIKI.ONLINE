@@ -5,7 +5,7 @@ const content = {
   en: {
     title: 'Advertise on ShemaleWiki — Pricing & Plans',
     hero: 'Grow Your Business with ShemaleWiki',
-    subtitle: 'Reach thousands of clients actively searching for trans escorts in your city. Join the fastest-growing trans escort directory.',
+    subtitle: 'Reach thousands of visitors actively searching for trans companions in your city. Join the fastest-growing trans community directory.',
     tiers: [
       {
         name: 'Basic Listing',
@@ -23,7 +23,7 @@ const content = {
       {
         name: 'Premium Agency',
         price: '€99/mo',
-        features: ['Up to 10 escort profiles', 'All Featured benefits per profile', 'Dedicated agency dashboard', 'Bulk profile management', 'Analytics & performance reports', 'API access for syncing'],
+        features: ['Up to 10 member profiles', 'All Featured benefits per profile', 'Dedicated agency dashboard', 'Bulk profile management', 'Analytics & performance reports', 'API access for syncing'],
         cta: 'Contact Sales',
       },
     ],
@@ -33,7 +33,7 @@ const content = {
       { step: '3', title: 'Go live', desc: 'Your profile goes live on ShemaleWiki and BuscaTrans — visible to thousands of potential clients.' },
     ],
     stats: [
-      { number: '3,700+', label: 'Active escorts' },
+      { number: '3,700+', label: 'Active members' },
       { number: '50+', label: 'Cities covered' },
       { number: '3', label: 'Languages' },
       { number: '10K+', label: 'Monthly visitors' },
@@ -49,7 +49,7 @@ const content = {
   es: {
     title: 'Anuncia en BuscaTrans — Precios y Planes',
     hero: 'Hacé crecer tu negocio con BuscaTrans',
-    subtitle: 'Llegá a miles de clientes que buscan escorts trans en tu ciudad. Sumate al directorio trans de mayor crecimiento.',
+    subtitle: 'Llegá a miles de visitantes que buscan acompañantes trans en tu ciudad. Sumate al directorio trans de mayor crecimiento.',
     tiers: [
       {
         name: 'Perfil Básico',
@@ -77,7 +77,7 @@ const content = {
       { step: '3', title: 'Publicá', desc: 'Tu perfil se publica en BuscaTrans y ShemaleWiki — visible para miles de clientes potenciales.' },
     ],
     stats: [
-      { number: '3.700+', label: 'Escorts activas' },
+      { number: '3.700+', label: 'Perfiles activos' },
       { number: '50+', label: 'Ciudades' },
       { number: '3', label: 'Idiomas' },
       { number: '10K+', label: 'Visitas mensuales' },

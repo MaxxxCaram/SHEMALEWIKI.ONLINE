@@ -47,7 +47,6 @@ export default function DashboardLogin() {
   const [createAge, setCreateAge] = useState('');
   const [createHeight, setCreateHeight] = useState('');
   const [createWeight, setCreateWeight] = useState('');
-  const [createEndowment, setCreateEndowment] = useState('');
   const [createNationality, setCreateNationality] = useState('');
   const [createLanguages, setCreateLanguages] = useState('');
   const [createOnlyFans, setCreateOnlyFans] = useState('');
@@ -144,7 +143,6 @@ export default function DashboardLogin() {
           age: createAge,
           height: createHeight,
           weight: createWeight,
-          endowment: createEndowment,
           nationality: createNationality,
           languages: createLanguages,
           onlyfans: createOnlyFans,
@@ -689,19 +687,6 @@ export default function DashboardLogin() {
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-                    <div className="form-group">
-                      <label htmlFor="createEndowment" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Medida (🍆 cm)</label>
-                      <input 
-                        type="text" 
-                        id="createEndowment"
-                        name="createEndowment"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="Ej. 18" 
-                        value={createEndowment}
-                        onChange={(e) => setCreateEndowment(e.target.value)}
-                      />
-                    </div>
                     <div className="form-group">
                       <label htmlFor="createNationality" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nacionalidad</label>
                       <input 

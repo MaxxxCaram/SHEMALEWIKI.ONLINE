@@ -32,12 +32,12 @@ const en = {
     body: `In these Terms and Conditions, the following definitions apply, both in singular and plural.
 
 1.1 Account: the ability to use the Services.
-1.2 Advertiser: the natural or legal person who, via the Website, makes themselves available to provide erotic and sexual services.
-1.3 Advertisement: an advertisement on the Website in which erotic and/or sexual services are offered by the Advertiser, including all image and video material.
+1.2 Member: the natural or legal person who, via the Website, creates a public profile to showcase their professional presence, talents, and services (expressly excluding the advertisement of sexual services).
+1.3 Profile: a public listing on the Website in which a Member presents their professional information, including all image and video material.
 1.4 Terms and Conditions: these terms and conditions, regardless of the form in which they are made known.
 1.5 Visitor: the natural person who uses the Website, for example by creating an Account.
-1.6 User, you, your: an Advertiser or Visitor.
-1.7 Services: the services offered by ${company.name} on the Website, consisting of providing a platform where Advertisers and Visitors can connect through Advertisements for the provision of erotic/sexual services.
+1.6 User, you, your: a Member or Visitor.
+1.7 Services: the services offered by ${company.name} on the Website, consisting of providing a visibility and networking platform where Members can showcase their professional profiles — such as modeling, performing, hosting, content creation, and social companionship — and connect with Visitors. This platform is not intended for the advertisement of sexual services.
 1.8 ${company.name}, we, us: ${company.name}, based in ${company.country}.
 1.9 Website: the websites ${company.domainsEn}.`,
   },
@@ -53,12 +53,12 @@ const en = {
 
   services: {
     heading: '3. SERVICES',
-    body: `3.1 Through the Website, we offer an online platform where Advertisers and Visitors can connect for the provision of erotic and sexual services. Our Services consist of:
-• For Advertisers: providing (i) advertising space on the Website for offering erotic and sexual services, and (ii) communication tools (e.g., messaging functions) to connect with Visitors.
-• For Visitors: providing an advertising platform with the ability to contact Advertisers about the erotic and sexual services they offer.
-The Website may only be used for legal erotic and sexual services.
+    body: `3.1 Through the Website, we offer an online platform where Members and Visitors can connect for professional networking and social companionship. Our Services consist of:
+• For Advertisers: providing (i) advertising space on the Website for presenting their professional profile and talents, and (ii) communication tools (e.g., messaging functions) to connect with Visitors.
+• For Visitors: providing an advertising platform with the ability to contact Members about their professional services.
+The Website is intended for professional visibility and networking. The advertisement of sexual services is expressly prohibited.
 
-3.2 We have a facilitating role only and cannot be held responsible for the actions or omissions of Users. We are expressly not involved in the erotic service that an Advertiser offers and/or provides to a Visitor and remain outside any contact between Users and/or any arrangements or agreements that may arise between an Advertiser and a Visitor through use of the Website. We expressly accept no liability for any damage suffered by a Visitor and/or Advertiser as a result of contact between the Visitor and the Advertiser and/or the (erotic) activities between the Visitor and the Advertiser.
+3.2 We have a facilitating role only and cannot be held responsible for the actions or omissions of Users. We are expressly not involved in the activities or services that a Member offers and/or provides to a Visitor and remain outside any contact between Users and/or any arrangements or agreements that may arise between an Advertiser and a Visitor through use of the Website. We expressly accept no liability for any damage suffered by a Visitor and/or Advertiser as a result of contact between the Visitor and the Advertiser and/or the activities between the Visitor and the Member.
 
 3.3 We do not guarantee that the Website or Services will function error-free and meet your expectations. In particular, we do not guarantee that: (i) the information on the Website (including information posted by Users) is accurate, complete, suitable, or current, does not infringe the (property) rights of third parties, or is otherwise unlawful; (ii) the Website will operate uninterrupted, be free of viruses, trojans, and other errors and/or defects, and that any defects will be remedied; (iii) third parties will not use the Website and/or Services unlawfully.
 
@@ -67,13 +67,13 @@ The Website may only be used for legal erotic and sexual services.
 
   conditions: {
     heading: '4. CONDITIONS FOR USE OF THE WEBSITE AND SERVICES',
-    body: `4.1 Visitors must be at least 18 years of age or older. If the Advertiser is a natural person, they must be at least 21 years of age or older. If the Advertiser is a legal entity with multiple sex workers, the sex workers for whom the Advertiser places the Service and/or Advertisement must be at least 21 years of age or older. We are entitled to verify age and, in case of doubt, to request additional proof (e.g., a copy of an ID). The copy of your ID is processed in accordance with the Privacy Policy. If we have doubts about your age, we are also entitled to refuse and/or terminate access to the Website and Services.
+    body: `4.1 Visitors must be at least 18 years of age or older. If the Member is a natural person, they must be at least 21 years of age or older. If the Member is a legal entity with multiple performers, the performers for whom the Member creates the Service and/or Advertisement must be at least 21 years of age or older. We are entitled to verify age and, in case of doubt, to request additional proof (e.g., a copy of an ID). The copy of your ID is processed in accordance with the Privacy Policy. If we have doubts about your age, we are also entitled to refuse and/or terminate access to the Website and Services.
 
 4.2 To use certain Services, you must create an Account and provide certain (personal) data (including at least an email address and in some cases name, address, and phone number). For the Account, you will receive a password. The Account and password are strictly personal; you may not allow third parties to use them. We are entitled to modify the password if necessary in the interest of the functioning of the Service. You are liable for any use made of your Account and indemnify us against any third-party claims regarding damages or otherwise, in any way arising from the use made of the Service through your Account.
 
 4.3 One Account may be created per User. Sharing Accounts or registering multiple Accounts is not permitted unless we have given express prior written (or email) consent.
 
-4.4 You guarantee that all (personal) data you provide in the context of the Service (including but not limited to name, address details, phone number, date of birth, ID, and email address) is complete, accurate, and current, and that you use the Website and Service exclusively for yourself or your own organization (in the case of an Advertiser with multiple sex workers). You also guarantee that you will comply with all applicable laws and regulations regarding the provision of erotic/sexual services.
+4.4 You guarantee that all (personal) data you provide in the context of the Service (including but not limited to name, address details, phone number, date of birth, ID, and email address) is complete, accurate, and current, and that you use the Website and Service exclusively for yourself or your own organization (in the case of a Member with multiple performers). You also guarantee that you will comply with all applicable laws and regulations regarding professional conduct and applicable laws.
 
 4.5 By posting Advertisements, (personal) data, reviews, or other content on the Website and/or within the Service, you expressly grant ${company.name} permission to publish this (personal) data, Advertisements, reviews, and/or other content on the Website. You guarantee that you are authorized to grant such permission. You acknowledge that the positioning of Advertisements and other information on the Website depends on a number of factors, including but not limited to the fee paid, and that no rights can be derived from this.
 
@@ -86,7 +86,8 @@ c) content that infringes intellectual property rights or privacy rights of thir
 d) content featuring sex workers younger than 21 years of age;
 e) content that, in our opinion, is contrary to public decency or good taste, violent, threatening, blasphemous, defamatory or libelous, or incites violence or hatred against another or others;
 f) content with computer programs (including auto-refreshers/mouse clickers, etc.), files and/or other material containing destructive and unpredictable features such as manipulated files, "hidden" files (e.g., images integrated into audio files), worms, Trojan horses, or bots for scrolling or other activities that disrupt or could disrupt the integrity or functioning of the Website or online communication in general;
-g) content that in any way mentions or refers to another website competing with or similar to the Website.
+g) content that in any way mentions or refers to another website competing with or similar to the Website;
+h) content that offers, promotes, advertises, or facilitates sexual services in exchange for compensation, including but not limited to escort services, prostitution, erotic massages, or any coded terminology intended to circumvent this prohibition.
 We are at all times entitled, at our own discretion, to modify, shorten, or remove User content from the Website, without this leading in any way to any right of the User to compensation. We will do so, for example, if the content is in violation of Article 4.
 
 4.8 Any (personal) data obtained through the Website may only be used for the purpose for which the User received it, namely responding to an Advertisement or a message received via the Website. It is not permitted to collect and process this data for any other purpose, including — but not limited to — any form of unsolicited communication (spam). If you act in violation of this Article 4.8, you shall forfeit, without further warning or notice of default and without judicial intervention being required, an immediately payable fine of EUR 500 (five hundred euros) per event or per day that the data is used, without prejudice to ${company.name}'s right to take other measures available to it against you and/or claim damages.`,
@@ -96,11 +97,11 @@ We are at all times entitled, at our own discretion, to modify, shorten, or remo
     heading: '5. ZERO TOLERANCE POLICY REGARDING ABUSES',
     body: `5.1 If there is suspicion that you are acting in violation of Article 4.7, we may immediately terminate the agreement and use of the Website and Services without this leading in any way to any right to compensation. We also reserve the right, at our own discretion, to inform the police, judicial authorities, and other relevant bodies and organizations and to file a report. We will, at our own discretion, cooperate with legally valid requests from government/judicial authorities to provide data in the context of investigating the abuses referred to in Article 4.7.
 
-5.2 In the context of our zero tolerance policy regarding abuses in the sex industry, we also call on Visitors to report abuses to us and to the relevant authorities.
+5.2 In the context of our zero tolerance policy regarding abuses and exploitation, we also call on Visitors to report abuses to us and to the relevant authorities.
 
-5.3 Although we prohibit the use of our Services by Advertisers under 21 years of age and perform age checks, we unfortunately cannot guarantee that an Advertiser is always 21 years or older. If you contact an Advertiser, we ask you to also check the Advertiser's age yourself. If you doubt whether the Advertiser is older than 21, or find that the Advertiser is a minor, you must immediately refrain from any contact with that Advertiser and immediately inform us and/or the police and judicial authorities of your doubt or finding. You may do so anonymously if desired via the appropriate reporting channels.
+5.3 Although we prohibit the use of our Services by Members under 21 years of age and perform age checks, we unfortunately cannot guarantee that an Advertiser is always 21 years or older. If you contact a Member, we ask you to also check the Member's age yourself. If you doubt whether the Advertiser is older than 21, or find that the Member is a minor, you must immediately refrain from any contact with that Member and immediately inform us and/or the police and judicial authorities of your doubt or finding. You may do so anonymously if desired via the appropriate reporting channels.
 
-5.4 If you suspect or have reasonable grounds to believe that an Advertiser is offering their (erotic) services under duress, blackmail, threat of violence, or otherwise involuntarily, you must immediately refrain from any contact with the Advertiser and immediately inform us and/or the police and judicial authorities. You may do so anonymously if desired via the appropriate reporting channels.
+5.4 If you suspect or have reasonable grounds to believe that a Member is offering services under duress, blackmail, threat of violence, or otherwise involuntarily, you must immediately refrain from any contact with the Advertiser and immediately inform us and/or the police and judicial authorities. You may do so anonymously if desired via the appropriate reporting channels.
 
 5.5 If you believe that certain information on the Website is unlawful, you may also report this to us. We will process the report, provided it meets all the requirements we have set. If the report shows that the contested material is unmistakably unlawful, we will remove it.
 
@@ -115,7 +116,7 @@ We are at all times entitled, at our own discretion, to modify, shorten, or remo
 
 ${company.name} as Data Processor
 
-6.2 If we process personal data of sex workers affiliated with an Advertiser on behalf of the Advertiser, we process the personal data on behalf of the Advertiser and act as processor, with the Advertiser as the data controller of the personal data of these sex workers, within the meaning of the GDPR. In this case, Articles 6.3 through 6.12 apply.
+6.2 If we process personal data of performers affiliated with a Member on behalf of the Advertiser, we process the personal data on behalf of the Advertiser and act as processor, with the Advertiser as the data controller of the personal data of these sex workers, within the meaning of the GDPR. In this case, Articles 6.3 through 6.12 apply.
 
 6.3 We process personal data only if necessary for the fulfillment of our obligations under the agreement with the Advertiser. Other processing will only be carried out after receipt of written instructions from the Advertiser, an order from a court, investigative or other authority, or if a legal obligation exists. We will inform the Advertiser in advance, unless the relevant legal provision does not permit this. We will not retain personal data longer than necessary for the performance of our obligations under the agreement and will delete them afterwards.
 
