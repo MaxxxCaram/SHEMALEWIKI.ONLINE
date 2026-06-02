@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "expo-web",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["node_modules/expo/node_modules/@expo/cli/build/bin/cli", "start", "--web", "--port", "8082"],
+      "port": 8082
+    }
+  ]
+}
