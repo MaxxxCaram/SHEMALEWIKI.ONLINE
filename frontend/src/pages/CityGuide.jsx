@@ -502,20 +502,20 @@ export default function CityGuide() {
       viewAllBtn: `Ver Todos los Miembros de ${displayCountry}`,
     },
     he: {
-      seoTitle: `חוויות פרימיום בתל אביב — פרופילים מאומתים`,
+      seoTitle: `חוויות פרימיום ב${displayCity} — פרופילים מאומתים`,
       seoDesc: (content
-        ? `גלו ${profileCount} פרופילים מאומתים בתל אביב, ${displayCountry}. דפדפו בפרופילים עם תמונות ופרטי קשר. ${(content.keywords || []).slice(0, 3).join(', ')}.`
-        : `גלו פרופילים מאומתים בתל אביב, ${displayCountry}. ${profileCount} פרופילים פעילים עם תמונות ופרטי קשר.`),
+        ? `גלו ${profileCount} פרופילים מאומתים ב${displayCity}, ${displayCountry}. דפדפו בפרופילים עם תמונות ופרטי קשר. ${(content.keywords || []).slice(0, 3).join(', ')}.`
+        : `גלו פרופילים מאומתים ב${displayCity}, ${displayCountry}. ${profileCount} פרופילים פעילים עם תמונות ופרטי קשר.`),
       home: 'דף הבית',
       backTo: `חזרה ל${displayCountry}`,
-      community: `הקהילה הטרנסית בתל אביב`,
-      guideTagline: `המדריך שלכם לחוויות פרימיום ופרופילים מאומתים בתל אביב, ${displayCountry}`,
-      about: `על הקהילה הטרנסית בתל אביב`,
+      community: `הקהילה הטרנסית ב${displayCity}`,
+      guideTagline: `המדריך שלכם לחוויות פרימיום ופרופילים מאומתים ב${displayCity}, ${displayCountry}`,
+      about: `על הקהילה הטרנסית ב${displayCity}`,
       theScene: 'הקהילה הטרנסית',
       districts: 'אזורים פופולריים',
-      tips: `טיפים למפגש בתל אביב`,
+      tips: `טיפים למפגש ב${displayCity}`,
       faq: 'שאלות נפוצות',
-      featured: `פרופילים מובילים בתל אביב`,
+      featured: `פרופילים מובילים ב${displayCity}`,
       viewAllCountry: `צפו בכל החברים ב${displayCountry}`,
       viewAllCountryDesc: `דפדפו במדריך המלא של ${displayCountry} כולל ערים נוספות`,
       viewAllBtn: `צפו בכל החברים מ${displayCountry}`,
