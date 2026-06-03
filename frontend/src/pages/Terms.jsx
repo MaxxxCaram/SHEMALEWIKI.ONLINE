@@ -168,7 +168,6 @@ ${company.name} as Data Processor
 9.2 ${company.name} offers the following subscription tiers for Advertisers:
 • Basic (Free): Standard listing with basic visibility on city/country pages.
 • Featured (€29/month): Premium placement at the top of search results and city pages, "Verified" badge eligibility, and extended profile features.
-• Agency (€99/month): Bulk listing management for agencies with multiple performers, priority support, and dedicated account management.
 
 9.3 The fee owed can be paid via the payment service offered on the Website. If payment is not made or not made on time, or is reversed, we are entitled to remove the posted Advertisement and still charge the amount owed. We are also entitled to charge statutory commercial interest.
 
@@ -374,7 +373,6 @@ ${company.name} como Encargado del Tratamiento
 9.2 ${company.name} ofrece los siguientes planes de suscripción para Anunciantes:
 • Basic (Gratuito): Anuncio estándar con visibilidad básica en páginas de ciudad/país.
 • Featured (€29/mes): Ubicación premium en la parte superior de resultados de búsqueda y páginas de ciudad, elegibilidad para insignia "Verificado" y funciones de perfil extendidas.
-• Agency (€99/mes): Gestión de anuncios por volumen para agencias con múltiples performers, soporte prioritario y gestión de cuenta dedicada.
 
 9.3 La tarifa adeudada se puede pagar a través del servicio de pago ofrecido en el Sitio Web. Si el pago no se realiza o no se realiza a tiempo, o se revierte, tenemos derecho a eliminar el Anuncio publicado y aun así cobrar el monto adeudado. También tenemos derecho a cobrar intereses comerciales legales.
 
@@ -580,7 +578,6 @@ ${company.name} como Subcontratante
 9.2 ${company.name} oferece os seguintes planos de subscrição para Anunciantes:
 • Basic (Grátis): Anúncio padrão com visibilidade básica nas páginas de cidade/país.
 • Featured (€29/mês): Posicionamento premium no topo dos resultados de pesquisa e páginas de cidade, elegibilidade para o selo "Verificado" e funcionalidades de perfil alargadas.
-• Agency (€99/mês): Gestão de anúncios em volume para agências com vários performers, suporte prioritário e gestão de conta dedicada.
 
 9.3 A taxa devida pode ser paga através do serviço de pagamento oferecido no Site. Se o pagamento não for efetuado ou não for efetuado atempadamente, ou for revertido, temos o direito de remover o Anúncio publicado e ainda assim cobrar o montante devido. Também temos o direito de cobrar juros comerciais legais.
 

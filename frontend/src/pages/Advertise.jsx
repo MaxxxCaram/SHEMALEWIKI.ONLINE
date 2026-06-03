@@ -20,12 +20,6 @@ const content = {
         features: ['Priority placement at top of city pages', 'Golden badge & highlighted card', 'Up to 20 photos in gallery', 'Verification badge', 'Priority support'],
         cta: 'Get Featured',
       },
-      {
-        name: 'Premium Agency',
-        price: '€99/mo',
-        features: ['Up to 10 member profiles', 'All Featured benefits per profile', 'Dedicated agency dashboard', 'Bulk profile management', 'Analytics & performance reports', 'API access for syncing'],
-        cta: 'Contact Sales',
-      },
     ],
     howItWorks: [
       { step: '1', title: 'Submit your profile', desc: 'Fill out our simple form with your details, photos, and services. Takes less than 5 minutes.' },
@@ -63,12 +57,6 @@ const content = {
         popular: true,
         features: ['Prioridad al inicio de páginas de ciudad', 'Insignia dorada y tarjeta resaltada', 'Hasta 20 fotos en galería', 'Insignia de verificación', 'Soporte prioritario'],
         cta: 'Ser Destacada',
-      },
-      {
-        name: 'Agencia Premium',
-        price: '€99/mes',
-        features: ['Hasta 10 perfiles', 'Todos los beneficios Destacados por perfil', 'Dashboard dedicado para agencia', 'Gestión de perfiles en lote', 'Analíticas y reportes', 'Acceso API para sincronización'],
-        cta: 'Contactar Ventas',
       },
     ],
     howItWorks: [
