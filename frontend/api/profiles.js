@@ -12,7 +12,7 @@ app.use(express.json());
 const SUPABASE_URL = 'https://qtuzpswxzengqoqqwtpt.supabase.co';
 // Using the anon key for reads, but secret for enrichment if needed.
 // Better to rely on environment variables in production.
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'sb_publishable_cwSD5GVp927MuLu0N1uROA_z7OsOjIB';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0dXpwc3d4emVuZ3FvcXF3dHB0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODc3NjEwOSwiZXhwIjoyMDk0MzUyMTA5fQ.uWpUtFDsYFqDwndAbAEzbnQIOnKDfzS6V5_Xsrsbv1E';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Fetch all profiles

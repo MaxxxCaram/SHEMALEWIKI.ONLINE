@@ -1,11 +1,7 @@
-const { createClient } = require('@supabase/supabase-js');
-
 const SUPABASE_URL = 'https://qtuzpswxzengqoqqwtpt.supabase.co';
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'sb_publishable_cwSD5GVp927MuLu0N1uROA_z7OsOjIB';
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 module.exports = async (req, res) => {
-    // Enable CORS
+    // CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -19,74 +15,94 @@ module.exports = async (req, res) => {
     }
 
     try {
+        const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        if (!SERVICE_KEY) {
+            console.error('SUPABASE_SERVICE_ROLE_KEY not set');
+            return res.status(500).json({ error: 'Server configuration error: missing API key' });
+        }
+
         const { 
-            name, email, phone, whatsapp, continent, country, city,
-            bio, age, height, weight, endowment, nationality, languages,
-            onlyfans, cam_chat, photoUrls, videoLinks 
+            name, email, phone, whatsapp, country, city,
+            bio, age, height, weight, nationality, languages,
+            onlyfans, cam_chat 
         } = req.body;
 
+        // Validate required fields
         if (!name || !email || !phone || !country || !city) {
-            return res.status(400).json({ error: 'Faltan campos obligatorios' });
+            return res.status(400).json({ 
+                error: 'Missing required fields',
+                required: ['name', 'email', 'phone', 'country', 'city']
+            });
         }
 
-        const profileId = `draft_${Date.now()}`;
-        const fullLocation = `DRAFT: ${continent || 'Europe'} | ${country} | ${city}`;
+        // Build profile ID
+        const profileId = `new_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        
+        // Detect continent from country
+        let continent = 'Other';
+        const countryLower = (country || '').toLowerCase().trim();
+        const eu = /spain|españa|netherlands|países bajos|holland|germany|alemania|france|francia|italy|italia|portugal|belgium|bélgica|uk|united kingdom|reino unido|switzerland|suiza|austria|poland|polonia|sweden|suecia|norway|noruega|denmark|dinamarca|finland|finlandia|ireland|irlanda|czech|chequia|greece|grecia|hungary|hungría|romania|rumania|bulgaria|serbia|croatia|croacia|slovenia|slovakia|lithuania|lituania|latvia|letonia|estonia|luxembourg|luxemburgo|malta|cyprus|chipre/;
+        const americas = /argentina|brazil|brasil|mexico|méxico|colombia|chile|peru|perú|uruguay|venezuela|ecuador|bolivia|paraguay|united states|estados unidos|canada|canadá|panama|panamá|costa rica|guatemala|honduras|el salvador|nicaragua|dominican|república dominicana|cuba|jamaica|bahamas|trinidad|haiti/;
+        
+        if (eu.test(countryLower)) continent = 'Europe';
+        else if (americas.test(countryLower)) continent = 'Americas';
+        
+        const location = `${continent} | ${country.trim()} | ${city.trim()}`;
 
-        // 1. Insert Profile
-        const { error: profileError } = await supabase
-            .from('profiles')
-            .insert([{
-                id: profileId,
-                name,
-                email,
-                phone,
-                whatsapp: whatsapp || '',
-                location: fullLocation,
-                bio: bio || '',
-                age: age || '',
-                height: height || '',
-                weight: weight || '',
-                endowment: endowment || '',
-                nationality: nationality || '',
-                languages: languages || '',
-                onlyfans: onlyfans || '',
-                cam_chat: cam_chat || '',
-                description: 'DRAFT_PENDING_APPROVAL'
-            }]);
+        // Insert profile via Supabase REST API (no client library needed)
+        const row = {
+            id: profileId,
+            name: name.trim(),
+            email: email.trim().toLowerCase(),
+            phone: phone.trim(),
+            whatsapp: (whatsapp || phone).trim(),
+            location,
+            bio: (bio || '').trim().slice(0, 2000),
+            age: String(age || '').trim(),
+            height: String(height || '').trim(),
+            weight: String(weight || '').trim(),
+            nationality: (nationality || '').trim(),
+            languages: (languages || '').trim(),
+            onlyfans: (onlyfans || '').trim(),
+            cam_chat: (cam_chat || '').trim(),
+            description: 'REGISTERED_VIA_SITE'
+        };
 
-        if (profileError) throw profileError;
-
-        // 2. Insert Photos
-        if (photoUrls && Array.isArray(photoUrls)) {
-            const validPhotos = photoUrls.filter(url => url.trim() !== '');
-            if (validPhotos.length > 0) {
-                const photoInserts = validPhotos.map(url => ({
-                    profile_id: profileId,
-                    photo_url: url.trim(),
-                    local_path: ''
-                }));
-                const { error: photoError } = await supabase.from('photos').insert(photoInserts);
-                if (photoError) console.error('Error inserting photos:', photoError);
+        const supabaseRes = await fetch(
+            `${SUPABASE_URL}/rest/v1/profiles`,
+            {
+                method: 'POST',
+                headers: {
+                    'apikey': SERVICE_KEY,
+                    'Authorization': `Bearer ${SERVICE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation'
+                },
+                body: JSON.stringify(row)
             }
+        );
+
+        if (!supabaseRes.ok) {
+            const errText = await supabaseRes.text();
+            console.error('Supabase insert failed:', supabaseRes.status, errText);
+            return res.status(500).json({ 
+                error: 'Database insert failed',
+                status: supabaseRes.status,
+                details: errText.slice(0, 300)
+            });
         }
 
-        // 3. Insert Videos
-        if (videoLinks && Array.isArray(videoLinks)) {
-            const validVideos = videoLinks.filter(url => url.trim() !== '');
-            if (validVideos.length > 0) {
-                const videoInserts = validVideos.map(url => ({
-                    profile_id: profileId,
-                    photo_url: url.trim(),
-                    local_path: ''
-                }));
-                const { error: videoError } = await supabase.from('photos').insert(videoInserts);
-                if (videoError) console.error('Error inserting video links:', videoError);
-            }
-        }
+        const data = await supabaseRes.json();
+        console.log(`Profile created: ${profileId} — ${name.trim()}`);
 
-        res.status(200).json({ message: 'Perfil borrador creado con éxito', profileId });
+        res.status(201).json({ 
+            success: true, 
+            message: 'Profile created successfully',
+            profile: Array.isArray(data) ? data[0] : data
+        });
+
     } catch (err) {
         console.error('Draft error:', err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Internal server error', details: err.message });
     }
 };

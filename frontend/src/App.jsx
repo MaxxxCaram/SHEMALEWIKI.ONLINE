@@ -15,6 +15,7 @@ import Privacy from './pages/Privacy';
 import AgeVerification, { useAgeVerified } from './components/AgeVerification';
 import './index.css';
 import logoSw from './assets/logosw.png';
+import logoBT from './assets/buscatrans-logo.svg';
 
 /* ── Domain detection ── */
 const isBuscaTrans = () => {
@@ -37,27 +38,13 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="container">
+        <div className="nav-links nav-left">
+          <Link to={bt ? "/es/" : "/"}>{bt ? 'Inicio' : 'Browse'}</Link>
+          <Link to="/advertise" style={{ color: 'var(--accent-secondary)' }}>{bt ? 'Anunciar' : 'Advertise'}</Link>
+        </div>
         <Link to={bt ? "/es/" : "/"} className="nav-brand">
           {bt ? (
-            <>
-              <span style={{
-                fontSize: '1.6rem',
-                fontWeight: 900,
-                letterSpacing: '-0.02em',
-                color: '#e040a0',
-                marginRight: '6px',
-                fontFamily: 'var(--font-display)',
-              }}>⚲</span>
-              <span style={{
-                background: 'linear-gradient(135deg, #c026d3, #e040a0)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                fontFamily: 'var(--font-display)',
-                fontWeight: 700,
-                fontSize: '1.3rem',
-                letterSpacing: '-0.01em',
-              }}>BUSCATRANS</span>
-            </>
+            <img src={logoBT} alt="BuscaTrans" style={{ height: '60px' }} />
           ) : (
             <>
               <img src={logoSw} alt="ShemaleWiki Online" style={{ height: '36px', marginRight: '8px' }} />
@@ -65,9 +52,7 @@ function Navbar() {
             </>
           )}
         </Link>
-        <div className="nav-links">
-          <Link to={bt ? "/es/" : "/"}>{bt ? 'Inicio' : 'Browse'}</Link>
-          <Link to="/advertise" style={{ color: 'var(--accent-secondary)' }}>{bt ? 'Anunciar' : 'Advertise'}</Link>
+        <div className="nav-links nav-right">
           {bt ? (
             <Link to="/registro" className="btn btn-primary" style={{ fontSize: '0.85rem', padding: '0.5rem 1.2rem' }}>
               Registrarse

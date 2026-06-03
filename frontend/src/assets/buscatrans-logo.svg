@@ -1,0 +1,24 @@
+<svg viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- BuscaTrans Logo — trans figure icon + wordmark -->
+  
+  <!-- Icon: trans figure -->
+  <g transform="translate(35, 40) scale(0.9) translate(-49, -47)" fill="none" stroke="#FF2E93" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Head -->
+    <circle cx="46" cy="46" r="27"></circle>
+    <!-- Right arm + arrow -->
+    <line x1="65" y1="65" x2="101" y2="101" stroke-width="13"></line>
+    <line x1="65" y1="27" x2="94" y2="4"></line>
+    <line x1="94" y1="4" x2="94" y2="22"></line>
+    <line x1="94" y1="4" x2="76" y2="4"></line>
+    <!-- Left arm + arrow -->
+    <line x1="27" y1="27" x2="4" y2="4"></line>
+    <line x1="4" y1="4" x2="4" y2="22"></line>
+    <line x1="4" y1="4" x2="22" y2="4"></line>
+    <!-- Body/legs -->
+    <line x1="46" y1="73" x2="46" y2="103"></line>
+    <line x1="33" y1="89" x2="59" y2="89"></line>
+  </g>
+  
+  <!-- Brand name -->
+  <text x="110" y="52" fill="#F3EEFA" font-family="'Space Grotesk', 'Space Mono', monospace" font-size="36" font-weight="700" letter-spacing="-1">buscatrans</text>
+</svg>

@@ -132,6 +132,10 @@ export default function Register() {
   const [selectedPhotoPrivacy, setSelectedPhotoPrivacy] = useState('verified');
   const [selectedPlan, setSelectedPlan] = useState('standard');
   const [crossList, setCrossList] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [createdProfile, setCreatedProfile] = useState(null);
 
   const maxSteps = 4;
 
@@ -155,6 +159,51 @@ export default function Register() {
   };
   const prevStep = () => {
     if (step > 0) setStep(s => s - 1);
+  };
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    setSubmitError('');
+
+    const payload = {
+      name: form.display_name || '',
+      email: form.email || '',
+      phone: form.contact || '',
+      whatsapp: form.contact || '',
+      country: form.country || '',
+      city: form.city || '',
+      bio: form.bio || '',
+      age: form.age || '',
+      languages: form.languages || '',
+      nationality: '',
+      height: '',
+      weight: '',
+      onlyfans: '',
+      cam_chat: ''
+    };
+
+    try {
+      const apiBase = window.location.origin;
+      const response = await fetch(`${apiBase}/api/drafts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || data.details || 'Registration failed');
+      }
+
+      setCreatedProfile(data.profile);
+      setSubmitSuccess(true);
+    } catch (err) {
+      console.error('Registration error:', err);
+      setSubmitError(err.message || 'Could not create profile. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -333,35 +382,76 @@ export default function Register() {
           {/* ── STEP 4: Plan ── */}
           {step === 3 && (
             <div>
-              <div className="plans-grid">
-                {actualT.plans.map(plan => (
-                  <div
-                    key={plan.id}
-                    className={`plan-card ${plan.recommended ? 'recommended' : ''} ${selectedPlan === plan.id ? '' : ''}`}
-                    onClick={() => setSelectedPlan(plan.id)}
-                    style={{ borderColor: selectedPlan === plan.id ? 'var(--accent-primary)' : undefined }}
-                  >
-                    {plan.recommended && (
-                      <div className="plan-recommended-badge">
-                        {bt ? 'Recomendado' : 'Recommended'}
-                      </div>
-                    )}
-                    <h3 className="plan-name">{plan.name}</h3>
-                    <div className="plan-price">
-                      {plan.price === 0 ? (bt ? 'Gratis' : 'Free') : `$${plan.price}`}
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>/mo</span>
-                    </div>
-                    {plan.features.length > 0 && (
-                      <ul className="plan-features">
-                        {plan.features.map((f, fi) => <li key={fi}>{f}</li>)}
-                      </ul>
-                    )}
+              {submitError && (
+                <div className="form-error" style={{
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  color: '#ef4444',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '0.5rem',
+                  marginBottom: '1rem',
+                  fontSize: '0.9rem'
+                }}>
+                  {submitError}
+                </div>
+              )}
+
+              {submitSuccess ? (
+                <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    width: '64px', height: '64px', borderRadius: '50%',
+                    background: 'rgba(34, 197, 94, 0.1)',
+                    border: '1px solid rgba(34, 197, 94, 0.3)',
+                    marginBottom: '1rem', fontSize: '2rem'
+                  }}>
+                    ✓
                   </div>
-                ))}
-              </div>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'center' }}>
-                {actualT.note}
-              </p>
+                  <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#22c55e' }}>
+                    {actualLang === 'es' ? '¡Perfil creado con éxito!' : 'Profile created!'}
+                  </h2>
+                  <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: '1.6' }}>
+                    {actualLang === 'es'
+                      ? `Tu perfil "${createdProfile?.name}" está pendiente de revisión. Te notificaremos cuando esté activo.`
+                      : `Your profile "${createdProfile?.name}" is pending review. We'll notify you when it goes live.`}
+                  </p>
+                  <a href="/" className="btn btn-primary" style={{ display: 'inline-block', textDecoration: 'none' }}>
+                    {actualLang === 'es' ? 'Volver al inicio' : 'Back to home'}
+                  </a>
+                </div>
+              ) : (
+                <div>
+                  <div className="plans-grid">
+                    {actualT.plans.map(plan => (
+                      <div
+                        key={plan.id}
+                        className={`plan-card ${plan.recommended ? 'recommended' : ''} ${selectedPlan === plan.id ? '' : ''}`}
+                        onClick={() => setSelectedPlan(plan.id)}
+                        style={{ borderColor: selectedPlan === plan.id ? 'var(--accent-primary)' : undefined }}
+                      >
+                        {plan.recommended && (
+                          <div className="plan-recommended-badge">
+                            {bt ? 'Recomendado' : 'Recommended'}
+                          </div>
+                        )}
+                        <h3 className="plan-name">{plan.name}</h3>
+                        <div className="plan-price">
+                          {plan.price === 0 ? (bt ? 'Gratis' : 'Free') : `€${plan.price}`}
+                          <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>/mo</span>
+                        </div>
+                        {plan.features.length > 0 && (
+                          <ul className="plan-features">
+                            {plan.features.map((f, fi) => <li key={fi}>{f}</li>)}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'center' }}>
+                    {actualT.note}
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
@@ -372,14 +462,29 @@ export default function Register() {
                 ← {bt ? 'Anterior' : 'Back'}
               </button>
             ) : <div />}
-            <button
-              className="btn btn-primary btn-lg"
-              onClick={nextStep}
-              disabled={!canAdvance()}
-              style={{ flex: step === 0 ? 1 : undefined }}
-            >
-              {actualT.ctas[step]}
-            </button>
+            {step === maxSteps - 1 ? (
+              submitSuccess ? null : (
+                <button
+                  className="btn btn-primary btn-lg"
+                  onClick={handleSubmit}
+                  disabled={submitting || !form.display_name || !form.email || !form.contact}
+                  style={{ flex: 1 }}
+                >
+                  {submitting
+                    ? (actualLang === 'es' ? 'Creando perfil...' : 'Creating profile...')
+                    : actualT.ctas[step]}
+                </button>
+              )
+            ) : (
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={nextStep}
+                disabled={!canAdvance()}
+                style={{ flex: step === 0 ? 1 : undefined }}
+              >
+                {actualT.ctas[step]}
+              </button>
+            )}
           </div>
         </div>
       </div>

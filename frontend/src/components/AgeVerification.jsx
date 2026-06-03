@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import logoSw from '../assets/logosw.png';
+import logoBT from '../assets/buscatrans-logo.svg';
 
 const STORAGE_KEY = 'sw_age_verified';
 
@@ -104,20 +105,6 @@ export default function AgeVerification({ onVerify }) {
   }
   const txt = t[lang] || t.en;
 
-  /* Logo */
-  const btLogo = () => (
-    <span style={{
-      fontFamily: "'Playfair Display', Georgia, serif",
-      fontSize: '1.6rem',
-      fontWeight: 700,
-      background: 'linear-gradient(135deg, #c026d3, #e040a0)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-    }}>
-      ⚲ BuscaTrans
-    </span>
-  );
-
   const handleCheckbox = (e) => {
     setConfirmed(e.target.checked);
     setError('');
@@ -172,7 +159,9 @@ export default function AgeVerification({ onVerify }) {
       }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          {bt ? btLogo() : (
+          {bt ? (
+            <img src={logoBT} alt="BuscaTrans" style={{ height: '65px' }} />
+          ) : (
             <img src={logoSw} alt="ShemaleWiki" style={{ height: '55px' }} />
           )}
         </div>

@@ -1,11 +1,18 @@
 """
-kinky_url_extractor.py — Fast photo URL extraction for kinky.nl profiles
+kinky_url_extractor.py v2 — Improved photo URL extraction for kinky.nl profiles
 Runs from Maxi's PC with visible Firefox. Extracts URLs only (NO download).
-Uploads to Supabase photos table. Server downloads images later.
+Saves to kinky_ profiles first, then relinks to UUID profiles.
+
+Key improvements over v1:
+  - Scrolls page to trigger lazy-loaded images
+  - Better CSS selectors (background-image, picture elements, data-src)
+  - Aggressive junk filtering (SVGs, payment icons, flags, logos, tracking pixels)
+  - Longer wait time for gallery to load
+  - Resets old progress to reprocess all profiles
 
 Usage:
-    python kinky_url_extractor.py --limit 5 --delay 2
-    python kinky_url_extractor.py --limit 0 --delay 1.5  # all 596
+    python kinky_url_extractor.py --limit 5 --delay 3
+    python kinky_url_extractor.py --limit 0 --delay 2  # all
 """
 
 import argparse
@@ -32,21 +39,29 @@ HEADERS = {
 PROGRESS_FILE = os.path.join(os.path.dirname(__file__), "kinky_extractor_progress.json")
 STATE_FILE = os.path.join(os.path.dirname(__file__), "kinky_extractor_state.json")
 
-# Image CDN domains (kinky.nl uses these for actual photos, not ads)
-PHOTO_DOMAINS = {
-    "kinky-images.nl",
-    "kinkykiekjes.nl",
-    "cloudfront.net",
-    "kinky.nl/images",
-}
+# Junk patterns — anything matching these is rejected
+JUNK_PATTERNS = [
+    # Payment/logos
+    'mastercard', 'visacard', 'ideal', 'bancontact', 'paypal', 'maestro',
+    # File types that are never profile photos
+    '.svg',
+    # Logos, icons, flags
+    '/logo', '/icon', '/flag', 'favicon', 'apple-touch',
+    # Ads & tracking
+    'doubleclick', 'googlead', 'exoclick', 'juicyads', 'trafficjunky',
+    'pixel', 'adform', 'casalemedia', 'quantserve',
+    'facebook.com', 'gravatar',
+    # Banners & UI elements
+    '/banner', 'banner_', 'placeholder', 'ajax-loader', 'spinner',
+]
 
-# Blacklist domains (ads, trackers, icons)
-BLOCKED_DOMAINS = {
-    "doubleclick.net", "googleadservices.com", "googlesyndication.com",
-    "exoclick.com", "trafficjunky.com", "juicyads.com",
-    "facebook.com", "gravatar.com", "google-analytics.com",
-    "pixel.quantserve.com", "adform.net", "casalemedia.com",
-}
+# Patterns that indicate actual profile photos
+GOOD_PATTERNS = [
+    'kinky-images.nl', 'kinkykiekjes.nl', 'cloudfront.net',
+    '/fotos/', '/photos/', '/gallery/', '/afbeeldingen/',
+    '_large', '_full', '_big', '-large', '-full',
+    'upload/', '/media/', '/images/profile',
+]
 
 
 def get_next_photo_id() -> int:
@@ -61,41 +76,121 @@ def get_next_photo_id() -> int:
 
 
 def extract_photo_urls(page) -> list[str]:
-    """Extract full-size photo URLs from a kinky.nl profile page using JS."""
+    """Extract full-size photo URLs from a kinky.nl profile page."""
+    # First, scroll to trigger lazy loading
+    page.evaluate("""() => {
+        window.scrollTo(0, document.body.scrollHeight / 4);
+    }""")
+    time.sleep(0.3)
+    page.evaluate("""() => {
+        window.scrollTo(0, document.body.scrollHeight / 2);
+    }""")
+    time.sleep(0.3)
+    page.evaluate("""() => {
+        window.scrollTo(0, document.body.scrollHeight);
+    }""")
+    time.sleep(0.5)
+    page.evaluate("""() => {
+        window.scrollTo(0, 0);
+    }""")
+    time.sleep(0.3)
+
     urls = page.evaluate("""() => {
-        const blocked = ['doubleclick', 'googlead', 'exoclick', 'juicyads',
-                         'facebook', 'gravatar', 'pixel', 'adform', 'casalemedia',
-                         'trafficjunky', 'banner', 'logo', 'icon', 'flag'];
+        const JUNK = ['mastercard', 'visacard', 'ideal', 'bancontact', 'paypal',
+                       '.svg', '/logo', '/icon', '/flag', 'favicon', 'apple-touch',
+                       'doubleclick', 'googlead', 'exoclick', 'juicyads', 'trafficjunky',
+                       'pixel', 'adform', 'casemedia', 'quantserve',
+                       'facebook.com', 'gravatar', 'banner', 'placeholder', 'ajax-loader', 'spinner'];
+        
+        const GOOD = ['kinky-images.nl', 'kinkykiekjes.nl', 'cloudfront.net',
+                      '/fotos/', '/photos/', '/gallery/', '/afbeeldingen/',
+                      'upload/', '/media/', '/images/profile'];
+        
         const seen = new Set();
         const results = [];
 
-        // Strategy 1: Find gallery/slider containers
-        const galleries = document.querySelectorAll('[class*="gallery"], [class*="slider"], [class*="carousel"], [class*="fotorama"], [class*="photos"], [class*="media"]');
-        for (const g of galleries) {
-            for (const img of g.querySelectorAll('img')) {
-                const src = img.src || img.getAttribute('data-src') || img.getAttribute('data-lazy');
-                if (!src || seen.has(src)) continue;
-                if (img.naturalWidth < 200) continue;
-                const low = src.toLowerCase();
-                if (blocked.some(b => low.includes(b))) continue;
-                // Convert thumb to full-size
-                let full = src.replace('_thumb_', '_').replace('/thumb/', '/').replace('_thumb.', '.');
-                seen.add(full);
-                results.push(full);
+        function isGood(url) {
+            const low = url.toLowerCase();
+            // Must pass junk filter
+            if (JUNK.some(j => low.includes(j))) return false;
+            // Must be an image URL
+            if (!low.match(/\.(jpg|jpeg|png|webp|gif|bmp)(\?|$|#)/i) &&
+                !GOOD.some(g => low.includes(g))) return false;
+            return true;
+        }
+
+        function addUrl(src) {
+            if (!src || seen.has(src)) return;
+            if (src.startsWith('data:')) return;
+            if (!isGood(src)) return;
+            // Convert thumbnail to full-size
+            let full = src
+                .replace('_thumb_', '_')
+                .replace('/thumb/', '/')
+                .replace('_thumb.', '.')
+                .replace('-150x150', '')
+                .replace('-300x300', '')
+                .replace('-thumbnail', '');
+            seen.add(full);
+            results.push(full);
+        }
+
+        // Strategy 1: Gallery/slider containers
+        const gallerySelectors = [
+            '[class*="gallery"]', '[class*="slider"]', '[class*="carousel"]',
+            '[class*="fotorama"]', '[class*="photos"]', '[class*="media-gallery"]',
+            '[id*="gallery"]', '[id*="slider"]', '[id*="carousel"]',
+            '[class*="swiper"]', '[class*="slick"]', '[class*="owl"]',
+            '[class*="lightbox"]', '[class*="slideshow"]',
+            // kinky.nl specific
+            '[class*="profile-photo"]', '[class*="photo-container"]',
+            '[class*="image-container"]', '[class*="thumb"]',
+        ];
+        
+        for (const sel of gallerySelectors) {
+            try {
+                for (const container of document.querySelectorAll(sel)) {
+                    for (const img of container.querySelectorAll('img')) {
+                        const src = img.src || img.getAttribute('data-src') || 
+                                    img.getAttribute('data-lazy') || img.getAttribute('srcset');
+                        if (img.naturalWidth >= 200) addUrl(src);
+                    }
+                    // Also check background images
+                    for (const el of container.querySelectorAll('[style*="background"]')) {
+                        const bg = el.style.backgroundImage;
+                        if (bg) {
+                            const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
+                            if (match) addUrl(match[1]);
+                        }
+                    }
+                }
+            } catch(e) {}
+        }
+
+        // Strategy 2: All large images on page (fallback)
+        if (results.length === 0) {
+            for (const img of document.querySelectorAll('img')) {
+                if (img.naturalWidth < 250 || img.naturalHeight < 250) continue;
+                const src = img.src || img.getAttribute('data-src') || 
+                            img.getAttribute('data-lazy') || img.getAttribute('srcset');
+                addUrl(src);
+            }
+            // Also check picture elements
+            for (const pic of document.querySelectorAll('picture source')) {
+                const src = pic.getAttribute('srcset') || pic.getAttribute('data-srcset');
+                if (src) {
+                    const firstUrl = src.split(',')[0].trim().split(' ')[0];
+                    addUrl(firstUrl);
+                }
             }
         }
 
-        // Strategy 2: All large images on page
+        // Strategy 3: Check for data attributes on any element
         if (results.length === 0) {
-            for (const img of document.querySelectorAll('img')) {
-                const src = img.src || img.getAttribute('data-src') || img.getAttribute('data-lazy');
-                if (!src || seen.has(src)) continue;
-                if (img.naturalWidth < 250 || img.naturalHeight < 250) continue;
-                const low = src.toLowerCase();
-                if (blocked.some(b => low.includes(b))) continue;
-                let full = src.replace('_thumb_', '_').replace('/thumb/', '/').replace('_thumb.', '.');
-                seen.add(full);
-                results.push(full);
+            for (const el of document.querySelectorAll('[data-src], [data-image], [data-photo], [data-full]')) {
+                const src = el.getAttribute('data-src') || el.getAttribute('data-image') ||
+                           el.getAttribute('data-photo') || el.getAttribute('data-full');
+                addUrl(src);
             }
         }
 
@@ -132,20 +227,34 @@ def save_state(state: dict):
         json.dump(state, f)
 
 
+def prepare_extractor():
+    """Delete old progress to force reprocessing of all profiles."""
+    if os.path.exists(PROGRESS_FILE):
+        os.remove(PROGRESS_FILE)
+        print("  🧹 Old progress deleted — all profiles will be reprocessed")
+    if os.path.exists(STATE_FILE):
+        os.remove(STATE_FILE)
+        print("  🧹 Old state deleted")
+
+
 def main():
-    parser = argparse.ArgumentParser(description="Extract kinky.nl photo URLs (no download)")
+    parser = argparse.ArgumentParser(description="Extract kinky.nl photo URLs v2 (no download)")
     parser.add_argument("--limit", type=int, default=5, help="Max profiles (0=all)")
-    parser.add_argument("--delay", type=float, default=2.0, help="Seconds between profiles")
+    parser.add_argument("--delay", type=float, default=3.0, help="Seconds between profiles")
     parser.add_argument("--start-from", type=int, default=0, help="Skip first N profiles")
+    parser.add_argument("--fresh", action="store_true", help="Delete old progress and start fresh")
     args = parser.parse_args()
 
     print("=" * 60)
-    print("KINKY.NL PHOTO URL EXTRACTOR")
+    print("KINKY.NL PHOTO URL EXTRACTOR v2")
     print(f"Limit: {args.limit if args.limit > 0 else 'ALL'} | Delay: {args.delay}s | Start: {args.start_from}")
     print("=" * 60)
 
-    # 1. Test Supabase connectivity FIRST
-    print("\n[1/4] Testing Supabase connection...")
+    if args.fresh:
+        prepare_extractor()
+
+    # 1. Test Supabase connectivity
+    print("\n[1/5] Testing Supabase connection...")
     try:
         r = requests.get(f"{SUPABASE_URL}/rest/v1/profiles?select=id&limit=1", headers=HEADERS)
         if r.status_code == 200:
@@ -160,7 +269,7 @@ def main():
         return
 
     # 2. Get profiles needing photos
-    print("\n[2/4] Loading profiles from Supabase...")
+    print("\n[2/5] Loading profiles from Supabase...")
     r = requests.get(
         f"{SUPABASE_URL}/rest/v1/profiles?select=id,url,name,location"
         f"&url=ilike.*kinky.nl*&limit=1000",
@@ -172,25 +281,17 @@ def main():
         return
 
     all_profiles = r.json()
-    print(f"  Found {len(all_profiles)} kinky.nl profiles in DB")
-
-    # Filter out ones that already have photos
-    r = requests.get(f"{SUPABASE_URL}/rest/v1/photos?select=profile_id&limit=50000", headers=HEADERS)
-    photo_pids = set(str(p["profile_id"]) for p in r.json())
-
-    profiles = [p for p in all_profiles if str(p["id"]) not in photo_pids]
-    print(f"  {len(profiles)} still need photos")
+    print(f"  Found {len(all_profiles)} kinky.nl profiles")
 
     # Load progress
     done = load_progress()
-    profiles = [p for p in profiles if p["id"] not in done]
-    print(f"  {len(profiles)} remaining after progress filter")
+    profiles = [p for p in all_profiles if p["id"] not in done]
+    print(f"  {len(profiles)} remaining to process ({len(done)} already done)")
 
-    # Apply start-from
+    # Apply start-from + limit
     profiles = profiles[args.start_from:]
-    # Apply limit
     if args.limit > 0:
-        profiles = profiles[: args.limit]
+        profiles = profiles[:args.limit]
 
     if not profiles:
         print("\n  ✅ All profiles already processed!")
@@ -199,20 +300,21 @@ def main():
 
     print(f"  Will process: {len(profiles)} profiles")
 
-    # Load/setup next_photo_id
+    # Setup next_photo_id
     state = load_state()
     next_id = state.get("next_photo_id", get_next_photo_id())
     print(f"  Next photo ID: {next_id}")
 
     # 3. Launch Firefox
-    print("\n[3/4] Launching Firefox (visible)...")
+    print("\n[3/5] Launching Firefox (visible)...")
+    print("  ⚠️  Keep Firefox visible — DO NOT minimize")
     stats = {"profiles": 0, "photos": 0, "errors": 0}
 
     try:
         with sync_playwright() as p:
             browser = p.firefox.launch(headless=False)
             page = browser.new_page()
-            page.set_default_timeout(15000)
+            page.set_default_timeout(20000)
 
             for i, profile in enumerate(profiles):
                 pid = profile["id"]
@@ -229,11 +331,12 @@ def main():
 
                 try:
                     page.goto(url, wait_until="domcontentloaded")
+                    # Extra wait for gallery JS to initialize
                     time.sleep(args.delay)
 
                     # Extract photo URLs
                     urls = extract_photo_urls(page)
-                    print(f"    Found {len(urls)} photos")
+                    print(f"    📸 Found {len(urls)} photos")
 
                     if urls:
                         # Insert into photos table
@@ -255,10 +358,9 @@ def main():
                                 json=chunk,
                             )
                             if r.status_code == 201:
-                                print(f"    ✅ Uploaded {len(chunk)} URLs to Supabase")
                                 stats["photos"] += len(chunk)
                             else:
-                                print(f"    ⚠️ Upload error: {r.status_code} {r.text[:100]}")
+                                print(f"    ⚠️ Upload error: {r.status_code}")
                                 # Try one-by-one
                                 for item in chunk:
                                     r2 = requests.post(
@@ -269,9 +371,10 @@ def main():
                                     if r2.status_code == 201:
                                         stats["photos"] += 1
                                     else:
-                                        next_id -= 1  # rollback
+                                        next_id -= 1
+                        print(f"    ✅ Saved {len(batch)} URLs")
                     else:
-                        print(f"    ℹ️  No photos found on page")
+                        print(f"    ℹ️  No photos found")
 
                     stats["profiles"] += 1
 
@@ -291,8 +394,43 @@ def main():
         traceback.print_exc()
         save_state({"next_photo_id": next_id})
 
-    # 4. Report
-    print("\n[4/4] DONE")
+    # 4. Relink photos to UUID profiles
+    print("\n[4/5] Relinking photos to UUID profiles...")
+    try:
+        # Get UUID→name mapping for NL profiles
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/profiles?select=id,name,location"
+            f"&location=ilike.*%|%Netherlands%|*&limit=1200",
+            headers=HEADERS,
+        )
+        uuid_profiles = {p["name"].strip().lower(): p["id"] for p in r.json()}
+        
+        # Get kinky_ profiles that just got photos
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/profiles?select=id,name&id=ilike.kinky_*&limit=600",
+            headers=HEADERS,
+        )
+        kinky_names = {p["id"]: p["name"].strip().lower() for p in r.json()}
+
+        relinked = 0
+        for kid, name in kinky_names.items():
+            if name in uuid_profiles:
+                uuid_id = uuid_profiles[name]
+                # Update photos from kinky_ ID to UUID ID
+                r = requests.patch(
+                    f"{SUPABASE_URL}/rest/v1/photos?profile_id=eq.{kid}",
+                    headers={**HEADERS, "Prefer": "return=minimal"},
+                    json={"profile_id": uuid_id},
+                )
+                if r.status_code in (200, 204):
+                    relinked += 1
+
+        print(f"  ✅ Relinked photos for {relinked} profiles → UUID IDs")
+    except Exception as e:
+        print(f"  ⚠️ Relink error: {e}")
+
+    # 5. Report
+    print("\n[5/5] DONE")
     print(f"  Profiles processed: {stats['profiles']}")
     print(f"  Photo URLs saved:   {stats['photos']}")
     print(f"  Errors:             {stats['errors']}")

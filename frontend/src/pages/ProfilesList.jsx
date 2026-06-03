@@ -1,21 +1,63 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Search, MapPin, ArrowLeft } from 'lucide-react';
+import { Search, MapPin, ArrowLeft, Building2 } from 'lucide-react';
 import { supabase } from '../supabase';
 import LazyImage from '../components/LazyImage';
+
+// City → slug matching CityGuide.jsx routing
+function cityToSlug(city) {
+  return city.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
 
 export default function ProfilesList() {
   const { continent, country } = useParams();
   const navigate = useNavigate();
   const [profiles, setProfiles] = useState([]);
+  const [cityCounts, setCityCounts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
+  const displayCountry = country.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
   useEffect(() => {
     fetchProfiles();
+    fetchCityCounts();
   }, [country]);
 
-  const displayCountry = country.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  // Extract unique cities + profile counts from all profiles in this country
+  const fetchCityCounts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('location')
+        .ilike('location', `% | ${displayCountry} |%`)
+        .limit(1000);
+
+      if (error) throw error;
+      if (!data) return;
+
+      const counts = {};
+      data.forEach(p => {
+        const parts = (p.location || '').split(' | ');
+        const city = parts[parts.length - 1];
+        if (city && city !== 'Unknown') {
+          counts[city] = (counts[city] || 0) + 1;
+        }
+      });
+
+      const sorted = Object.entries(counts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([city, count]) => ({
+          city,
+          slug: cityToSlug(city),
+          count
+        }));
+
+      setCityCounts(sorted);
+    } catch (err) {
+      console.error('Error fetching city counts:', err);
+    }
+  };
 
   const fetchProfiles = async (searchQuery = '') => {
     setLoading(true);
@@ -32,7 +74,6 @@ export default function ProfilesList() {
       
       if (error) throw error;
       if (data) {
-        // Filter out watermarked shemalewiki.com photos
         const cleaned = data.map(p => ({
           ...p,
           photos: (p.photos || []).filter(ph => !(ph.photo_url || '').includes('shemalewiki.com'))
@@ -64,6 +105,63 @@ export default function ProfilesList() {
         <h1 className="page-title">Community in {displayCountry}</h1>
         <p className="page-subtitle">Find the perfect companion</p>
       </div>
+
+      {/* City cards grid */}
+      {cityCounts.length > 0 && (
+        <section style={{ marginBottom: '2.5rem' }}>
+          <h2 style={{ 
+            fontSize: '1.5rem', 
+            fontWeight: 700, 
+            marginBottom: '1.25rem',
+            color: 'var(--text-primary)'
+          }}>
+            Cities in {displayCountry}
+          </h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+            gap: '1rem'
+          }}>
+            {cityCounts.map(({ city, slug, count }) => (
+              <Link
+                key={city}
+                to={`/${continent}/${country}/${slug}`}
+                className="glass-card"
+                style={{
+                  padding: '1.25rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  textDecoration: 'none',
+                  color: 'var(--text-primary)',
+                  transition: 'var(--transition)'
+                }}
+              >
+                <span style={{
+                  background: 'var(--accent-primary)',
+                  borderRadius: '50%',
+                  width: 36,
+                  height: 36,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <Building2 size={18} color="white" />
+                </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: '1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {city}
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                    {count} {count === 1 ? 'profile' : 'profiles'}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="search-container">
         <form onSubmit={handleSearch} style={{ display: 'flex', width: '100%', gap: '1rem' }}>

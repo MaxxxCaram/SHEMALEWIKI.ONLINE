@@ -1,0 +1,142 @@
+DOCUMENTO FUNDACIONAL
+
+BuscaTrans.com + ShemaleWiki.online
+
+Un sistema estrategico, logistico y tecnologico
+
+para blindar el trabajo sexual trans.
+
+MissNL Productions · Amsterdam, Paises Bajos
+
+Fundadora y Directora Ejecutiva: Victoria Caram
+
+Miss Trans Star International 2016 · Miss Trans Argentina 2016 · Miss T World Netherlands 2017
+
+Version 1.0 · 2026
+
+1. Manifiesto fundacional
+
+Durante siglos, el trabajo sexual fue el sustento de nuestros hogares cuando el mundo nos cerraba todas las demas puertas. No pedimos perdon por eso. Lo nombramos. Lo honramos. Y hoy, lo protegemos.
+
+BuscaTrans no nace como una startup. Nace como infraestructura de resistencia.
+
+Vimos lo que paso en Estados Unidos con FOSTA-SESTA. Vimos como cerraron Backpage, como limpiaron Craigslist, como plataformas que existian hace decadas desaparecieron de un dia al otro. Vimos a nuestras hermanas quedarse sin visibilidad, sin ingresos, sin red — de golpe, sin aviso.
+
+Lo vemos avanzar en Europa. En Espana, los sitios generalistas ya no permiten anunciarse abiertamente. Las chicas tienen que hacerse pasar por masajistas. Es el principio de un proceso que conocemos bien: primero la invisibilizacion, despues la criminalizacion.
+
+BuscaTrans existe para que cuando llegue ese momento — si llega — ya tengamos nuestra propia casa. Una casa que no depende de que un algoritmo nos tolere, ni de que una empresa anonima decida si existimos o no.
+
+Esto es un manto de proteccion para el que fue durante siglos el sustento de nuestros hogares. Construido antes de que nos caiga la noche.
+
+Pero la proteccion que necesitamos no viene solo de afuera. Viene tambien de adentro.
+
+De los ciclos que nos fragmentan. De la ausencia de estructura financiera que convierte buenos ingresos en vulnerabilidad permanente. De las adicciones que nacen como mecanismos de supervivencia emocional. De los terceros que se quedan con lo nuestro. De la soledad de no tener a quien llamar.
+
+Por eso este sistema tiene cuatro capas. No una. Cuatro. Simultaneas.
+
+2. El sistema de blindaje — cuatro capas
+
+BuscaTrans es el primer sistema disenado especificamente para responder a las cuatro amenazas simultaneas que enfrenta el trabajo sexual trans. Ninguna plataforma existente aborda mas de una.
+
+Capa 1 — Blindaje politico y legal
+
+Contra: gobiernos de ultra derecha, leyes abolicionistas, grupos religiosos, feminismo anti-trabajo sexual.
+
+Capa 2 — Blindaje tecnologico y de visibilidad
+
+Contra: plataformas abusivas, censura algorıtmica, costos explotadores, dependencia de terceros.
+
+Capa 3 — Blindaje de seguridad fisica y colectiva
+
+Contra: clientes peligrosos, violencia, explotacion por terceros, exposicion de identidad.
+
+Capa 4 — Blindaje personal e interno
+
+Contra: ciclos de vulnerabilidad economica, adicciones, ausencia de estructura, aislamiento emocional.
+
+Esta es la capa mas dificil de nombrar. Y la mas necesaria. Porque ninguna ley, ninguna plataforma y ningun cliente nos la puede quitar — pero tampoco nos la puede dar. Tiene que construirse desde adentro.
+
+3. La plataforma — como funciona
+
+Dos sitios, un solo sistema. El backend es compartido — las escorts se registran una vez y eligen en que plataforma o plataformas aparecer.
+
+Lo que pueden hacer las escorts
+
+Crear perfil completo con galeria de fotos bajo su control total
+
+Elegir visibilidad de cada foto: publica, verificados, privada con link
+
+Publicar en el canal de Telegram de su ciudad directamente desde el dashboard
+
+Activar canal VIP privado de pago en Telegram con gestion automatica
+
+Consultar y reportar en la blacklist compartida de su ciudad
+
+Acceder a todas las capacitaciones grabadas en cualquier momento
+
+Ver estadisticas de visitas a su perfil (agregadas, sin datos de clientes)
+
+Elegir en que sitio o sitios aparecer con un solo registro
+
+Lo que ven los clientes
+
+Acceso completamente anonimo — sin registro, sin cuenta, sin cookies de tracking
+
+Busqueda por ciudad, pais, disponibilidad y servicios
+
+Perfil completo con galeria de fotos aprobadas por la escort
+
+Contacto directo fuera de la plataforma — WhatsApp o Telegram — sin intermediarios
+
+Age gate de un click al entrar — sin formularios ni datos personales
+
+Integracion con Telegram
+
+El canal de ciudad (@BuscaTransBarcelona, @BuscaTransMadrid, etc.) es una pieza critica del sistema. Cuando la plataforma tiene 5,000 suscriptores en un canal de ciudad, ese canal vale como activo independiente — los clientes lo siguen aunque ese dia no entren al sitio.
+
+Canal publico por ciudad: escorts publican disponibilidad y fotos del dia
+
+Canal VIP privado por escort: acceso de pago, gestionado por bot automaticamente
+
+Bot de Telegram vinculado al dashboard: publicar, ver stats, reportar blacklist
+
+Los clientes se suscriben sin dar ningun dato personal
+
+4. Modelo de negocio
+
+Mas barato que todos. Con mas valor que todos. Esa es la propuesta que no tiene respuesta en el mercado actual.
+
+4.1 Precios — el argumento mas facil
+
+4.2 Fuentes de ingreso
+
+4.3 Proyeccion de ingresos
+
+Escenario conservador.
+
+Costos de infraestructura: ~500 EUR/mes. Margen operativo mayor al 95% una vez cubiertos los costos fijos.
+
+5. Plan de lanzamiento — 6 meses
+
+Barcelona primero. No por casualidad — porque es donde hay un vacio real ahora mismo, y porque es donde el pitch es mas facil: 'Podes ser lo que sos. Sin hacerte pasar por masajista.'
+
+6. Estructura legal y operativa
+
+7. Por que Victoria Caram y MissNL Productions
+
+No soy una empresa anonima. No soy una observadora externa que decidio hacer un producto para nuestra comunidad. Soy parte de la comunidad. Lo vivi. Lo vivo. Y por eso entiendo lo que se necesita de una manera que ninguna otra plataforma puede replicar.
+
+8. Vision a dos anos
+
+En dos anos, BuscaTrans no es un directorio. Es la red de proteccion y herramientas mas grande que existe para trabajadoras sexuales trans en el mundo de habla hispana y en el mercado internacional de habla inglesa.
+
+El objetivo final no es tener el directorio mas grande. Es que en diez anos las mujeres trans que trabajaron en esto hayan podido construir algo — ahorro, salud, opciones. Que el trabajo que sostiene nuestros hogares desde siempre haya servido tambien para construir futuro.
+
+Victoria Caram · Fundadora
+
+MissNL Productions · Amsterdam, Paises Bajos
+
+missnlproductions.com · buscatrans.com · shemalewiki.online
+
+Documento confidencial · Solo para uso interno y presentaciones autorizadas
+

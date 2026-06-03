@@ -205,7 +205,176 @@ const cityContent = {
   }
 };
 
-// Helper to get slug from display name
+// ── Spanish content (es) ──
+const cityContentEs = {
+  amsterdam: {
+    displayName: 'Ámsterdam',
+    country: 'Países Bajos',
+    continent: 'europe',
+    intro: `Ámsterdam es uno de los destinos más vibrantes e inclusivos de Europa para compañía trans premium. Conocida mundialmente por sus actitudes progresistas, su cultura liberal y su legendario Barrio Rojo, Ámsterdam ofrece un entorno excepcionalmente acogedor para la comunidad trans. La famosa tolerancia y mentalidad abierta de la ciudad la convierten en un destino de primer nivel para quienes buscan conexiones auténticas con hermosas mujeres trans.`,
+    scene: `La comunidad trans en Ámsterdam es notablemente diversa y profesional. Desde las históricas calles de los canales de De Wallen hasta los modernos barrios de De Pijp y Jordaan, las profesionales independientes operan en toda la ciudad. El marco legal holandés proporciona mayor seguridad y profesionalismo que la mayoría de las ciudades del mundo. Muchas ofrecen servicios en apartamentos privados bien equipados cerca del centro, mientras que otras brindan servicios a hoteles y residencias de lujo.`,
+    districts: `Los barrios populares incluyen la zona Centrum cerca de Dam Square, el elegante distrito de Oud-Zuid y el área de Noord en desarrollo al otro lado del río IJ. Las zonas de ocio de Leidseplein y Rembrandtplein también son puntos de encuentro frecuentes. Para quienes prefieren discreción, los tranquilos barrios residenciales de Oud-Zuid y Amstelveen ofrecen privacidad con excelentes conexiones de tranvía.`,
+    tips: `Al reservar en Ámsterdam, la comunicación es clave. La mayoría habla excelente inglés además de holandés. Se recomienda reservar con anticipación, especialmente durante eventos como el Orgullo de Ámsterdam y el Día del Rey. Las tarifas suelen oscilar entre €150-300 por hora para profesionales independientes. Siempre verifica perfiles y lee reseñas antes de reservar. El excelente transporte público y la abundancia de hoteles boutique facilitan la logística.`,
+    keywords: ['trans Ámsterdam', 'shemale Ámsterdam', 'travestis Ámsterdam', 'acompañantes trans Ámsterdam', 'ts Países Bajos'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Ámsterdam?', a: 'Sí, los servicios de compañía entre adultos que consienten son legales en los Países Bajos. Las trabajadoras independientes operan legalmente en toda la ciudad.' },
+      { q: '¿Qué zonas de Ámsterdam tienen más acompañantes trans?', a: 'El Centrum (centro), De Pijp, Oud-Zuid y las áreas cercanas al Barrio Rojo tienen la mayor concentración, aunque muchas operan en todo el Gran Ámsterdam.' },
+      { q: '¿Cómo verifico un perfil en Ámsterdam?', a: 'Busca perfiles con múltiples fotos verificadas, descripciones detalladas de servicios y reseñas positivas. Los perfiles de ShemaleWiki incluyen indicadores de verificación y fotos reales.' },
+    ]
+  },
+  barcelona: {
+    displayName: 'Barcelona',
+    country: 'España',
+    continent: 'europe',
+    intro: `Barcelona se destaca como una de las ciudades más emocionantes del Mediterráneo para encuentros con acompañantes trans. Esta soleada capital catalana combina sofisticación cosmopolita con una cultura famosamente abierta, convirtiéndola en un destino ideal para quienes buscan compañía trans premium. Desde el encanto medieval del Barrio Gótico hasta las maravillas modernistas del Eixample, Barcelona ofrece un impresionante telón de fondo para experiencias inolvidables.`,
+    scene: `La escena trans en Barcelona es dinámica, diversa y cada vez más visible. La gran comunidad internacional de la ciudad significa que encontrarás acompañantes de toda Europa, Latinoamérica y Asia. Las actitudes sociales liberales y la fuerte comunidad LGBTQ+ en el distrito del Eixample (conocido como "Gaixample") crean un ambiente naturalmente acogedor. Muchas ofrecen servicios multilingües en español, inglés y catalán.`,
+    districts: `El Eixample es el corazón de la escena LGBTQ+ de Barcelona y un centro para acompañantes trans. El barrio costero de la Barceloneta ofrece lugares escénicos, mientras que la exclusiva zona de Sarrià-Sant Gervasi brinda espacios discretos para encuentros de alto nivel. El Barrio Gótico y El Born ofrecen encantadores hoteles boutique perfectos para encuentros íntimos. Para quienes buscan vida nocturna, Port Olímpic y Vila Olímpica combinan ambiente playero con excelentes opciones gastronómicas.`,
+    tips: `Las tarifas en Barcelona suelen oscilar entre €120-250 por hora. Los meses de verano (junio-septiembre) registran mayor demanda debido al turismo, por lo que se recomienda reservar con anticipación. El excelente sistema de metro hace que cualquier barrio sea accesible. Muchas ofrecen servicios a domicilio, con puntos de encuentro populares cerca de Plaça Catalunya, Passeig de Gràcia y las zonas de playa.`,
+    keywords: ['trans Barcelona', 'shemale Barcelona', 'travestis Barcelona', 'acompañantes trans Barcelona', 'ts España'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Barcelona?', a: 'Sí, la actividad profesional independiente entre adultos es legal en España. Barcelona tiene un sector de servicios para adultos bien establecido.' },
+      { q: '¿Cuál es la mejor zona para acompañantes trans en Barcelona?', a: 'El Eixample (Gaixample) es el centro LGBTQ+ y una zona privilegiada. Otras zonas populares incluyen el Barrio Gótico, la Barceloneta y las áreas alrededor de Plaça Catalunya.' },
+      { q: '¿Qué idiomas hablan las acompañantes trans en Barcelona?', a: 'La mayoría habla español y muchas hablan inglés. Catalán, portugués, italiano y francés también son comunes dado el carácter internacional de la ciudad.' },
+    ]
+  },
+  madrid: {
+    displayName: 'Madrid',
+    country: 'España',
+    continent: 'europe',
+    intro: `Madrid palpita con energía como capital de España y uno de los destinos más destacados de Europa para compañía trans premium. La ciudad que nunca duerme ofrece una mezcla electrizante de cultura, vida nocturna y una próspera escena LGBTQ+ centrada alrededor del famoso barrio de Chueca. Para quienes buscan acompañantes trans en Madrid, la ciudad ofrece una combinación inigualable de discreción, diversidad y pasión.`,
+    scene: `La escena trans en Madrid es sofisticada y bien establecida. El estatus de la ciudad como centro de negocios global significa que las acompañantes atienden a una clientela internacional con altas expectativas. Encontrarás una notable diversidad de mujeres trans de toda España, Latinoamérica y más allá. Las acompañantes de Madrid son conocidas por su profesionalismo, estilo y la calidez característica de la cultura española.`,
+    districts: `Chueca es el icónico barrio LGBTQ+ de Madrid y un punto de partida natural para la escena trans. El exclusivo distrito de Salamanca ofrece entornos de lujo para encuentros de alto nivel, mientras que Malasaña brinda un ambiente más bohemio y artístico. Las zonas comerciales de AZCA y Cuatro Torres cerca del Paseo de la Castellana son populares para encuentros discretos con profesionales. Para quienes se alojan cerca de atracciones turísticas, el área alrededor de Gran Vía y Puerta del Sol ofrece acceso conveniente.`,
+    tips: `Las tarifas en Madrid suelen oscilar entre €120-250 por hora, con acompañantes premium que cobran tarifas más altas. La infraestructura hotelera de clase mundial de la ciudad significa excelentes opciones. El metro de Madrid es uno de los mejores de Europa. Las mejores épocas para visitar son primavera (marzo-mayo) y otoño (septiembre-noviembre) cuando el clima es perfecto y el calendario cultural está en su apogeo.`,
+    keywords: ['trans Madrid', 'shemale Madrid', 'travestis Madrid', 'acompañantes trans Madrid', 'ts España'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Madrid?', a: 'Sí, la compañía entre adultos que consienten es legal en España. Madrid tiene una sofisticada escena de servicios para adultos que opera libremente en toda la ciudad.' },
+      { q: '¿Qué barrios son mejores para acompañantes trans en Madrid?', a: 'Chueca es el corazón LGBTQ+ de Madrid. Salamanca ofrece discreción de lujo, y la zona de Gran Vía/Puerta del Sol brinda comodidad central para turistas.' },
+      { q: '¿Cómo se compara Madrid con Barcelona para acompañantes trans?', a: 'Ambas ciudades tienen excelentes escenas. Madrid ofrece más un ambiente orientado a negocios con una escena local más grande, mientras que Barcelona tiene más atmósfera de playa con mayor proporción de acompañantes orientadas al turismo.' },
+    ]
+  },
+  'buenos-aires': {
+    displayName: 'Buenos Aires',
+    country: 'Argentina',
+    continent: 'americas',
+    intro: `Buenos Aires cautiva con su elegancia europea, su cultura apasionada y su próspera escena trans. La cosmopolita capital argentina combina bulevares de estilo parisino con la sensualidad latinoamericana, creando un ambiente singularmente seductor para quienes buscan compañía trans premium. Desde las coloridas calles de La Boca hasta el sofisticado barrio de Recoleta, Buenos Aires ofrece una experiencia inolvidable.`,
+    scene: `La escena trans en Buenos Aires es una de las más desarrolladas y profesionales de Sudamérica. Las leyes progresistas de identidad de género y el sólido marco de derechos LGBTQ+ de Argentina proporcionan un entorno de apoyo. Las acompañantes de Buenos Aires son conocidas por su impresionante belleza, sofisticación y el distintivo encanto argentino. La escena incluye desde acompañantes de élite en Puerto Madero hasta profesionales independientes en los diversos barrios de la ciudad.`,
+    districts: `Palermo es el barrio más moderno de Buenos Aires y un centro de actividad trans, subdividido en Palermo Soho, Palermo Hollywood y Palermo Chico. Recoleta ofrece elegancia clásica europea con hoteles de lujo ideales para encuentros de alto nivel. El moderno barrio de Puerto Madero es la zona más exclusiva, con hoteles cinco estrellas populares para encuentros. Belgrano y Las Cañitas brindan un ambiente más residencial y discreto.`,
+    tips: `Las tarifas en Buenos Aires suelen oscilar entre ARS $40.000-100.000 por hora. Muchas prefieren dólares o euros debido a las fluctuaciones. El español es esencial; el inglés es menos común que en ciudades europeas. Palermo y Recoleta ofrecen la mejor combinación de acompañantes de calidad, excelentes hoteles y vibrante gastronomía. La cultura nocturna de la ciudad — cena a las 22:00, boliches a las 2:00 — significa que los encuentros a menudo se extienden hasta altas horas.`,
+    keywords: ['trans Buenos Aires', 'shemale Buenos Aires', 'travestis Buenos Aires', 'acompañantes trans Buenos Aires', 'ts Argentina'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Buenos Aires?', a: 'Sí, el acompañamiento entre adultos que consienten es legal en Argentina. Buenos Aires tiene una industria de servicios para adultos bien establecida y profesional.' },
+      { q: '¿Cuáles son los mejores barrios para acompañantes trans en Buenos Aires?', a: 'Palermo (Soho, Hollywood y Chico) es el distrito principal. Recoleta ofrece elegancia y discreción, mientras que Puerto Madero brinda los entornos más lujosos.' },
+      { q: '¿Se paga en pesos o dólares en Buenos Aires?', a: 'Muchas prefieren el pago en dólares estadounidenses o euros debido a la estabilidad monetaria. Discute la moneda de pago al reservar para evitar malentendidos.' },
+    ]
+  },
+  rotterdam: {
+    displayName: 'Róterdam',
+    country: 'Países Bajos',
+    continent: 'europe',
+    intro: `Róterdam es la segunda ciudad más grande de los Países Bajos y una estrella en ascenso en la escena trans. Conocida por su arquitectura moderna de vanguardia, su enorme puerto y su energía multicultural, Róterdam ofrece una experiencia notablemente diferente a Ámsterdam: más audaz, más diversa y llena de sorpresas. La gran comunidad internacional de la ciudad y las actitudes progresistas holandesas la convierten en un destino excelente.`,
+    scene: `La escena trans en Róterdam refleja el carácter de la ciudad: moderna, diversa y refrescantemente directa. El estatus de la ciudad como el puerto más grande de Europa atrae un flujo constante de visitantes internacionales, creando una demanda estable de acompañantes trans profesionales. Las mujeres trans de Róterdam son conocidas por su independencia y profesionalismo.`,
+    districts: `El centro de la ciudad alrededor del Markthal y las Casas Cubo es una ubicación privilegiada, con excelentes conexiones de transporte y muchos puntos de encuentro discretos. La moderna zona de Witte de Withstraat ofrece una vibrante escena cultural. El distrito de Kop van Zuid, con sus impresionantes vistas al horizonte y hoteles de lujo como Hotel New York, brinda entornos de alto nivel. Los barrios de Kralingen y Hillegersberg ofrecen más discreción residencial.`,
+    tips: `Las tarifas en Róterdam suelen oscilar entre €130-280 por hora. La mayoría habla excelente inglés además de holandés. La excelente red de metro y tranvía hace que cualquier barrio sea accesible. Reserva con anticipación durante eventos importantes como el Festival Internacional de Cine de Róterdam y el North Sea Jazz Festival cuando la demanda alcanza su punto máximo.`,
+    keywords: ['trans Róterdam', 'shemale Róterdam', 'travestis Róterdam', 'acompañantes trans Róterdam', 'ts Países Bajos'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Róterdam?', a: 'Sí, la actividad profesional independiente es legal y está regulada en los Países Bajos. Róterdam tiene el mismo marco legal que Ámsterdam.' },
+      { q: '¿Cómo se compara Róterdam con Ámsterdam?', a: 'Róterdam ofrece un ambiente más moderno y menos turístico que Ámsterdam. Las acompañantes aquí suelen atender a viajeros de negocios y locales, con tarifas ligeramente más bajas en promedio.' },
+      { q: '¿Qué zonas son mejores en Róterdam?', a: 'El Centrum, Kop van Zuid y la zona de Witte de Withstraat son ubicaciones principales. El área alrededor de la estación Rotterdam Centraal también ofrece excelente accesibilidad.' },
+    ]
+  },
+  'den-haag': {
+    displayName: 'La Haya',
+    country: 'Países Bajos',
+    continent: 'europe',
+    intro: `La Haya (Den Haag) es el corazón político de los Países Bajos y un destino sofisticado para encuentros con acompañantes trans. Sede del gobierno holandés, la familia real y los tribunales internacionales, La Haya atrae a diplomáticos, profesionales y visitantes exigentes que aprecian las cosas buenas. La arquitectura elegante, la ubicación costera y el carácter internacional de la ciudad crean un ambiente singularmente refinado.`,
+    scene: `La escena trans en La Haya se caracteriza por la discreción y la sofisticación. La clientela diplomática y profesional espera los más altos estándares de servicio y confidencialidad. Las acompañantes trans de La Haya son conocidas por su elegancia, educación y capacidad para integrarse perfectamente en el refinado tejido social de la ciudad.`,
+    districts: `Los barrios de Statenkwartier y Archipelbuurt son las zonas más prestigiosas de La Haya, con impresionantes mansiones del siglo XIX que brindan entornos elegantes para encuentros de alto nivel. El Zeeheldenkwartier ofrece un ambiente más bohemio. Para romance costero, el distrito de playa de Scheveningen combina hoteles de lujo con impresionantes vistas al Mar del Norte. El centro alrededor del Binnenhof y Lange Voorhout ofrece elegancia clásica holandesa.`,
+    tips: `Las tarifas en La Haya suelen oscilar entre €150-300 por hora, reflejando la clientela de alto nivel. La mayoría habla excelente inglés y muchas hablan francés. El Hotel Kurhaus en Scheveningen es un lugar legendario para encuentros de alto nivel. Reserva con discreción: La Haya valora la privacidad por encima de todo.`,
+    keywords: ['trans La Haya', 'shemale Den Haag', 'travestis La Haya', 'acompañantes trans La Haya', 'ts Países Bajos'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en La Haya?', a: 'Sí, la actividad profesional independiente es legal y está regulada en los Países Bajos. La Haya tiene el mismo marco legal progresista.' },
+      { q: '¿Qué tipo de clientes atienden las acompañantes trans en La Haya?', a: 'Dadas las instituciones internacionales de la ciudad, muchos clientes son diplomáticos, profesionales legales y viajeros de negocios. Las acompañantes están acostumbradas a la discreción y la clientela sofisticada.' },
+      { q: '¿Es Scheveningen una buena zona para encuentros?', a: 'Absolutamente. El distrito de playa de Scheveningen ofrece hoteles de lujo con vistas al mar, excelente gastronomía y un ambiente de resort a solo 15 minutos del centro.' },
+    ]
+  },
+  paris: {
+    displayName: 'París',
+    country: 'Francia',
+    continent: 'europe',
+    intro: `París no necesita presentación como la ciudad del amor mundial, pero su escena trans es una joya oculta esperando ser descubierta. La legendaria elegancia de la capital francesa, su gastronomía de clase mundial y su ambiente romántico crean un telón de fondo incomparable para encuentros con acompañantes trans. Desde las calles empedradas de Montmartre hasta las elegantes avenidas de los Campos Elíseos, París eleva cada encuentro a una aventura memorable.`,
+    scene: `La escena trans en París es sofisticada, discreta y distintivamente francesa en su enfoque del placer. La larga tradición de cortesanas y acompañamiento sofisticado de la ciudad vive en su comunidad trans moderna. Las mujeres trans parisinas son reconocidas por su estilo, encanto y el inconfundible arte de vivir francés.`,
+    districts: `El Marais es el corazón LGBTQ+ de París y un centro natural para la actividad trans, con su arquitectura histórica y vibrante vida nocturna. La zona de Ópera y Madeleine ofrece elegancia parisina clásica con grandes hoteles como el Ritz y Le Meurice. Los Campos Elíseos y el distrito 8 brindan el máximo lujo, mientras que Saint-Germain-des-Prés combina prestigio intelectual con encanto discreto.`,
+    tips: `Las tarifas en París suelen oscilar entre €200-500 por hora. El francés es muy apreciado pero muchas hablan inglés. Los hoteles de lujo — desde el Ritz hasta Le Bristol — reciben acompañantes con discreción apropiada. Evita las trampas para turistas alrededor de Pigalle; la verdadera escena parisina opera con mucha más sofisticación. Reserva con anticipación durante la Semana de la Moda cuando la demanda se dispara.`,
+    keywords: ['trans París', 'shemale París', 'travestis París', 'acompañantes trans París', 'ts Francia'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en París?', a: 'Sí, la actividad profesional entre adultos que consienten es legal en Francia. Las acompañantes independientes operan libremente.' },
+      { q: '¿Dónde está la mejor escena trans en París?', a: 'El Marais (distrito 4) es el centro LGBTQ+. Los distritos 8 y 16 ofrecen lujo y discreción, mientras que Saint-Germain-des-Prés brinda encanto sofisticado.' },
+      { q: '¿Hablan inglés las acompañantes trans en París?', a: 'Muchas sí, particularmente aquellas que atienden a clientes internacionales. Sin embargo, algunas frases en francés siempre son apreciadas.' },
+    ]
+  },
+  london: {
+    displayName: 'Londres',
+    country: 'Reino Unido',
+    continent: 'europe',
+    intro: `Londres es una de las ciudades verdaderamente globales del mundo y un destino de primer nivel para encuentros con acompañantes trans. La increíble diversidad de la capital británica, su inigualable escena cultural y su sofisticada industria de servicios para adultos crean oportunidades excepcionales para quienes buscan compañía trans premium.`,
+    scene: `La escena trans en Londres está entre las más diversas y profesionales del mundo. El estatus de la ciudad como capital financiera y cultural atrae a acompañantes de todo el Reino Unido, Europa, Asia y Latinoamérica. Las acompañantes trans de Londres son conocidas por su profesionalismo y educación.`,
+    districts: `Mayfair y Knightsbridge son los corazones de lujo de Londres, con hoteles cinco estrellas como Claridge's y The Dorchester. Soho ha sido durante mucho tiempo el distrito de entretenimiento de Londres. La City de Londres y Canary Wharf atienden a profesionales financieros que buscan discreción. Shoreditch y Dalston ofrecen una escena más alternativa y creativa.`,
+    tips: `Las tarifas en Londres suelen oscilar entre £150-400 por hora. El inglés es universal. La extensa red de metro hace que cualquier zona sea accesible, aunque reservar cerca de tu ubicación ahorra tiempo significativo. La escena es más activa en las Zonas 1-2. Reserva con anticipación durante la Semana de la Moda de Londres y eventos importantes.`,
+    keywords: ['trans Londres', 'shemale Londres', 'travestis Londres', 'acompañantes trans Londres', 'ts Reino Unido'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Londres?', a: 'Sí, la actividad profesional entre adultos que consienten es legal en el Reino Unido. Las acompañantes independientes operan legalmente.' },
+      { q: '¿Cuál es la mejor zona para acompañantes trans en Londres?', a: 'Mayfair y Knightsbridge ofrecen lujo y discreción. Soho es el centro histórico de entretenimiento. La City y Canary Wharf son ideales para viajeros de negocios.' },
+      { q: '¿Cómo verifico un perfil en Londres?', a: 'Busca perfiles con fotos verificadas, reseñas consistentes en plataformas y comunicación profesional. Los perfiles de ShemaleWiki proporcionan un punto de partida confiable.' },
+    ]
+  },
+  berlin: {
+    displayName: 'Berlín',
+    country: 'Alemania',
+    continent: 'europe',
+    intro: `Berlín es la capital indiscutible del estilo alternativo en Europa: una ciudad donde la cultura alternativa, la vida nocturna de clase mundial y las actitudes progresistas convergen para crear uno de los destinos trans más emocionantes del continente. La capital alemana es legendaria por su apertura sexual, su próspera comunidad LGBTQ+ y su espíritu libre.`,
+    scene: `La escena trans en Berlín es tan diversa como la ciudad misma. La larga tradición de liberación sexual de Berlín y su estatus como destino global de fiesta atraen a acompañantes de toda Europa, Asia y Latinoamérica. El profesionalismo alemán se encuentra con la creatividad berlinesa: puntualidad, comunicación clara y una refrescante falta de prejuicios.`,
+    districts: `Schöneberg ha sido el corazón LGBTQ+ de Berlín durante más de un siglo. Los modernos barrios de Friedrichshain y Kreuzberg ofrecen un ambiente más alternativo y juvenil. Charlottenburg brinda un ambiente más clásico y de lujo. Mitte es el distrito central ideal para arreglos de alto nivel. Prenzlauer Berg ofrece un ambiente más residencial.`,
+    tips: `Las tarifas en Berlín suelen oscilar entre €120-300 por hora. La mayoría habla excelente inglés además de alemán. La excelente red de U-Bahn y S-Bahn hace que cualquier barrio sea accesible las 24 horas. La cultura de fiesta significa que los encuentros nocturnos y de madrugada son comunes. Reserva con anticipación durante el Orgullo de Berlín y el festival de cine Berlinale.`,
+    keywords: ['trans Berlín', 'shemale Berlín', 'travestis Berlín', 'acompañantes trans Berlín', 'ts Alemania'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Berlín?', a: 'Sí, la actividad profesional independiente es legal y está regulada en Alemania. Berlín tiene un marco legal establecido desde hace mucho tiempo.' },
+      { q: '¿Cuál es la mejor zona en Berlín?', a: 'Schöneberg es el distrito LGBTQ+ histórico. Friedrichshain, Kreuzberg y Charlottenburg también son populares por su mezcla de hoteles, vida nocturna y discreción.' },
+      { q: '¿Qué idiomas hablan las acompañantes en Berlín?', a: 'La mayoría habla alemán e inglés. Muchas también hablan ruso, turco, polaco o árabe reflejando el carácter internacional de Berlín.' },
+    ]
+  },
+  brussels: {
+    displayName: 'Bruselas',
+    country: 'Bélgica',
+    continent: 'europe',
+    intro: `Bruselas es la capital diplomática de Europa y una joya subestimada para encuentros con acompañantes trans. El carácter internacional de la capital belga, su cocina de fama mundial y su sorprendente vida nocturna crean un ambiente único. Como sede de la UE y la OTAN, Bruselas atrae a una clientela sofisticada y multilingüe que aprecia la calidad y la discreción.`,
+    scene: `La escena trans en Bruselas refleja la posición de la ciudad en la encrucijada de Europa. Las acompañantes trans tienden a ser multilingües, bien educadas y acostumbradas a atender a clientes exigentes de círculos diplomáticos y empresariales. La escena es más discreta que Ámsterdam pero igualmente profesional.`,
+    districts: `El Barrio Europeo alrededor de Schuman y Place du Luxembourg es el corazón de la comunidad internacional. Los barrios de Ixelles y Saint-Gilles ofrecen un ambiente moderno y multicultural. La zona de la Grand Place brinda impresionantes telones de fondo para encuentros de lujo en hoteles como el Amigo. Las áreas de Uccle y Woluwe ofrecen privacidad residencial.`,
+    tips: `Las tarifas en Bruselas suelen oscilar entre €150-350 por hora. Francés, holandés e inglés son ampliamente utilizados. El centro compacto es transitable a pie, con excelentes conexiones de metro. La famosa gastronomía de Bruselas la hace ideal para encuentros prolongados con cena.`,
+    keywords: ['trans Bruselas', 'shemale Bruselas', 'travestis Bruselas', 'acompañantes trans Bruselas', 'ts Bélgica'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Bruselas?', a: 'Sí, la actividad profesional entre adultos que consienten es legal en Bélgica. Bruselas tiene un sector de servicios para adultos bien regulado.' },
+      { q: '¿Qué idiomas hablan las acompañantes trans en Bruselas?', a: 'La mayoría habla francés y muchas hablan holandés e inglés. Dado el carácter internacional de la ciudad, el multilingüismo es la norma.' },
+      { q: '¿Dónde está la mejor zona en Bruselas?', a: 'El Barrio Europeo, Ixelles y el área alrededor de la Grand Place son las ubicaciones principales, ofreciendo una mezcla de hoteles de lujo, excelente gastronomía y entornos discretos.' },
+    ]
+  },
+  lisbon: {
+    displayName: 'Lisboa',
+    country: 'Portugal',
+    continent: 'europe',
+    intro: `Lisboa es la soleada capital atlántica de Europa: una ciudad de siete colinas, edificios de colores pastel y una escena trans sorprendentemente vibrante. Las actitudes sociales progresistas de Portugal, el lujo asequible y el auge del turismo hacen de Lisboa un destino cada vez más popular para quienes buscan compañía trans premium.`,
+    scene: `La escena trans en Lisboa ha crecido significativamente junto con el auge turístico de la ciudad. Portugal despenalizó todas las drogas en 2001 y se ha clasificado constantemente entre los países más progresistas de Europa en temas LGBTQ+. Las acompañantes trans de Lisboa incluyen tanto portuguesas locales como una creciente comunidad brasileña.`,
+    districts: `Príncipe Real es el centro LGBTQ+ de Lisboa y el centro natural de la escena trans, lleno de bares con estilo, hoteles boutique y vibrante vida nocturna. El vecino Bairro Alto se transforma de calles tranquilas durante el día a una de las zonas de vida nocturna más animadas de Europa al anochecer. Chiado ofrece gastronomía sofisticada y compras de lujo. El distrito de Parque das Nações brinda entornos modernos frente al mar.`,
+    tips: `Las tarifas en Lisboa suelen oscilar entre €100-250 por hora. El portugués es el idioma principal; el inglés es común entre quienes atienden a turistas. Las colinas de Lisboa significan que los taxis/Uber son tus amigos. Reserva con anticipación durante el verano (junio-septiembre) y eventos importantes como el Orgullo de Lisboa y la Web Summit.`,
+    keywords: ['trans Lisboa', 'shemale Lisboa', 'travestis Lisboa', 'acompañantes trans Lisboa', 'ts Portugal'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Lisboa?', a: 'Sí, la actividad profesional entre adultos que consienten es legal en Portugal. Lisboa tiene un ambiente tolerante y profesional.' },
+      { q: '¿Cuál es la mejor zona en Lisboa?', a: 'Príncipe Real es el corazón LGBTQ+ de Lisboa. Bairro Alto, Chiado y Parque das Nações también son populares por sus hoteles, gastronomía y vida nocturna.' },
+      { q: '¿Qué idiomas hablan las acompañantes trans en Lisboa?', a: 'El portugués es el idioma principal. El inglés es común, y muchas acompañantes de Brasil añaden un distintivo sabor lusófono a la escena.' },
+    ]
+  },
+};
+
+// Helper from display name
 function cityToSlug(city) {
   return city.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
@@ -218,14 +387,20 @@ export default function CityGuide() {
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState(null);
 
+  // Detect language from URL path
+  const lang = typeof window !== 'undefined' 
+    ? (window.location.pathname.startsWith('/es/') || window.location.pathname.startsWith('/es') ? 'es' : 'en')
+    : 'en';
+  const contentMap = lang === 'es' ? cityContentEs : cityContent;
+
   const displayCountry = country.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   const displayCity = city.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
-  // Find matching content by city slug
+  // Find matching content by city slug from the correct language map
   useEffect(() => {
-    const match = cityContent[city.toLowerCase()];
+    const match = contentMap[city.toLowerCase()];
     setContent(match || null);
-  }, [city]);
+  }, [city, lang]);
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -265,24 +440,58 @@ export default function CityGuide() {
     fetchProfiles();
   }, [displayCity]);
 
-  const seoTitle = `Trans Companions in ${displayCity} — Verified Profiles`;
-  const seoDesc = content
-    ? `Find ${profileCount} verified trans companions in ${displayCity}, ${displayCountry}. Browse profiles with photos and contact info. ${content.keywords.slice(0, 3).join(', ')}.`
-    : `Find verified trans companions in ${displayCity}, ${displayCountry}. Browse ${profileCount} active profiles with photos and contact info.`;
+  // i18n helpers
+  const t = {
+    seoTitle: lang === 'es'
+      ? `Acompañantes Trans en ${displayCity} — Perfiles Verificados`
+      : `Trans Companions in ${displayCity} — Verified Profiles`,
+    seoDesc: lang === 'es'
+      ? (content 
+        ? `Encuentra ${profileCount} acompañantes trans verificadas en ${displayCity}, ${displayCountry}. Perfiles con fotos e información de contacto. ${content.keywords.slice(0, 3).join(', ')}.`
+        : `Encuentra acompañantes trans verificadas en ${displayCity}, ${displayCountry}. ${profileCount} perfiles activos con fotos e información de contacto.`)
+      : (content
+        ? `Find ${profileCount} verified trans companions in ${displayCity}, ${displayCountry}. Browse profiles with photos and contact info. ${content.keywords.slice(0, 3).join(', ')}.`
+        : `Find verified trans companions in ${displayCity}, ${displayCountry}. Browse ${profileCount} active profiles with photos and contact info.`),
+    home: lang === 'es' ? 'Inicio' : 'Home',
+    backTo: lang === 'es' ? `Volver a ${displayCountry}` : `Back to ${displayCountry}`,
+    community: lang === 'es' ? `Comunidad Trans en ${displayCity}` : `Trans Community in ${displayCity}`,
+    guideTagline: lang === 'es'
+      ? `Tu guía de acompañantes trans y perfiles verificados en ${displayCity}, ${displayCountry}`
+      : `Your guide to trans companions and verified profiles in ${displayCity}, ${displayCountry}`,
+    about: lang === 'es' ? `Sobre la Comunidad Trans en ${displayCity}` : `About Trans Community in ${displayCity}`,
+    theScene: lang === 'es' ? 'La Comunidad Trans' : 'The Trans Community',
+    districts: lang === 'es' ? 'Barrios y Zonas Populares' : 'Popular Districts & Areas',
+    tips: lang === 'es' ? `Consejos para Reservar en ${displayCity}` : `Tips for Booking Trans Community in ${displayCity}`,
+    faq: lang === 'es' ? 'Preguntas Frecuentes' : 'Frequently Asked Questions',
+    featured: lang === 'es' ? `Acompañantes Destacadas en ${displayCity}` : `Featured Trans Community in ${displayCity}`,
+    viewAllCountry: lang === 'es' 
+      ? `Ver todos los miembros en ${displayCountry}`
+      : `View all members in ${displayCountry}`,
+    viewAllCountryDesc: lang === 'es'
+      ? `Explora el directorio completo de ${displayCountry} incluyendo otras ciudades`
+      : `Browse the complete ${displayCountry} directory including other cities`,
+    viewAllBtn: lang === 'es' ? `Ver Todos los Miembros de ${displayCountry}` : `View All ${displayCountry} Members`,
+  };
 
   return (
     <>
       <SEO
-        title={seoTitle}
-        description={seoDesc}
+        title={t.seoTitle}
+        description={t.seoDesc}
         canonicalPath={`/${continent}/${country}/${city}`}
+        lang={lang}
+        alternates={lang === 'en' ? [
+          { lang: 'es', path: `/es/${continent}/${country}/${city}` }
+        ] : [
+          { lang: 'en', path: `/en/${continent}/${country}/${city}` }
+        ]}
       />
       <div className="container" style={{ padding: '2rem 0 4rem' }}>
         {/* Breadcrumb navigation */}
         <div className="city-breadcrumb">
-          <Link to="/" className="breadcrumb-link">Home</Link>
+          <Link to="/" className="breadcrumb-link">{t.home}</Link>
           <span className="breadcrumb-sep">›</span>
-          <Link to={`/${continent}`} className="breadcrumb-link">
+          <Link to={`/${lang === 'es' ? 'es/' : ''}${continent}`} className="breadcrumb-link">
             {continent.charAt(0).toUpperCase() + continent.slice(1)}
           </Link>
           <span className="breadcrumb-sep">›</span>
@@ -298,21 +507,21 @@ export default function CityGuide() {
           className="back-btn"
         >
           <ArrowLeft className="back-icon" />
-          Back to {displayCountry}
+          {t.backTo}
         </button>
 
         {/* Hero Section */}
         <div className="city-hero glass" style={{ padding: '2.5rem', marginBottom: '2rem' }}>
           <h1 className="page-title" style={{ marginBottom: '0.5rem' }}>
-            Trans Community in {displayCity}
+            {t.community}
           </h1>
           <p className="page-subtitle" style={{ fontSize: '1.2rem', marginBottom: '1.5rem' }}>
-            Your guide to trans companions and verified profiles in {displayCity}, {displayCountry}
+            {t.guideTagline}
           </p>
           <div className="city-stats" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
             <div className="city-stat">
               <Users size={20} style={{ color: 'var(--accent-primary)' }} />
-              <span><strong>{profileCount}</strong> active profiles</span>
+              <span><strong>{profileCount}</strong> {lang === 'es' ? 'perfiles activos' : 'active profiles'}</span>
             </div>
             <div className="city-stat">
               <MapPin size={20} style={{ color: 'var(--accent-primary)' }} />
@@ -324,20 +533,20 @@ export default function CityGuide() {
         {/* City Guide Content */}
         {content && (
           <div className="city-content glass" style={{ padding: '2.5rem', marginBottom: '2rem' }}>
-            <h2>About Trans Community in {displayCity}</h2>
+            <h2>{t.about}</h2>
             <p>{content.intro}</p>
 
-            <h3>The Trans Community</h3>
+            <h3>{t.theScene}</h3>
             <p>{content.scene}</p>
 
-            <h3>Popular Districts & Areas</h3>
+            <h3>{t.districts}</h3>
             <p>{content.districts}</p>
 
-            <h3>Tips for Booking Trans Community in {displayCity}</h3>
+            <h3>{t.tips}</h3>
             <p>{content.tips}</p>
 
             {/* FAQ Section */}
-            <h3 style={{ marginTop: '2rem' }}>Frequently Asked Questions</h3>
+            <h3 style={{ marginTop: '2rem' }}>{t.faq}</h3>
             <div className="city-faq">
               {content.faq.map((item, idx) => (
                 <div key={idx} className="city-faq-item">
@@ -352,7 +561,7 @@ export default function CityGuide() {
             {/* Related Keywords */}
             <div style={{ marginTop: '2rem' }}>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                Also searching for:
+                {lang === 'es' ? 'También buscando:' : 'Also searching for:'}
               </p>
               <div className="tags-container">
                 {content.keywords.map((kw, idx) => (
@@ -372,9 +581,9 @@ export default function CityGuide() {
           >
             <Building2 size={24} style={{ color: 'var(--accent-primary)' }} />
             <div>
-              <strong>View all members in {displayCountry}</strong>
+              <strong>{t.viewAllCountry}</strong>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
-                Browse the complete {displayCountry} directory including other cities
+                {t.viewAllCountryDesc}
               </p>
             </div>
           </Link>
@@ -382,7 +591,7 @@ export default function CityGuide() {
 
         {/* Profile Cards */}
         <h2 style={{ marginBottom: '1.5rem', fontSize: '1.75rem' }}>
-          Featured Trans Community in {displayCity}
+          {t.featured}
         </h2>
 
         {loading ? (
@@ -391,9 +600,9 @@ export default function CityGuide() {
           </div>
         ) : profiles.length === 0 ? (
           <div className="empty-state">
-            <p>No profiles found in {displayCity} yet.</p>
+            <p>{lang === 'es' ? `Aún no hay perfiles en ${displayCity}.` : `No profiles found in ${displayCity} yet.`}</p>
             <Link to={`/${continent}/${country}`} className="btn btn-primary" style={{ marginTop: '1rem' }}>
-              Browse all {displayCountry} members
+              {lang === 'es' ? `Explorar todos los miembros de ${displayCountry}` : `Browse all ${displayCountry} members`}
             </Link>
           </div>
         ) : (
@@ -410,7 +619,7 @@ export default function CityGuide() {
                     <h3 className="profile-card-title">{profile.name}</h3>
                     <div className="profile-card-meta">
                       <span>📍 {profile.location || 'Unknown'}</span>
-                      {profile.age && <span>🎂 Age: {profile.age}</span>}
+                      {profile.age && <span>🎂 {lang === 'es' ? `Edad: ${profile.age}` : `Age: ${profile.age}`}</span>}
                     </div>
                   </div>
                 </Link>
@@ -424,7 +633,7 @@ export default function CityGuide() {
                 className="btn btn-primary"
                 style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}
               >
-                View All {displayCountry} Members
+                {t.viewAllBtn}
               </Link>
             </div>
           </>
