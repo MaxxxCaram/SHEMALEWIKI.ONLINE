@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -12,12 +12,13 @@
     <!-- Google Fonts: both brands -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700&family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@300;400;500;700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
     <script>
-      // Dual-brand: swap meta before React mounts
+      // Dual-brand + RTL: swap meta before React mounts
       (function() {
         var host = window.location.hostname;
+        var path = window.location.pathname;
         if (host.indexOf('buscatrans') !== -1) {
           document.documentElement.lang = 'es';
           document.documentElement.setAttribute('data-brand', 'buscatrans');
@@ -28,6 +29,11 @@
           if (link) link.href = 'https://buscatrans.com/';
         } else {
           document.documentElement.setAttribute('data-brand', 'shemalewiki');
+          // Hebrew RTL detection
+          if (path.startsWith('/he/') || path === '/he') {
+            document.documentElement.lang = 'he';
+            document.documentElement.dir = 'rtl';
+          }
         }
       })();
     </script>

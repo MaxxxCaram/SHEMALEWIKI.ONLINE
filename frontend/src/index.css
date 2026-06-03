@@ -807,3 +807,68 @@ h1, h2, h3, h4, h5, h6 {
   .dash-stats { grid-template-columns: repeat(3, 1fr); }
   .section-title { font-size: 1.5rem; }
 }
+
+/* ===== HEBREW RTL SUPPORT ===== */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* RTL: Hebrew font swap */
+[dir="rtl"] body {
+  --font-display: 'Frank Ruhl Libre', 'Playfair Display', serif;
+  --font-body: 'Heebo', 'Assistant', 'DM Sans', sans-serif;
+}
+
+[dir="rtl"] [data-brand="shemalewiki"] {
+  --font-display: 'Frank Ruhl Libre', 'Bebas Neue', serif;
+  --font-body: 'Heebo', 'Space Grotesk', sans-serif;
+}
+
+/* RTL: mirror flexbox */
+[dir="rtl"] .nav-links,
+[dir="rtl"] .search-container,
+[dir="rtl"] .filter-pills,
+[dir="rtl"] .btn {
+  flex-direction: row-reverse;
+}
+
+/* RTL: fix navbar grid (left↔right) */
+[dir="rtl"] .nav-left { grid-column: 3; justify-content: flex-end; }
+[dir="rtl"] .nav-right { grid-column: 1; justify-content: flex-start; }
+
+/* RTL: text alignment overrides */
+[dir="rtl"] .hero-section { text-align: center; }
+[dir="rtl"] .section-title { text-align: right; }
+[dir="rtl"] .card-content { text-align: right; }
+[dir="rtl"] .profile-details { text-align: right; }
+
+/* RTL: mirror padding/margin */
+[dir="rtl"] .search-input { padding-right: 1.25rem; padding-left: 1.25rem; }
+[dir="rtl"] .btn { padding-right: 1.5rem; padding-left: 1.5rem; }
+
+/* RTL: form inputs */
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] select { text-align: right; direction: rtl; }
+
+/* RTL: mirror icons/spacing in buttons */
+[dir="rtl"] .btn svg,
+[dir="rtl"] .btn img { margin-left: 0.5rem; margin-right: 0; }
+
+/* RTL: breadcrumbs */
+[dir="rtl"] .breadcrumb { direction: rtl; }
+[dir="rtl"] .breadcrumb a::after { content: ' ← '; }
+[dir="rtl"] .breadcrumb a::before { content: none; }
+
+/* RTL: profile cards */
+[dir="rtl"] .profile-card { text-align: right; }
+[dir="rtl"] .badge { margin-left: 0; margin-right: 0.5rem; }
+
+/* RTL: footer */
+[dir="rtl"] .footer-links { flex-direction: row-reverse; }
+
+/* RTL: responsive */
+@media (max-width: 768px) {
+  [dir="rtl"] .search-container { flex-direction: column; }
+}

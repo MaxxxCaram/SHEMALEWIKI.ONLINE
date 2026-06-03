@@ -124,6 +124,12 @@ function AppContent() {
           <Route path="/pt/:continent/:country" element={<ProfilesList />} />
           <Route path="/pt/:continent/:country/:city" element={<CityGuide />} />
           <Route path="/pt/profile/:id" element={<Profile />} />
+
+          <Route path="/he" element={<Continents />} />
+          <Route path="/he/:continent" element={<Countries />} />
+          <Route path="/he/:continent/:country" element={<ProfilesList />} />
+          <Route path="/he/:continent/:country/:city" element={<CityGuide />} />
+          <Route path="/he/profile/:id" element={<Profile />} />
         </Routes>
       </main>
     </Router>

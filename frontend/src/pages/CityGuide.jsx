@@ -374,6 +374,35 @@ const cityContentEs = {
   },
 };
 
+// ── HEBREW CITY CONTENT ──
+const cityContentHe = {
+  'tel-aviv': {
+    displayName: 'תל אביב',
+    country: 'Israel',
+    continent: 'asia',
+    intro: 'תל אביב היא העיר התוססת והקוסמופוליטית ביותר במזרח התיכון, וידועה בתרבות הליברלית שלה, חיי הלילה המפורסמים, וקהילת הלהטב"ק הגאה. העיר הלבנה לחוף הים התיכון מושכת אליה מבקרים מכל העולם, והסצנה הטרנסית כאן משקפת את הפתיחות והאנרגיה הייחודית של תל אביב.',
+    scene: 'הסצנה הטרנסית בתל אביב מגוונת ומשגשגת. תוכלו למצוא כאן יזמיות עצמאיות מהארץ ומהעולם, המציעות חוויות וחברה ברמה הגבוהה ביותר. המרכזים הפופולריים כוללים את שדרות רוטשילד, נווה צדק, אזור הנמל, ודרום העיר — כל אחד עם האופי הייחודי שלו.',
+    districts: [
+      { name: 'מרכז העיר (רוטשילד, אלנבי)', description: 'לב העיר הפועם — בתי קפה, מסעדות יוקרה, חיי לילה תוססים ומלונות בוטיק. האזור המבוקש ביותר.' },
+      { name: 'נווה צדק', description: 'שכונה ציורית עם סמטאות רומנטיות, גלריות, ומסעדות שף. מושלם למפגש אלגנטי ושקט.' },
+      { name: 'נמל תל אביב', description: 'מתחם בילויים על קו המים עם מסעדות, ברים ומועדונים. אווירה צעירה ותוססת.' },
+      { name: 'דרום תל אביב (פלורנטין, נווה שאנן)', description: 'אזור אמנותי, רב-תרבותי, עם אווירה אורבנית ייחודית ומחירים נגישים יותר.' },
+    ],
+    tips: [
+      'רוב היזמיות בתל אביב דוברות עברית ואנגלית — חלקן גם רוסית, צרפתית או ערבית.',
+      'סופי השבוע בתל אביב (שישי-שבת) רגועים יותר — ימי חול הם הזמן העמוס ביותר.',
+      'המלונות לאורך הטיילת מציעים דיסקרטיות ונוף לים — אזור מושלם למפגש.',
+      'התחבורה הציבורית מצוינת, אבל מוניות ושירותי הסעות פרטיים זמינים ונוחים מאוד.',
+    ],
+    keywords: ['תל אביב', 'טרנס', 'ישראל', 'חוויות', 'מפגשים', 'חברה', 'עצמאיות', 'להטב"ק', 'דיסקרטי'],
+    faq: [
+      { q: 'האם החוויות בתל אביב חוקיות?', a: 'כן. מפגשים בין בגירים בהסכמה הם חוקיים בישראל. תל אביב ידועה בסביבה הבטוחה והליברלית שלה.' },
+      { q: 'מה האזור המומלץ ביותר בתל אביב?', a: 'מרכז העיר — רוטשילד, אלנבי ונווה צדק — הוא האזור הפופולרי ביותר. הנמל מצוין לאווירה צעירה, ודרום העיר מציע אלטרנטיבה אמנותית.' },
+      { q: 'איך יוצרים קשר עם יזמיות עצמאיות בתל אביב?', a: 'פשוט — כל פרופיל מציג מספר טלפון, וואטסאפ או אימייל. אפשר ליצור קשר ישירות.' },
+    ],
+  },
+};
+
 // Helper from display name
 function cityToSlug(city) {
   return city.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -389,9 +418,11 @@ export default function CityGuide() {
 
   // Detect language from URL path
   const lang = typeof window !== 'undefined' 
-    ? (window.location.pathname.startsWith('/es/') || window.location.pathname.startsWith('/es') ? 'es' : 'en')
+    ? (window.location.pathname.startsWith('/es/') || window.location.pathname.startsWith('/es') ? 'es'
+      : window.location.pathname.startsWith('/he/') || window.location.pathname.startsWith('/he') ? 'he'
+      : 'en')
     : 'en';
-  const contentMap = lang === 'es' ? cityContentEs : cityContent;
+  const contentMap = lang === 'es' ? cityContentEs : lang === 'he' ? cityContentHe : cityContent;
 
   const displayCountry = country.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   const displayCity = city.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
@@ -440,38 +471,67 @@ export default function CityGuide() {
     fetchProfiles();
   }, [displayCity]);
 
-  // i18n helpers
-  const t = {
-    seoTitle: lang === 'es'
-      ? `Acompañantes Trans en ${displayCity} — Perfiles Verificados`
-      : `Trans Companions in ${displayCity} — Verified Profiles`,
-    seoDesc: lang === 'es'
-      ? (content 
-        ? `Encuentra ${profileCount} acompañantes trans verificadas en ${displayCity}, ${displayCountry}. Perfiles con fotos e información de contacto. ${content.keywords.slice(0, 3).join(', ')}.`
-        : `Encuentra acompañantes trans verificadas en ${displayCity}, ${displayCountry}. ${profileCount} perfiles activos con fotos e información de contacto.`)
-      : (content
-        ? `Find ${profileCount} verified trans companions in ${displayCity}, ${displayCountry}. Browse profiles with photos and contact info. ${content.keywords.slice(0, 3).join(', ')}.`
+  // i18n helpers — lookup by language
+  const i18n = {
+    en: {
+      seoTitle: `Trans Companions in ${displayCity} — Verified Profiles`,
+      seoDesc: (content
+        ? `Find ${profileCount} verified trans companions in ${displayCity}, ${displayCountry}. Browse profiles with photos and contact info. ${(content.keywords || []).slice(0, 3).join(', ')}.`
         : `Find verified trans companions in ${displayCity}, ${displayCountry}. Browse ${profileCount} active profiles with photos and contact info.`),
-    home: lang === 'es' ? 'Inicio' : 'Home',
-    backTo: lang === 'es' ? `Volver a ${displayCountry}` : `Back to ${displayCountry}`,
-    community: lang === 'es' ? `Comunidad Trans en ${displayCity}` : `Trans Community in ${displayCity}`,
-    guideTagline: lang === 'es'
-      ? `Tu guía de acompañantes trans y perfiles verificados en ${displayCity}, ${displayCountry}`
-      : `Your guide to trans companions and verified profiles in ${displayCity}, ${displayCountry}`,
-    about: lang === 'es' ? `Sobre la Comunidad Trans en ${displayCity}` : `About Trans Community in ${displayCity}`,
-    theScene: lang === 'es' ? 'La Comunidad Trans' : 'The Trans Community',
-    districts: lang === 'es' ? 'Barrios y Zonas Populares' : 'Popular Districts & Areas',
-    tips: lang === 'es' ? `Consejos para Reservar en ${displayCity}` : `Tips for Booking Trans Community in ${displayCity}`,
-    faq: lang === 'es' ? 'Preguntas Frecuentes' : 'Frequently Asked Questions',
-    featured: lang === 'es' ? `Acompañantes Destacadas en ${displayCity}` : `Featured Trans Community in ${displayCity}`,
-    viewAllCountry: lang === 'es' 
-      ? `Ver todos los miembros en ${displayCountry}`
-      : `View all members in ${displayCountry}`,
-    viewAllCountryDesc: lang === 'es'
-      ? `Explora el directorio completo de ${displayCountry} incluyendo otras ciudades`
-      : `Browse the complete ${displayCountry} directory including other cities`,
-    viewAllBtn: lang === 'es' ? `Ver Todos los Miembros de ${displayCountry}` : `View All ${displayCountry} Members`,
+      home: 'Home',
+      backTo: `Back to ${displayCountry}`,
+      community: `Trans Community in ${displayCity}`,
+      guideTagline: `Your guide to trans companions and verified profiles in ${displayCity}, ${displayCountry}`,
+      about: `About Trans Community in ${displayCity}`,
+      theScene: 'The Trans Community',
+      districts: 'Popular Districts & Areas',
+      tips: `Tips for Booking Trans Community in ${displayCity}`,
+      faq: 'Frequently Asked Questions',
+      featured: `Featured Trans Community in ${displayCity}`,
+      viewAllCountry: `View all members in ${displayCountry}`,
+      viewAllCountryDesc: `Browse the complete ${displayCountry} directory including other cities`,
+      viewAllBtn: `View All ${displayCountry} Members`,
+    },
+    es: {
+      seoTitle: `Acompañantes Trans en ${displayCity} — Perfiles Verificados`,
+      seoDesc: (content
+        ? `Encuentra ${profileCount} acompañantes trans verificadas en ${displayCity}, ${displayCountry}. Perfiles con fotos e información de contacto. ${(content.keywords || []).slice(0, 3).join(', ')}.`
+        : `Encuentra acompañantes trans verificadas en ${displayCity}, ${displayCountry}. ${profileCount} perfiles activos con fotos e información de contacto.`),
+      home: 'Inicio',
+      backTo: `Volver a ${displayCountry}`,
+      community: `Comunidad Trans en ${displayCity}`,
+      guideTagline: `Tu guía de acompañantes trans y perfiles verificados en ${displayCity}, ${displayCountry}`,
+      about: `Sobre la Comunidad Trans en ${displayCity}`,
+      theScene: 'La Comunidad Trans',
+      districts: 'Barrios y Zonas Populares',
+      tips: `Consejos para Reservar en ${displayCity}`,
+      faq: 'Preguntas Frecuentes',
+      featured: `Acompañantes Destacadas en ${displayCity}`,
+      viewAllCountry: `Ver todos los miembros en ${displayCountry}`,
+      viewAllCountryDesc: `Explora el directorio completo de ${displayCountry} incluyendo otras ciudades`,
+      viewAllBtn: `Ver Todos los Miembros de ${displayCountry}`,
+    },
+    he: {
+      seoTitle: `חוויות פרימיום בתל אביב — פרופילים מאומתים`,
+      seoDesc: (content
+        ? `גלו ${profileCount} פרופילים מאומתים בתל אביב, ${displayCountry}. דפדפו בפרופילים עם תמונות ופרטי קשר. ${(content.keywords || []).slice(0, 3).join(', ')}.`
+        : `גלו פרופילים מאומתים בתל אביב, ${displayCountry}. ${profileCount} פרופילים פעילים עם תמונות ופרטי קשר.`),
+      home: 'דף הבית',
+      backTo: `חזרה ל${displayCountry}`,
+      community: `הקהילה הטרנסית בתל אביב`,
+      guideTagline: `המדריך שלכם לחוויות פרימיום ופרופילים מאומתים בתל אביב, ${displayCountry}`,
+      about: `על הקהילה הטרנסית בתל אביב`,
+      theScene: 'הקהילה הטרנסית',
+      districts: 'אזורים פופולריים',
+      tips: `טיפים למפגש בתל אביב`,
+      faq: 'שאלות נפוצות',
+      featured: `פרופילים מובילים בתל אביב`,
+      viewAllCountry: `צפו בכל החברים ב${displayCountry}`,
+      viewAllCountryDesc: `דפדפו במדריך המלא של ${displayCountry} כולל ערים נוספות`,
+      viewAllBtn: `צפו בכל החברים מ${displayCountry}`,
+    },
   };
+  const t = i18n[lang] || i18n.en;
 
   return (
     <>
@@ -480,18 +540,19 @@ export default function CityGuide() {
         description={t.seoDesc}
         canonicalPath={`/${continent}/${country}/${city}`}
         lang={lang}
-        alternates={lang === 'en' ? [
-          { lang: 'es', path: `/es/${continent}/${country}/${city}` }
-        ] : [
-          { lang: 'en', path: `/en/${continent}/${country}/${city}` }
-        ]}
+        alternates={(lang === 'en' 
+          ? [{ lang: 'es', path: `/es/${continent}/${country}/${city}` }, { lang: 'he', path: `/he/${continent}/${country}/${city}` }]
+          : lang === 'es'
+          ? [{ lang: 'en', path: `/en/${continent}/${country}/${city}` }, { lang: 'he', path: `/he/${continent}/${country}/${city}` }]
+          : [{ lang: 'en', path: `/en/${continent}/${country}/${city}` }, { lang: 'es', path: `/es/${continent}/${country}/${city}` }]
+        )}
       />
       <div className="container" style={{ padding: '2rem 0 4rem' }}>
         {/* Breadcrumb navigation */}
         <div className="city-breadcrumb">
           <Link to="/" className="breadcrumb-link">{t.home}</Link>
           <span className="breadcrumb-sep">›</span>
-          <Link to={`/${lang === 'es' ? 'es/' : ''}${continent}`} className="breadcrumb-link">
+          <Link to={`/${lang === 'en' ? '' : lang + '/'}${continent}`} className="breadcrumb-link">
             {continent.charAt(0).toUpperCase() + continent.slice(1)}
           </Link>
           <span className="breadcrumb-sep">›</span>
