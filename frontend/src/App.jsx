@@ -44,7 +44,7 @@ function Navbar() {
         </div>
         <Link to={bt ? "/es/" : "/"} className="nav-brand">
           {bt ? (
-            <img src={logoBT} alt="BuscaTrans" style={{ height: '60px' }} />
+            <img src={logoBT} alt="BuscaTrans" style={{ height: '90px' }} />
           ) : (
             <>
               <img src={logoSw} alt="ShemaleWiki Online" style={{ height: '36px', marginRight: '8px' }} />

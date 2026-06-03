@@ -160,7 +160,7 @@ export default function AgeVerification({ onVerify }) {
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           {bt ? (
-            <img src={logoBT} alt="BuscaTrans" style={{ height: '65px' }} />
+            <img src={logoBT} alt="BuscaTrans" style={{ height: '100px' }} />
           ) : (
             <img src={logoSw} alt="ShemaleWiki" style={{ height: '55px' }} />
           )}
