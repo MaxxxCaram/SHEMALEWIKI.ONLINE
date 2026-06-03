@@ -49,7 +49,7 @@ const content = {
       plans: [
         { id: 'free', name: 'Free', price: 0, features: [] },
         { id: 'standard', name: 'Standard', price: 19, recommended: true, features: ['Top of search results', 'Verified badge', 'View analytics', 'Priority support'] },
-        { id: 'vip', name: 'VIP Gold', price: 49, features: ['Everything in Standard', 'Homepage feature slot', 'Tour date promotion', 'Dedicated account manager'] },
+        { id: 'vip', name: 'VIP Gold', price: 49, features: ['Everything in Standard', 'Homepage feature slot', 'Tour date promotion', 'Priority verification'] },
       ],
     },
     ctas: ['Next → Profile details', 'Next → Upload photos', 'Next → Choose plan', 'Publish my profile →'],
