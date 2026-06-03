@@ -7,6 +7,7 @@ const getLang = () => {
   if (typeof window === 'undefined') return 'en';
   if (isBT() || (typeof window !== 'undefined' && window.location.pathname.startsWith('/es'))) return 'es';
   if (typeof window !== 'undefined' && window.location.pathname.startsWith('/pt')) return 'pt';
+  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/he')) return 'he';
   return 'en';
 };
 
@@ -58,6 +59,21 @@ const contents = {
       { heading: '10. Modificações', body: 'Reservamo-nos o direito de modificar esta Política de Privacidade. As alterações serão publicadas nesta página. O uso continuado do site constitui a sua aceitação.', lastUpdated: 'Maio 2026' },
     ],
   },
+  he: {
+    title: 'מדיניות פרטיות',
+    sections: [
+      { heading: '1. בקר/ת הנתונים', body: `בקר/ת הנתונים האחראי/ת לעיבוד המידע האישי שלך היא ${company.name}, עם כתובת רשומה ב${company.country}. אימייל ליצירת קשר: ${company.email}.` },
+      { heading: '2. נתונים שנאספים', body: 'אנו אוספים את הנתונים הבאים:\n• מידע שנמסר בעת ההרשמה: שם במה, אימייל, וואטסאפ/טלגרם, מדינה, עיר.\n• תוכן הפרופיל: ביוגרפיה, תמונות, תעריפים, שירותים, זמינות.\n• נתוני שימוש: כתובת IP, סוג דפדפן, דפים שבוקרו, זמני גישה.\n• נתוני אימות גיל: שנת לידה (לא נשמרת לאחר אימות).' },
+      { heading: '3. מטרת העיבוד', body: 'הנתונים שלך מעובדים לצורך:\n• פרסום וניהול פרופילים בפלטפורמה.\n• פרסום צולב בין ShemaleWiki.online ו-BuscaTrans.com (בהסכמתך).\n• תקשורת בנוגע לחשבון ולמודעות שלך.\n• שיפור השירותים והפונקציונליות של האתר.\n• עמידה בהתחייבויות חוקיות, כולל אימות גיל.' },
+      { heading: '4. בסיס חוקי', body: 'העיבוד מבוסס על:\n• הסכמתך המפורשת בעת ההרשמה ופרסום התוכן.\n• אינטרס לגיטימי בתפעול פלטפורמת המדריך.\n• עמידה בהתחייבויות חוקיות (אימות גיל, מניעת תוכן בלתי חוקי).' },
+      { heading: '5. שמירת נתונים', body: '• נתוני פרופיל: נשמרים כל עוד החשבון פעיל. ניתן למחוק את החשבון בכל עת.\n• אימות גיל: שנת לידה אינה נשמרת לאחר אימות.\n• יומני שימוש: נשמרים למשך 12 חודשים לצורכי אבטחה.\n• תמונות ומודעות: נשמרות עד למחיקתן או סגירת החשבון.' },
+      { heading: '6. שיתוף נתונים', body: 'איננו מוכרים את הנתונים האישיים שלך. נתונים עשויים להיות משותפים עם:\n• ספקי שירות: אחסון (Vercel), מסד נתונים (Supabase), שירותי אימייל.\n• רשויות מוסמכות: כאשר הדבר נדרש על פי חוק או לדיווח על תוכן בלתי חוקי.\n• פרסום צולב: אם תסכים/י, הפרופיל שלך יופיע בשני האתרים ShemaleWiki.online ו-BuscaTrans.com.' },
+      { heading: '7. זכויות המשתמש/ת', body: 'יש לך זכות ל:\n• גישה לנתונים האישיים שלך.\n• תיקון נתונים לא מדויקים.\n• מחיקת הנתונים שלך (\"הזכות להישכח\").\n• הגבלת עיבוד.\n• ניידות נתונים.\n• התנגדות לעיבוד.\n• ביטול הסכמה בכל עת.\n\nלמימוש זכויות אלה, צור/צרי קשר: ${company.email}' },
+      { heading: '8. עוגיות (Cookies)', body: 'אנו משתמשים בעוגיות חיוניות לניהול מושב ולאימות גיל. לא נעשה שימוש בעוגיות פרסום או מעקב ללא הסכמה. ניתן להגדיר את הדפדפן לדחות עוגיות, אך הדבר עלול להשפיע על פונקציונליות האתר.' },
+      { heading: '9. אבטחה', body: 'אנו מיישמים אמצעים טכניים וארגוניים מתאימים להגנה על הנתונים שלך: הצפנת SSL, מסד נתונים מאובטח עם בקרות גישה, וגישת צוות מוגבלת לנתונים אישיים.' },
+      { heading: '10. שינויים', body: 'אנו שומרים לעצמנו את הזכות לשנות מדיניות פרטיות זו. שינויים יפורסמו בדף זה. שימוש מתמשך באתר מהווה הסכמה.', lastUpdated: 'מאי 2026' },
+    ],
+  },
 };
 
 export default function Privacy() {
@@ -65,7 +81,7 @@ export default function Privacy() {
   const t = contents[lang] || contents.en;
   const bt = isBT();
   const brand = bt ? 'BuscaTrans' : 'ShemaleWiki';
-  const backLabels = { en: '← Back to home', es: '← Volver al inicio', pt: '← Voltar ao início' };
+  const backLabels = { en: '← Back to home', es: '← Volver al inicio', pt: '← Voltar ao início', he: 'חזרה לדף הבית ←' };
 
   return (
     <>
