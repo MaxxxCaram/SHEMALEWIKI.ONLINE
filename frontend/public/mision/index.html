@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShemaleWiki — Mission Control</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --panel: #111827;
+    --border: #1e293b;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --green: #10b981;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --pink: #ec4899;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(124,58,237,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 60%, rgba(6,182,212,0.06) 0%, transparent 60%);
+  }
+  .header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.5px;
+  }
+  .header .badge {
+    background: rgba(124,58,237,0.15);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .refresh {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-left: 12px;
+  }
+  .main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .card-header h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+  .card-header .icon { font-size: 1.4rem; }
+  /* KPIs */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+  }
+  .kpi-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+  }
+  .kpi-value {
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .kpi-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .kpi-sub {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .text-green { color: var(--green); }
+  .text-amber { color: var(--amber); }
+  .text-accent { color: var(--accent); }
+  .text-pink { color: var(--pink); }
+  .text-cyan { color: var(--accent2); }
+  /* Progress bar */
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+  .fill-green { background: var(--green); }
+  .fill-accent { background: var(--accent); }
+  .fill-cyan { background: var(--accent2); }
+  .fill-amber { background: var(--amber); }
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+  th {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 2px solid var(--border);
+    color: var(--muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  td {
+    padding: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  tr:hover td { background: rgba(124,58,237,0.05); }
+  /* Timeline */
+  .timeline { position: relative; padding-left: 24px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 16px;
+    padding-left: 8px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -18px;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+  .timeline-date {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .timeline-text {
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .tag-done { background: rgba(16,185,129,0.15); color: var(--green); }
+  .tag-progress { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .tag-todo { background: rgba(148,163,184,0.15); color: var(--muted); }
+  .tag-blocked { background: rgba(239,68,68,0.15); color: var(--red); }
+  /* Domain status */
+  .domain-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-live { background: var(--green); box-shadow: 0 0 6px rgba(16,185,129,0.5); }
+  .dot-unknown { background: var(--amber); }
+  /* Full width cards */
+  .span-2 { grid-column: span 2; }
+  @media (max-width: 768px) {
+    .main { grid-template-columns: 1fr; padding: 16px; }
+    .span-2 { grid-column: span 1; }
+    .header { padding: 12px 16px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  /* pulse animation for live indicator */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .live-pulse {
+    animation: pulse 2s infinite;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <h1>🛰️ ShemaleWiki Mission Control</h1>
+    <span class="refresh">Actualizado: <span id="timestamp">--</span> • Fuente: Supabase + Vercel</span>
+  </div>
+  <div>
+    <span class="badge live-pulse">● LIVE</span>
+    <span class="badge" style="border-color: var(--accent2); color: var(--accent2);">FASE 2</span>
+  </div>
+</div>
+
+<!-- KPI ROW -->
+<div style="max-width:1400px; margin: 0 auto; padding: 24px 32px 0;">
+  <div class="kpi-grid" id="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-value text-accent" id="kpi-profiles">--</div>
+      <div class="kpi-label">Perfiles Totales</div>
+      <div class="kpi-sub">Supabase</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value text-green" id="kpi-phone">--</div>
+      <div class="kpi-label">Con Teléfono</div>
+      <div class="kpi-sub" id="kpi-phone-pct"></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value text-cyan" id="kpi-wa">--</div>
+      <div class="kpi-label">Con WhatsApp</div>
+      <div class="kpi-sub" id="kpi-wa-pct"></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value text-pink" id="kpi-email">--</div>
+      <div class="kpi-label">Con Email</div>
+      <div class="kpi-sub" id="kpi-email-pct"></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value text-amber" id="kpi-photos">--</div>
+      <div class="kpi-label">Fotos</div>
+      <div class="kpi-sub">Storage</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value text-green" id="kpi-domains">--</div>
+      <div class="kpi-label">Dominios Live</div>
+      <div class="kpi-sub">Vercel</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main" id="main-grid">
+
+  <!-- ROADMAP -->
+  <div class="card span-2">
+    <div class="card-header">
+      <h3>🗺️ Roadmap 90 Días</h3>
+      <span class="icon">🎯</span>
+    </div>
+    <div id="roadmap"></div>
+  </div>
+
+  <!-- DATA SOURCES -->
+  <div class="card">
+    <div class="card-header">
+      <h3>📡 Fuentes de Datos</h3>
+      <span class="icon">🔍</span>
+    </div>
+    <div id="sources"></div>
+  </div>
+
+  <!-- DOMAINS -->
+  <div class="card">
+    <div class="card-header">
+      <h3>🌐 Dominios</h3>
+      <span class="icon">🔗</span>
+    </div>
+    <div id="domains"></div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="card span-2">
+    <div class="card-header">
+      <h3>📜 Registro de Actividades</h3>
+      <span class="icon">⏱️</span>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </div>
+
+  <!-- TOP COUNTRIES -->
+  <div class="card">
+    <div class="card-header">
+      <h3>🌍 Top Países</h3>
+      <span class="icon">📍</span>
+    </div>
+    <div id="countries"></div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="card">
+    <div class="card-header">
+      <h3>⚡ Accesos Rápidos</h3>
+      <span class="icon">🚀</span>
+    </div>
+    <div id="links"></div>
+  </div>
+
+</div>
+
+<script>
+// ===== DATA INJECTION =====
+const DATA = {
+  profiles: 4055,
+  withPhone: 3291,
+  withWA: 1019,
+  withEmail: 223,
+  withPhotos: 40791,
+  countries: {"Netherlands":546,"Argentina":209,"Spain":147,"Belgium":51,"Germany":30,"Brazil":18,"Finland":15,"Switzerland":10,"United Kingdom":8,"France":6},
+  domains: [
+    {name:"shemalewiki.online", status:"live"},
+    {name:"buscatrans.com", status:"live"},
+    {name:"www.shemalewiki.online", status:"live"},
+    {name:"www.buscatrans.com", status:"live"},
+  ],
+  sources: [
+    {name:"kinky.nl", profiles:1846, status:"scraped", note:"Firefox Playwright"},
+    {name:"Wayback Machine", profiles:1256, status:"recovered", note:"ShemaleWiki.com 2013-25"},
+    {name:"distintas.net", profiles:206, status:"scraped", note:"+ 132 WhatsApp"},
+    {name:"topshemales.com", profiles:20, status:"scraped", note:"+ 6 Telegram"},
+  ],
+  roadmap: [
+    {phase:"FASE 1: Fundación ✅", progress:100, color:"fill-green", items:"Supabase schema, Vercel deploy, dominios live, recovery WB, age gate, disclaimer"},
+    {phase:"FASE 2: Contenido 🔄", progress:75, color:"fill-accent", items:"3,310 contactos extraídos, 40K fotos, city guides (Ámsterdam, Barcelona, Bruselas, Madrid, Helsinki)"},
+    {phase:"FASE 3: Monetización ⏳", progress:15, color:"fill-cyan", items:"Pricing page, featured listings, ad networks (ExoClick, TrafficJunky), stripe/payments"},
+    {phase:"FASE 4: Growth 🎯", progress:0, color:"fill-amber", items:"SEO indexing, backlinks, social media, email marketing, 10K daily visitors target"},
+  ],
+  timeline: [
+    {date:"May 14", text:"Supabase schema created. WB profiles imported (2,000 numeric IDs). Age gate + disclaimer added."},
+    {date:"May 15", text:"Vercel deploy live. Domains shemalewiki.online + buscatrans.com configured. Dual-brand frontend working."},
+    {date:"May 16-20", text:"Archive.org photo filters fixed. 40K photos linked to profiles. Watermark filter applied."},
+    {date:"May 21", text:"kinky.nl scraping scripts (v6.2). Firefox + requests combo works. Cloudflare bypass solved."},
+    {date:"May 26", text:"distintas.net scraping: 291 profiles (132 WA). Argentina/Brazil/Spain coverage."},
+    {date:"May 29", text:"Vercel DNS migration. Hostinger → Vercel NS. HTTPS live on both domains. Build cache fix."},
+    {date:"Jun 2", text:"Supabase SMTP config (Hostinger). Email templates ES con branding BuscaTrans. PAT token."},
+    {date:"Jun 2-5", text:"Bulk contact extraction: 3,310 perfiles con teléfono/WA/email. Excel consolidado. Linkage kinky_↔UUID."},
+    {date:"Jun 5", text:"Mission Control dashboard deployed. Registro visual de progreso del proyecto."},
+  ],
+  links: [
+    {label:"Sitio Live", url:"https://shemalewiki.online"},
+    {label:"BuscaTrans", url:"https://buscatrans.com"},
+    {label:"Supabase", url:"https://supabase.com/dashboard/project/qtuzpswxzengqoqqwtpt"},
+    {label:"Vercel", url:"https://vercel.com/maxxxcaram/shemalewiki-online"},
+    {label:"GitHub Repo", url:"https://github.com/MaxxxCaram/SHEMALEWIKI.ONLINE"},
+  ],
+};
+
+// ===== RENDER =====
+document.getElementById('timestamp').textContent = new Date().toLocaleString('es-AR');
+
+// KPIs
+document.getElementById('kpi-profiles').textContent = DATA.profiles.toLocaleString();
+document.getElementById('kpi-phone').textContent = DATA.withPhone.toLocaleString();
+document.getElementById('kpi-phone-pct').textContent = Math.round(DATA.withPhone/DATA.profiles*100) + '% del total';
+document.getElementById('kpi-wa').textContent = DATA.withWA.toLocaleString();
+document.getElementById('kpi-wa-pct').textContent = Math.round(DATA.withWA/DATA.profiles*100) + '% del total';
+document.getElementById('kpi-email').textContent = DATA.withEmail.toLocaleString();
+document.getElementById('kpi-email-pct').textContent = Math.round(DATA.withEmail/DATA.profiles*100) + '% del total';
+document.getElementById('kpi-photos').textContent = DATA.withPhotos.toLocaleString();
+document.getElementById('kpi-domains').textContent = DATA.domains.filter(d=>d.status==='live').length;
+
+// Roadmap
+let roadmapHTML = '';
+DATA.roadmap.forEach(r => {
+  roadmapHTML += `
+    <div style="margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-weight:600;">${r.phase}</span>
+        <span style="font-size:0.75rem;color:var(--muted);">${r.progress}%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill ${r.color}" style="width:${r.progress}%"></div></div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">${r.items}</div>
+    </div>`;
+});
+document.getElementById('roadmap').innerHTML = roadmapHTML;
+
+// Sources
+let sourcesHTML = '<table><tr><th>Fuente</th><th>Perfiles</th><th>Estado</th></tr>';
+DATA.sources.forEach(s => {
+  sourcesHTML += `<tr><td><strong>${s.name}</strong><br><span style="font-size:0.7rem;color:var(--muted);">${s.note}</span></td><td style="font-weight:700;">${s.profiles}</td><td><span class="tag tag-done">${s.status}</span></td></tr>`;
+});
+sourcesHTML += '</table>';
+document.getElementById('sources').innerHTML = sourcesHTML;
+
+// Domains
+let domainsHTML = '';
+DATA.domains.forEach(d => {
+  domainsHTML += `<div class="domain-status"><span class="dot dot-live"></span><span>${d.name}</span><span class="tag tag-done">live</span></div>`;
+});
+document.getElementById('domains').innerHTML = domainsHTML;
+
+// Timeline
+let timelineHTML = '';
+DATA.timeline.forEach(t => {
+  timelineHTML += `
+    <div class="timeline-item">
+      <div class="timeline-date">${t.date}</div>
+      <div class="timeline-text">${t.text}</div>
+    </div>`;
+});
+document.getElementById('timeline').innerHTML = timelineHTML;
+
+// Countries
+let countriesHTML = '<table><tr><th>País</th><th>Perfiles</th></tr>';
+Object.entries(DATA.countries).forEach(([c,n]) => {
+  countriesHTML += `<tr><td>${c}</td><td style="font-weight:600;">${n}</td></tr>`;
+});
+countriesHTML += '</table>';
+document.getElementById('countries').innerHTML = countriesHTML;
+
+// Links
+let linksHTML = '';
+DATA.links.forEach(l => {
+  linksHTML += `<div style="margin-bottom:8px;"><a href="${l.url}" target="_blank" style="color:var(--accent2);text-decoration:none;font-size:0.85rem;">→ ${l.label}</a></div>`;
+});
+document.getElementById('links').innerHTML = linksHTML;
+</script>
+
+</body>
+</html>
