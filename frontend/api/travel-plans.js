@@ -6,7 +6,10 @@
  * POST /api/travel-plans                  → create/update plans for a profile
  * 
  * Backend: Supabase Storage bucket `travel-plans`
- * File format: {profile_id}.json → { plans: [...], profile_id }
+ * - {profile_id}.json → { plans: [...], profile_id }
+ * - _index.json → { profiles: { [id]: { cities: [...], updated_at } } }
+ * 
+ * Supabase bug: bucket listing always returns 400. We use _index.json instead.
  * 
  * Cron activation: POST /api/travel-plans with X-Internal-Secret header
  * activates plans whose arrival is within 48h, deactivates expired ones.
@@ -15,139 +18,116 @@
 const SUPABASE_URL = 'https://qtuzpswxzengqoqqwtpt.supabase.co';
 const INTERNAL_SECRET = process.env.TRAVEL_INTERNAL_SECRET || 'vivas-travel-2026-internal';
 
-// Load service key from Vercel env
 function getServiceKey() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) throw new Error('SUPABASE_SERVICE_ROLE_KEY not set');
   return key;
 }
 
-function supabaseHeaders(serviceKey) {
-  return {
-    'apikey': serviceKey,
-    'Authorization': `Bearer ${serviceKey}`,
-    'Content-Type': 'application/json',
-  };
+// ─── Storage helpers ───
+
+function sbAuth(serviceKey) {
+  return { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` };
 }
 
-// Read all travel plans from storage
-async function getAllPlans(serviceKey) {
-  // Supabase Storage listing requires prefix= param (bare listing returns 400)
+async function readFile(serviceKey, filename) {
   const resp = await fetch(
-    `${SUPABASE_URL}/storage/v1/object/list/travel-plans?prefix=`,
-    { 
-      headers: { 
-        apikey: serviceKey, 
-        Authorization: `Bearer ${serviceKey}` 
-      } 
-    }
+    `${SUPABASE_URL}/storage/v1/object/travel-plans/${filename}`,
+    { headers: sbAuth(serviceKey) }
   );
-  
-  if (!resp.ok) {
-    const err = await resp.text();
-    console.error('Failed to list travel plans:', resp.status, err);
-    return [];
-  }
-  
-  const data = await resp.json();
-  const files = (data || []).filter(f => f.name && f.name.endsWith('.json') && f.name !== '_index.json');
-  
-  const allPlans = [];
-  for (const file of files) {
-    try {
-      const objResp = await fetch(
-        `${SUPABASE_URL}/storage/v1/object/travel-plans/${file.name}`,
-        { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` } }
-      );
-      if (objResp.ok) {
-        const planData = await objResp.json();
-        if (planData && planData.plans) {
-          allPlans.push(planData);
-        }
-      }
-    } catch (e) {
-      console.error(`Error reading ${file.name}:`, e.message);
-    }
-  }
-  
-  return allPlans;
+  if (!resp.ok) return null;
+  return await resp.json();
 }
 
-// Save plans for a single profile
-async function savePlans(serviceKey, profileId, planData) {
-  const headers = supabaseHeaders(serviceKey);
-  
-  // Upload JSON file
+async function writeFile(serviceKey, filename, data) {
   const resp = await fetch(
-    `${SUPABASE_URL}/storage/v1/object/travel-plans/${profileId}.json`,
+    `${SUPABASE_URL}/storage/v1/object/travel-plans/${filename}`,
     {
       method: 'POST',
-      headers,
-      body: JSON.stringify(planData),
+      headers: { ...sbAuth(serviceKey), 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
     }
   );
-  
   if (!resp.ok) {
     const err = await resp.text();
-    throw new Error(`Failed to save plans: ${resp.status} ${err}`);
+    throw new Error(`Write failed for ${filename}: ${resp.status} ${err}`);
   }
-  
   return { success: true };
 }
 
-// Compute travel plan status
+// ─── Index management ───
+
+async function getIndex(serviceKey) {
+  const data = await readFile(serviceKey, '_index.json');
+  return data || { profiles: {}, updated_at: new Date().toISOString() };
+}
+
+async function updateIndex(serviceKey, profileId, cities) {
+  const index = await getIndex(serviceKey);
+  index.profiles[profileId] = {
+    cities: cities || [],
+    updated_at: new Date().toISOString(),
+  };
+  index.updated_at = new Date().toISOString();
+  await writeFile(serviceKey, '_index.json', index);
+}
+
+// ─── Plan status ───
+
 function computePlanStatus(plan) {
   const now = new Date();
   const arrival = new Date(plan.arrival_date);
   const departure = new Date(plan.departure_date);
-  const visibleFrom = new Date(arrival.getTime() - 48 * 60 * 60 * 1000); // 48h before
-  
+  const visibleFrom = new Date(arrival.getTime() - 48 * 60 * 60 * 1000);
+
   if (now > departure) return 'past';
-  if (now >= visibleFrom && now <= departure) return 'active'; // visible + active
-  if (now >= arrival && now <= departure) return 'active';
+  if (now >= visibleFrom && now <= departure) return 'active';
   if (now < arrival) return 'upcoming';
   return 'past';
 }
 
+function hoursUntilVisible(plan) {
+  const target = new Date(plan.arrival_date).getTime() - 48 * 60 * 60 * 1000;
+  return Math.max(0, Math.ceil((target - Date.now()) / (1000 * 60 * 60)));
+}
+
+// ─── Handler ───
+
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Internal-Secret');
-  
+
   if (req.method === 'OPTIONS') return res.status(200).end();
-  
+
   try {
     const serviceKey = getServiceKey();
-    const url = new URL(req.url, `https://${req.headers.host || 'localhost'}`);
+    const url = new URL(req.url, `https://${req.headers.host || 'shemalewiki.online'}`);
     const path = url.pathname.replace('/api/travel-plans', '');
-    
+
     // ─── INTERNAL CRON: Activate/deactivate plans ───
-    if (req.method === 'POST' && req.headers['x-internal-secret'] === INTERNAL_SECRET && !req.body?.profile_id) {
-      const allPlans = await getAllPlans(serviceKey);
+    if (req.method === 'POST' && req.headers['x-internal-secret'] === INTERNAL_SECRET && (!req.body || !req.body.profile_id)) {
+      const index = await getIndex(serviceKey);
       const now = new Date();
-      let activated = 0;
-      let expired = 0;
-      
-      for (const profileData of allPlans) {
+      let activated = 0, expired = 0, checked = 0;
+
+      for (const [profileId, entry] of Object.entries(index.profiles || {})) {
+        const data = await readFile(serviceKey, `${profileId}.json`);
+        if (!data || !data.plans) continue;
+        checked++;
         let changed = false;
-        const plans = profileData.plans || [];
-        
-        for (const plan of plans) {
+
+        for (const plan of data.plans) {
           const arrival = new Date(plan.arrival_date);
           const departure = new Date(plan.departure_date);
           const visibleFrom = new Date(arrival.getTime() - 48 * 60 * 60 * 1000);
-          const wasActive = plan.is_active;
-          
-          // Activate: within 48h window AND not yet departed
+
           if (now >= visibleFrom && now <= departure && !plan.is_active) {
             plan.is_active = true;
             plan.activated_at = now.toISOString();
             changed = true;
             activated++;
           }
-          
-          // Deactivate: past departure
           if (now > departure && plan.is_active) {
             plan.is_active = false;
             plan.deactivated_at = now.toISOString();
@@ -155,100 +135,100 @@ export default async function handler(req, res) {
             expired++;
           }
         }
-        
+
         if (changed) {
-          await savePlans(serviceKey, profileData.profile_id, profileData);
+          data.updated_at = now.toISOString();
+          await writeFile(serviceKey, `${profileId}.json`, data);
         }
       }
-      
-      return res.json({ activated, expired, checked: allPlans.length, timestamp: now.toISOString() });
+
+      return res.json({ activated, expired, checked, timestamp: now.toISOString() });
     }
-    
+
     // ─── PUBLIC: Get active travelers for a city ───
     if (req.method === 'GET' && path === '/active') {
       const city = url.searchParams.get('city');
       if (!city) return res.status(400).json({ error: 'city param required' });
-      
-      const allPlans = await getAllPlans(serviceKey);
+
+      const index = await getIndex(serviceKey);
       const active = [];
-      
-      for (const profileData of allPlans) {
-        const plans = profileData.plans || [];
-        for (const plan of plans) {
-          if (plan.is_active && plan.city.toLowerCase() === city.toLowerCase()) {
+      const cityLower = city.toLowerCase();
+
+      for (const [profileId, entry] of Object.entries(index.profiles || {})) {
+        // Quick check: does this user have plans in this city?
+        const hasCity = (entry.cities || []).some(c => c.toLowerCase() === cityLower);
+        if (!hasCity) continue;
+
+        const data = await readFile(serviceKey, `${profileId}.json`);
+        if (!data || !data.plans) continue;
+
+        for (const plan of data.plans) {
+          if (plan.is_active && plan.city.toLowerCase() === cityLower) {
             active.push({
-              profile_id: profileData.profile_id,
+              profile_id: profileId,
               plan_id: plan.id,
               city: plan.city,
-              country: plan.country,
+              country: plan.country || '',
               arrival_date: plan.arrival_date,
               departure_date: plan.departure_date,
             });
           }
         }
       }
-      
+
       return res.json({ city, active, count: active.length });
     }
-    
+
     // ─── GET: User's travel plans ───
     if (req.method === 'GET') {
       const profileId = url.searchParams.get('profile_id');
       if (!profileId) return res.status(400).json({ error: 'profile_id required' });
-      
-      const headers = { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` };
-      const resp = await fetch(
-        `${SUPABASE_URL}/storage/v1/object/travel-plans/${profileId}.json`,
-        { headers }
-      );
-      
-      if (resp.status === 404 || resp.status === 400) {
+
+      const data = await readFile(serviceKey, `${profileId}.json`);
+
+      if (!data) {
         return res.json({ profile_id: profileId, plans: [] });
       }
-      
-      if (!resp.ok) {
-        const err = await resp.text();
-        return res.status(resp.status).json({ error: err });
-      }
-      
-      const data = await resp.json();
-      
-      // Compute live status for each plan
+
       data.plans = (data.plans || []).map(plan => ({
         ...plan,
         status: computePlanStatus(plan),
-        hours_until_visible: Math.max(0, Math.ceil(
-          (new Date(plan.arrival_date).getTime() - 48 * 60 * 60 * 1000 - Date.now()) / (1000 * 60 * 60)
-        )),
+        hours_until_visible: hoursUntilVisible(plan),
       }));
-      
+
       return res.json(data);
     }
-    
+
     // ─── POST/PUT: Save user's travel plans ───
     if (req.method === 'POST' || req.method === 'PUT') {
       const { profile_id, plans } = req.body || {};
       if (!profile_id) return res.status(400).json({ error: 'profile_id required' });
       if (!Array.isArray(plans)) return res.status(400).json({ error: 'plans array required' });
-      
-      // Validate plans
+
+      const cities = [];
       for (const plan of plans) {
-        if (!plan.id) plan.id = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : `plan_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        if (!plan.id) plan.id = `plan_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
         if (!plan.city) return res.status(400).json({ error: 'city required for all plans' });
-        if (!plan.arrival_date || !plan.departure_date) return res.status(400).json({ error: 'arrival_date and departure_date required' });
+        if (!plan.arrival_date || !plan.departure_date) return res.status(400).json({ error: 'dates required' });
         plan.is_active = plan.is_active || false;
         plan.created_at = plan.created_at || new Date().toISOString();
         plan.updated_at = new Date().toISOString();
+        if (!cities.includes(plan.city)) cities.push(plan.city);
       }
-      
+
       const planData = { profile_id, plans, updated_at: new Date().toISOString() };
-      await savePlans(serviceKey, profile_id, planData);
-      
+
+      // Save plan file + update index (in parallel — order doesn't matter for reads)
+      await Promise.all([
+        writeFile(serviceKey, `${profile_id}.json`, planData),
+        updateIndex(serviceKey, profile_id, cities),
+      ]);
+
       return res.json({ success: true, profile_id, plan_count: plans.length });
     }
-    
+
     return res.status(405).json({ error: 'Method not allowed' });
-    
+
   } catch (err) {
     console.error('Travel Plans API error:', err);
     return res.status(500).json({ error: err?.message || 'Internal error' });
