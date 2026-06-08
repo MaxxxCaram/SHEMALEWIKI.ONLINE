@@ -218,11 +218,15 @@ export default async function handler(req, res) {
 
       const planData = { profile_id, plans, updated_at: new Date().toISOString() };
 
-      // Save plan file + update index (in parallel — order doesn't matter for reads)
-      await Promise.all([
-        writeFile(serviceKey, `${profile_id}.json`, planData),
-        updateIndex(serviceKey, profile_id, cities),
-      ]);
+      // Save plan file + update index SEQUENTIALLY (index may fail silently in parallel)
+      await writeFile(serviceKey, `${profile_id}.json`, planData);
+      
+      try {
+        await updateIndex(serviceKey, profile_id, cities);
+      } catch (e) {
+        console.error('Index update failed (non-fatal):', e.message);
+        // Non-fatal: plan data is saved, index will be rebuilt on next save
+      }
 
       return res.json({ success: true, profile_id, plan_count: plans.length });
     }
