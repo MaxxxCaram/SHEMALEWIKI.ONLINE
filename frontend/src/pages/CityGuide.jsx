@@ -405,6 +405,7 @@ export default function CityGuide() {
   const [profileCount, setProfileCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState(null);
+  const [travelers, setTravelers] = useState([]);
 
   // Detect language from URL path
   const lang = typeof window !== 'undefined' 
@@ -459,6 +460,22 @@ export default function CityGuide() {
     };
 
     fetchProfiles();
+  }, [displayCity]);
+
+  // Fetch active travelers for this city
+  useEffect(() => {
+    const fetchTravelers = async () => {
+      try {
+        const resp = await fetch(`https://shemalewiki.online/api/travel-plans/active?city=${encodeURIComponent(displayCity)}`);
+        if (resp.ok) {
+          const data = await resp.json();
+          setTravelers(data.active || []);
+        }
+      } catch (e) {
+        // Silently fail — travelers section is non-critical
+      }
+    };
+    fetchTravelers();
   }, [displayCity]);
 
   // i18n helpers — lookup by language
@@ -580,6 +597,44 @@ export default function CityGuide() {
             </div>
           </div>
         </div>
+
+        {/* ✈️ Active Travelers — profiles arriving within 48h */}
+        {travelers.length > 0 && (
+          <div className="city-travelers glass" style={{ padding: '1.8rem 2.5rem', marginBottom: '2rem', borderLeft: '3px solid var(--accent-primary)' }}>
+            <h2 style={{ marginTop: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span>✈️</span> 
+              {lang === 'es' ? `Viajeras en ${displayCity}` : `Travelers in ${displayCity}`}
+            </h2>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
+              {lang === 'es' 
+                ? `${travelers.length} acompañante${travelers.length > 1 ? 's' : ''} llegando en las próximas 48 horas. ¡Reservá ahora!`
+                : `${travelers.length} companion${travelers.length > 1 ? 's' : ''} arriving in the next 48 hours. Book now!`}
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              {travelers.map((t, i) => (
+                <div key={t.plan_id || i} style={{
+                  background: 'rgba(124, 58, 237, 0.1)',
+                  border: '1px solid rgba(124, 58, 237, 0.3)',
+                  borderRadius: '12px',
+                  padding: '0.8rem 1.2rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}>
+                  <span>🌟</span>
+                  <span style={{ fontWeight: 700, color: '#fff' }}>
+                    {t.city || displayCity}
+                  </span>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                    {new Date(t.arrival_date).toLocaleDateString(lang === 'es' ? 'es' : 'en', { day: 'numeric', month: 'short' })}
+                    {' → '}
+                    {new Date(t.departure_date).toLocaleDateString(lang === 'es' ? 'es' : 'en', { day: 'numeric', month: 'short' })}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* City Guide Content */}
         {content && (
