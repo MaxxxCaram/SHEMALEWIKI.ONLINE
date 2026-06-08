@@ -45,7 +45,7 @@ module.exports = async (req, res) => {
                 'X-Title': 'Vivas Nos Queremos'
             },
             body: JSON.stringify({
-                model: 'mistralai/mistral-7b-instruct:free',
+                model: 'google/gemma-4-31b-it:free',
                 messages,
                 max_tokens: 300,
                 temperature: 0.7
