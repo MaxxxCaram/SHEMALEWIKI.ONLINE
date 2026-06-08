@@ -147,36 +147,43 @@ export default async function handler(req, res) {
 
     // ─── PUBLIC: Get active travelers for a city ───
     if (req.method === 'GET' && path === '/active') {
-      const city = url.searchParams.get('city');
-      if (!city) return res.status(400).json({ error: 'city param required' });
+      try {
+        const city = url.searchParams.get('city');
+        if (!city) return res.status(400).json({ error: 'city param required' });
 
-      const index = await getIndex(serviceKey);
-      const active = [];
-      const cityLower = city.toLowerCase();
+        const index = await getIndex(serviceKey);
+        const active = [];
+        const cityLower = city.toLowerCase();
 
-      for (const [profileId, entry] of Object.entries(index.profiles || {})) {
-        // Quick check: does this user have plans in this city?
-        const hasCity = (entry.cities || []).some(c => c.toLowerCase() === cityLower);
-        if (!hasCity) continue;
+        for (const [profileId, entry] of Object.entries(index.profiles || {})) {
+          const hasCity = (entry.cities || []).some(c => c.toLowerCase() === cityLower);
+          if (!hasCity) continue;
 
-        const data = await readFile(serviceKey, `${profileId}.json`);
-        if (!data || !data.plans) continue;
+          const data = await readFile(serviceKey, `${profileId}.json`);
+          if (!data || !data.plans) continue;
 
-        for (const plan of data.plans) {
-          if (plan.is_active && plan.city.toLowerCase() === cityLower) {
-            active.push({
-              profile_id: profileId,
-              plan_id: plan.id,
-              city: plan.city,
-              country: plan.country || '',
-              arrival_date: plan.arrival_date,
-              departure_date: plan.departure_date,
-            });
+          for (const plan of data.plans) {
+            if (plan.is_active && plan.city.toLowerCase() === cityLower) {
+              active.push({
+                profile_id: profileId,
+                plan_id: plan.id,
+                city: plan.city,
+                country: plan.country || '',
+                arrival_date: plan.arrival_date,
+                departure_date: plan.departure_date,
+              });
+            }
           }
         }
-      }
 
-      return res.json({ city, active, count: active.length });
+        return res.json({ city, active, count: active.length });
+      } catch (innerErr) {
+        return res.status(500).json({ 
+          error: 'Active query failed', 
+          detail: innerErr?.message || 'unknown',
+          stack: innerErr?.stack?.split('\n').slice(0, 3).join(' | ')
+        });
+      }
     }
 
     // ─── GET: User's travel plans ───
