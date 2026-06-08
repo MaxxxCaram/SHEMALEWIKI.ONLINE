@@ -18,6 +18,7 @@
     { "source": "/api/drafts", "destination": "/api/drafts.js" },
     { "source": "/api/update-profile", "destination": "/api/update-profile.js" },
     { "source": "/api/vivas/chat", "destination": "/api/vivas-chat.js" },
+    { "source": "/api/travel-plans", "destination": "/api/travel-plans.js" },
     { "source": "/api/(.*)", "destination": "/api/profiles.js" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
