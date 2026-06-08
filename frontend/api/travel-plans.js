@@ -32,21 +32,25 @@ function supabaseHeaders(serviceKey) {
 
 // Read all travel plans from storage
 async function getAllPlans(serviceKey) {
-  const headers = supabaseHeaders(serviceKey);
-  headers['Content-Type'] = undefined; // GET doesn't need Content-Type
-  
+  // Supabase Storage listing requires prefix= param (bare listing returns 400)
   const resp = await fetch(
-    `${SUPABASE_URL}/storage/v1/object/list/travel-plans`,
-    { headers: { ...headers, 'Content-Type': undefined } }
+    `${SUPABASE_URL}/storage/v1/object/list/travel-plans?prefix=`,
+    { 
+      headers: { 
+        apikey: serviceKey, 
+        Authorization: `Bearer ${serviceKey}` 
+      } 
+    }
   );
   
   if (!resp.ok) {
-    console.error('Failed to list travel plans:', resp.status, await resp.text());
+    const err = await resp.text();
+    console.error('Failed to list travel plans:', resp.status, err);
     return [];
   }
   
   const data = await resp.json();
-  const files = (data || []).filter(f => f.name.endsWith('.json'));
+  const files = (data || []).filter(f => f.name && f.name.endsWith('.json') && f.name !== '_index.json');
   
   const allPlans = [];
   for (const file of files) {
@@ -57,7 +61,9 @@ async function getAllPlans(serviceKey) {
       );
       if (objResp.ok) {
         const planData = await objResp.json();
-        allPlans.push(planData);
+        if (planData && planData.plans) {
+          allPlans.push(planData);
+        }
       }
     } catch (e) {
       console.error(`Error reading ${file.name}:`, e.message);
@@ -227,7 +233,7 @@ export default async function handler(req, res) {
       
       // Validate plans
       for (const plan of plans) {
-        if (!plan.id) plan.id = crypto.randomUUID ? crypto.randomUUID() : `plan_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        if (!plan.id) plan.id = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : `plan_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
         if (!plan.city) return res.status(400).json({ error: 'city required for all plans' });
         if (!plan.arrival_date || !plan.departure_date) return res.status(400).json({ error: 'arrival_date and departure_date required' });
         plan.is_active = plan.is_active || false;
@@ -245,6 +251,6 @@ export default async function handler(req, res) {
     
   } catch (err) {
     console.error('Travel Plans API error:', err);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err?.message || 'Internal error' });
   }
 }
