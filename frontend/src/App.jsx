@@ -12,6 +12,7 @@ import Advertise from './pages/Advertise';
 import Register from './pages/Register';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
+import Reclama from './pages/Reclama';
 import AgeVerification, { useAgeVerified } from './components/AgeVerification';
 import './index.css';
 import logoSw from './assets/logosw.png';
@@ -99,6 +100,8 @@ function AppContent() {
           <Route path="/registro" element={<Register />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/reclama" element={<Reclama />} />
+          <Route path="/es/reclama" element={<Reclama />} />
 
           {/* Legacy continent routes */}
           <Route path="/:continent" element={<Countries />} />
