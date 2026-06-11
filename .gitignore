@@ -19,3 +19,4 @@ dist/
 .env.local
 .env.development.local
 *.local
+.env*

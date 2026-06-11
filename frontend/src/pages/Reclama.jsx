@@ -21,8 +21,12 @@ export default function Reclama() {
       <div className="reclama-card">
         <div className="reclama-intro">
           <p>
-            Soy <strong>Victoria Caram</strong>, presidenta de PROUD Nederland y fundadora de{' '}
-            <strong>BuscaTrans / ShemaleWiki</strong>, la primera plataforma de experiencias y
+            Soy <strong>Victoria Caram</strong>, activista por los derechos humanos, 
+            presidenta de PROUD Nederland, directora ejecutiva de Miss Star International y 
+            experta en derechos humanos de las trabajadoras sexuales en el Parlamento Europeo.
+          </p>
+          <p>
+            Fundé <strong>BuscaTrans / ShemaleWiki</strong>, la primera plataforma de experiencias y
             compañía premium creada y autogestionada por mujeres trans.
           </p>
         </div>
