@@ -20,6 +20,14 @@
     { "source": "/api/vivas/chat", "destination": "/api/vivas-chat.js" },
     { "source": "/api/travel-plans(.*)", "destination": "/api/travel-plans.js" },
     { "source": "/api/(.*)", "destination": "/api/profiles.js" },
+    { "source": "/vivas/_expo/(.*)", "destination": "/vivas/_expo/$1" },
+    { "source": "/vivas/assets/(.*)", "destination": "/vivas/assets/$1" },
+    { "source": "/vivas/favicon.ico", "destination": "/vivas/favicon.ico" },
+    { "source": "/vivas/(.*)", "destination": "/vivas/index.html" },
+    { "source": "/vivas", "destination": "/vivas/index.html" },
+    { "source": "/_expo/(.*)", "destination": "/vivas/_expo/$1" },
+    { "source": "/assets/node_modules/(.*)", "destination": "/vivas/assets/node_modules/$1" },
+    { "source": "/favicon-vivas.ico", "destination": "/vivas/favicon.ico" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
