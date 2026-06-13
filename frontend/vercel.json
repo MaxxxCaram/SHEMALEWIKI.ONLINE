@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd vivas-app && node -e \"const fs=require('fs');const j=JSON.parse(fs.readFileSync('app.json','utf8'));j.expo.extra.supabaseAnonKey=process.env.VIVAS_SUPABASE_ANON_KEY||j.expo.extra.supabaseAnonKey;fs.writeFileSync('app.json',JSON.stringify(j,null,2)+'\\n')\" && npm install && npx expo export --platform web && cp -r dist/* ../dist/vivas/ && cd .. && npm run build",
+  "buildCommand": "bash build.sh",
   "outputDirectory": "dist",
   "headers": [
     {
