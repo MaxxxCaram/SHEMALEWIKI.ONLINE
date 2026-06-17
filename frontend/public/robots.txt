@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Sitemap: https://shemalewiki.online/sitemap.xml
+Sitemap: https://buscatrans.com/sitemap.xml
 
 # Disallow dashboard/admin pages from indexing
 Disallow: /dashboard
