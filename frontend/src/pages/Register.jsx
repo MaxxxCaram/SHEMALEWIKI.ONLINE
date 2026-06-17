@@ -307,7 +307,7 @@ export default function Register() {
               <div className="form-group">
                 <label className="form-label">{bt ? 'Servicios que ofrecés' : 'Services offered'}</label>
                 <div className="form-multi-select">
-                  {actualT.services.map(s => (
+                  {actualT.fields.services.map(s => (
                     <button
                       key={s}
                       type="button"
@@ -324,7 +324,7 @@ export default function Register() {
               <div className="form-group">
                 <label className="form-label">{bt ? 'Disponibilidad' : 'Availability'}</label>
                 <div className="form-radio-group">
-                  {actualT.availability.map(opt => (
+                  {actualT.fields.availability.map(opt => (
                     <label
                       key={opt.value}
                       className={`form-radio ${selectedAvailability === opt.value ? 'selected' : ''}`}
@@ -355,13 +355,13 @@ export default function Register() {
               </div>
 
               <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '1rem', fontStyle: 'italic' }}>
-                🔒 {actualT.step3.privacy}
+                🔒 {actualT.fields.step3.privacy}
               </p>
 
               <div className="form-group">
                 <label className="form-label">{bt ? 'Privacidad de fotos' : 'Privacy options'}</label>
                 <div className="form-radio-group">
-                  {actualT.step3.photoOptions.map(opt => (
+                  {actualT.fields.step3.photoOptions.map(opt => (
                     <label
                       key={opt.value}
                       className={`form-radio ${selectedPhotoPrivacy === opt.value ? 'selected' : ''}`}
@@ -422,7 +422,7 @@ export default function Register() {
               ) : (
                 <div>
                   <div className="plans-grid">
-                    {actualT.plans.map(plan => (
+                    {actualT.fields.plans.map(plan => (
                       <div
                         key={plan.id}
                         className={`plan-card ${plan.recommended ? 'recommended' : ''} ${selectedPlan === plan.id ? '' : ''}`}
