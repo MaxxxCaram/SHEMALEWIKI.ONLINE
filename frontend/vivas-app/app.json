@@ -11,8 +11,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.buscatrans.vivasnosqueremos",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Necesitamos tu ubicaci\u00f3n para el check-in de seguridad y bot\u00f3n de emergencia.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Tu seguridad es lo primero. Usamos tu ubicaci\u00f3n solo durante el check-in y emergencias.",
+        "NSLocationWhenInUseUsageDescription": "Necesitamos tu ubicación para el check-in de seguridad y botón de emergencia.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Tu seguridad es lo primero. Usamos tu ubicación solo durante el check-in y emergencias.",
         "UIBackgroundModes": [
           "location",
           "fetch"
