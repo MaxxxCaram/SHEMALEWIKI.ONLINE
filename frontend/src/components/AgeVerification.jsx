@@ -185,6 +185,30 @@ export default function AgeVerification({ onVerify }) {
           }
         </p>
 
+        {/* App Download Button — BuscaTrans only */}
+        {bt && (
+          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+            <a
+              href="https://shemalewiki.online/downloads/vivas.apk"
+              style={{
+                display: 'inline-block',
+                padding: '0.85rem 2rem',
+                borderRadius: '0.5rem',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                fontSize: '1.1rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                fontFamily: "'DM Sans', sans-serif",
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 20px rgba(118, 75, 162, 0.4)',
+              }}
+            >
+              📱 Descargar App
+            </a>
+          </div>
+        )}
+
         {/* Title */}
         <h1 style={{
           fontSize: '1.3rem',
