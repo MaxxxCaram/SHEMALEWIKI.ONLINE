@@ -257,7 +257,7 @@ export default function DashboardLogin() {
               </div>
               <h2 style={{ fontSize: '1.35rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Iniciar Sesión</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.5', flexGrow: 1, marginBottom: '1.5rem' }}>
-                Para las escorts que ya tienen su perfil actualizado y activo por nuestro equipo de administración.
+                Para las acompañantes que ya tienen su perfil actualizado y activo por nuestro equipo de administración.
               </p>
               <button className="btn" style={{ background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-primary)', width: '100%', border: '1px solid var(--glass-border)' }}>
                 Acceder <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
