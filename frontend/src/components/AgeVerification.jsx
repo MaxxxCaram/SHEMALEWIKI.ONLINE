@@ -23,7 +23,7 @@ const isBT = () => typeof window !== 'undefined' && window.location.hostname.inc
 /* ── Content ── */
 const t = {
   en: {
-    title: 'Legal Notice — Age Verification',
+    title: 'Welcome — Access Verification',
     intro: 'To browse this website you must accept the following terms:',
     terms: [
       'You must be 18 years of age or older to continue browsing.',
@@ -43,7 +43,7 @@ const t = {
     errorCheckbox: 'Please accept the terms to continue.',
   },
   es: {
-    title: 'Aviso Legal — Verificación de Edad',
+    title: 'Bienvenida — Verificación de Acceso',
     intro: 'Para navegar por este sitio web debe aceptar los siguientes términos:',
     terms: [
       'Para seguir navegando has de ser mayor de 18 años.',
@@ -63,7 +63,7 @@ const t = {
     errorCheckbox: 'Por favor aceptá los términos para continuar.',
   },
   pt: {
-    title: 'Aviso Legal — Verificação de Idade',
+    title: 'Bem-vinda — Verificação de Acesso',
     intro: 'Para navegar neste site você deve aceitar os seguintes termos:',
     terms: [
       'Você deve ter 18 anos ou mais para continuar navegando.',

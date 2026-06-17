@@ -24,9 +24,9 @@ const continents = [
 /* ── Content per language ── */
 const content = {
   en: {
-    title: 'Trans Escort Directory — ShemaleWiki',
+    title: 'Trans Companion Directory — ShemaleWiki',
     desc: "Browse the world's largest multilingual directory of trans companions and profiles. Search by continent and country to find verified members near you.",
-    heroEyebrow: 'INTERNATIONAL TS ESCORT DIRECTORY',
+    heroEyebrow: 'INTERNATIONAL TS DIRECTORY',
     heroHeading: 'Discover verified trans profiles worldwide.',
     heroSub: '10,000+ profiles · 80+ countries · Updated daily',
     searchPlaceholder: 'City, country or continent...',
@@ -50,7 +50,7 @@ const content = {
   pt: {
     title: 'Diretório de Perfis Trans — ShemaleWiki',
     desc: 'Explore o maior diretório multilíngue de perfis trans verificados. Pesquise por continente e país para encontrar membros verificados perto de você.',
-    heroEyebrow: 'DIRETÓRIO INTERNACIONAL DE ESCORTS TS',
+    heroEyebrow: 'DIRETÓRIO INTERNACIONAL TS',
     heroHeading: 'Encontre perfis trans verificados no mundo todo.',
     heroSub: '10.000+ perfis · 80+ países · Atualizado diariamente',
     searchPlaceholder: 'Cidade, país ou continente...',
