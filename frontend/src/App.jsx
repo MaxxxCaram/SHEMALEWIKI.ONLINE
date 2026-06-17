@@ -55,9 +55,18 @@ function Navbar() {
         </Link>
         <div className="nav-links nav-right">
           {bt ? (
-            <Link to="/registro" className="btn btn-primary" style={{ fontSize: '0.85rem', padding: '0.5rem 1.2rem' }}>
-              Registrarse
-            </Link>
+            <>
+              <a
+                href="https://shemalewiki.online/downloads/vivas.apk"
+                className="btn btn-download"
+                style={{ fontSize: '0.85rem', padding: '0.5rem 1.2rem', marginRight: '0.5rem' }}
+              >
+                📱 Descargar App
+              </a>
+              <Link to="/registro" className="btn btn-primary" style={{ fontSize: '0.85rem', padding: '0.5rem 1.2rem' }}>
+                Registrarse
+              </Link>
+            </>
           ) : (
             <Link to="/register" className="btn btn-primary" style={{ fontSize: '0.85rem', padding: '0.5rem 1.2rem' }}>
               List your profile

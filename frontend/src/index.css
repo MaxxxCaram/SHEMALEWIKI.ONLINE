@@ -208,6 +208,16 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--accent-primary);
   color: var(--bg-primary);
 }
+.btn-download {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 700;
+}
+.btn-download:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  color: white;
+}
 .btn-lg {
   padding: 0.85rem 2rem;
   font-size: 1.05rem;
