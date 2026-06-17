@@ -166,6 +166,23 @@ export default function AgeVerification({ onVerify }) {
           )}
         </div>
 
+        {/* Tagline — BuscaTrans only */}
+        {bt && (
+          <p style={{
+            color: 'var(--accent-primary)',
+            fontSize: '0.95rem',
+            lineHeight: 1.5,
+            textAlign: 'center',
+            marginBottom: '1.25rem',
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: 'italic',
+            letterSpacing: '0.01em',
+            opacity: 0.9,
+          }}>
+            La primera plataforma integral de trabajo independiente autogestionada por mujeres trans
+          </p>
+        )}
+
         {/* Title */}
         <h1 style={{
           fontSize: '1.3rem',
