@@ -458,15 +458,17 @@ export default function Register() {
           {/* Navigation buttons */}
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', gap: '1rem' }}>
             {step > 0 ? (
-              <button className="btn btn-outline" onClick={prevStep}>
+              <button type="button" className="btn btn-outline" onClick={prevStep} onMouseDown={prevStep}>
                 ← {bt ? 'Anterior' : 'Back'}
               </button>
             ) : <div />}
             {step === maxSteps - 1 ? (
               submitSuccess ? null : (
                 <button
+                  type="button"
                   className="btn btn-primary btn-lg"
                   onClick={handleSubmit}
+                  onMouseDown={handleSubmit}
                   disabled={submitting || !form.display_name || !form.email || !form.contact}
                   style={{ flex: 1 }}
                 >
@@ -477,8 +479,11 @@ export default function Register() {
               )
             ) : (
               <button
+                type="button"
                 className="btn btn-primary btn-lg"
                 onClick={nextStep}
+                onMouseDown={nextStep}
+                onTouchEnd={nextStep}
                 disabled={!canAdvance()}
                 style={{ flex: step === 0 ? 1 : undefined }}
               >
