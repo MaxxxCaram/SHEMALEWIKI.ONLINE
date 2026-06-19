@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 
@@ -161,34 +161,12 @@ export default function Register() {
     if (step > 0) setStep(s => s - 1);
   };
 
-  // Native event listeners — bypass React synthetic event issues on mobile/browser
-  const nextBtnRef = useRef(null);
-  const submitBtnRef = useRef(null);
-  const prevBtnRef = useRef(null);
-
-  useEffect(() => {
-    const nextEl = nextBtnRef.current;
-    const submitEl = submitBtnRef.current;
-    const prevEl = prevBtnRef.current;
-
-    if (nextEl) {
-      const handler = (e) => { e.preventDefault(); nextStep(); };
-      nextEl.addEventListener('click', handler);
-      nextEl.addEventListener('touchend', handler);
-    }
-    if (submitEl) {
-      const handler = (e) => { e.preventDefault(); handleSubmit(); };
-      submitEl.addEventListener('click', handler);
-      submitEl.addEventListener('touchend', handler);
-    }
-    if (prevEl) {
-      const handler = (e) => { e.preventDefault(); prevStep(); };
-      prevEl.addEventListener('click', handler);
-      prevEl.addEventListener('touchend', handler);
-    }
-  }, [step, submitting]); // re-bind when step changes or submitting state changes
+  const submitInFlight = useRef(false);
 
   const handleSubmit = async () => {
+    // GUARD: prevent double submission
+    if (submitInFlight.current) return;
+    submitInFlight.current = true;
     setSubmitting(true);
     setSubmitError('');
 
@@ -230,6 +208,7 @@ export default function Register() {
       setSubmitError(err.message || 'Could not create profile. Please try again.');
     } finally {
       setSubmitting(false);
+      submitInFlight.current = false;
     }
   };
 
@@ -485,7 +464,7 @@ export default function Register() {
           {/* Navigation buttons */}
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', gap: '1rem' }}>
             {step > 0 ? (
-              <button type="button" ref={prevBtnRef} className="btn btn-outline" onClick={prevStep} onMouseDown={prevStep}>
+              <button type="button" className="btn btn-outline" onClick={prevStep}>
                 ← {bt ? 'Anterior' : 'Back'}
               </button>
             ) : <div />}
@@ -493,10 +472,8 @@ export default function Register() {
               submitSuccess ? null : (
                 <button
                   type="button"
-                  ref={submitBtnRef}
                   className="btn btn-primary btn-lg"
                   onClick={handleSubmit}
-                  onMouseDown={handleSubmit}
                   disabled={submitting || !form.display_name || !form.email || !form.contact}
                   style={{ flex: 1 }}
                 >
@@ -508,11 +485,8 @@ export default function Register() {
             ) : (
               <button
                 type="button"
-                ref={nextBtnRef}
                 className="btn btn-primary btn-lg"
                 onClick={nextStep}
-                onMouseDown={nextStep}
-                onTouchEnd={nextStep}
                 disabled={!canAdvance()}
                 style={{ flex: step === 0 ? 1 : undefined }}
               >

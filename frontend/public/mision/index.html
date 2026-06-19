@@ -3,470 +3,237 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShemaleWiki — Mission Control</title>
+<title>Mission Control — Hermes Swarm</title>
 <style>
   :root {
-    --bg: #0a0e17;
-    --panel: #111827;
-    --border: #1e293b;
-    --accent: #7c3aed;
-    --accent2: #06b6d4;
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --border: #1e1e2e;
+    --accent: #a78bfa;
+    --green: #4ade80;
+    --red: #f87171;
+    --yellow: #fbbf24;
     --text: #e2e8f0;
-    --muted: #94a3b8;
-    --green: #10b981;
-    --amber: #f59e0b;
-    --red: #ef4444;
-    --pink: #ec4899;
+    --muted: #64748b;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin:0; padding:0; box-sizing:border-box; }
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', -apple-system, sans-serif;
     min-height: 100vh;
-    background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(124,58,237,0.08) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 60%, rgba(6,182,212,0.06) 0%, transparent 60%);
+    padding: 20px;
   }
   .header {
-    background: var(--panel);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; margin-bottom: 20px;
   }
-  .header h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 0.5px;
+  .header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; }
+  .header h1 span { color: var(--accent); }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+  .status-dot.online { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+  .status-dot.offline { background: var(--red); }
+  .status-dot.standby { background: var(--yellow); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .metrics {
+    display: flex; gap: 12px; flex-wrap: wrap;
   }
-  .header .badge {
-    background: rgba(124,58,237,0.15);
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  .metric {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 16px; font-size: 0.85rem; min-width: 100px; text-align: center;
   }
-  .refresh {
-    font-size: 0.7rem;
-    color: var(--muted);
-    margin-left: 12px;
-  }
-  .main {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 24px 32px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
+  .metric .val { font-size: 1.5rem; font-weight: 700; }
+  .metric .lbl { color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px; margin-bottom: 20px;
   }
   .card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    transition: border-color 0.2s;
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px;
   }
-  .card:hover { border-color: var(--accent); }
-  .card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
+  .card h3 { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .worker-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
   }
-  .card-header h3 {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--muted);
+  .worker-row:last-child { border-bottom: none; }
+  .worker-name { font-weight: 600; font-size: 0.9rem; }
+  .worker-task { font-size: 0.75rem; color: var(--muted); }
+  .worker-status { font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; }
+  .worker-status.active { background: rgba(74,222,128,0.15); color: var(--green); }
+  .worker-status.standby { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 8px; font-weight: 600; }
+  .badge.high { background: rgba(248,113,113,0.2); color: var(--red); }
+  .badge.medium { background: rgba(251,191,36,0.2); color: var(--yellow); }
+  .badge.critical { background: rgba(248,113,113,0.3); color: #fff; animation: pulse 1.5s infinite; }
+  .kanban-col { min-width: 200px; }
+  .kanban-col h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .kanban-col.done h4 { color: var(--green); }
+  .kanban-col.progress h4 { color: var(--yellow); }
+  .kanban-col.todo h4 { color: var(--muted); }
+  .kanban-card {
+    background: rgba(30,30,46,0.6); border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; font-size: 0.8rem;
   }
-  .card-header .icon { font-size: 1.4rem; }
-  /* KPIs */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 16px;
+  .kanban-card .worker-tag { font-size: 0.65rem; color: var(--accent); }
+  .health-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 6px; }
+  .health-item {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 10px; border-radius: 6px; font-size: 0.78rem;
+    background: rgba(30,30,46,0.5); border: 1px solid var(--border);
   }
-  .kpi-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
-    text-align: center;
-  }
-  .kpi-value {
-    font-size: 2.4rem;
-    font-weight: 800;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .kpi-label {
-    font-size: 0.75rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .kpi-sub {
-    font-size: 0.7rem;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-  .text-green { color: var(--green); }
-  .text-amber { color: var(--amber); }
-  .text-accent { color: var(--accent); }
-  .text-pink { color: var(--pink); }
-  .text-cyan { color: var(--accent2); }
-  /* Progress bar */
-  .progress-bar {
-    height: 6px;
-    background: var(--border);
-    border-radius: 3px;
-    margin-top: 8px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.6s ease;
-  }
-  .fill-green { background: var(--green); }
-  .fill-accent { background: var(--accent); }
-  .fill-cyan { background: var(--accent2); }
-  .fill-amber { background: var(--amber); }
-  /* Tables */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8rem;
-  }
-  th {
-    text-align: left;
-    padding: 8px;
-    border-bottom: 2px solid var(--border);
-    color: var(--muted);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  td {
-    padding: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-  tr:hover td { background: rgba(124,58,237,0.05); }
-  /* Timeline */
-  .timeline { position: relative; padding-left: 24px; }
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 8px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: var(--border);
-  }
-  .timeline-item {
-    position: relative;
-    margin-bottom: 16px;
-    padding-left: 8px;
-  }
-  .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -18px;
-    top: 4px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 2px solid var(--bg);
-  }
-  .timeline-date {
-    font-size: 0.7rem;
-    color: var(--muted);
-    margin-bottom: 2px;
-  }
-  .timeline-text {
-    font-size: 0.82rem;
-    line-height: 1.4;
-  }
-  .tag {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 0.65rem;
-    font-weight: 600;
-    margin-right: 4px;
-  }
-  .tag-done { background: rgba(16,185,129,0.15); color: var(--green); }
-  .tag-progress { background: rgba(245,158,11,0.15); color: var(--amber); }
-  .tag-todo { background: rgba(148,163,184,0.15); color: var(--muted); }
-  .tag-blocked { background: rgba(239,68,68,0.15); color: var(--red); }
-  /* Domain status */
-  .domain-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 0;
-  }
-  .dot { width: 8px; height: 8px; border-radius: 50%; }
-  .dot-live { background: var(--green); box-shadow: 0 0 6px rgba(16,185,129,0.5); }
-  .dot-unknown { background: var(--amber); }
-  /* Full width cards */
-  .span-2 { grid-column: span 2; }
-  @media (max-width: 768px) {
-    .main { grid-template-columns: 1fr; padding: 16px; }
-    .span-2 { grid-column: span 1; }
-    .header { padding: 12px 16px; }
-    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  /* pulse animation for live indicator */
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-  .live-pulse {
-    animation: pulse 2s infinite;
+  .health-ok { color: var(--green); }
+  .health-fail { color: var(--red); border-color: rgba(248,113,113,0.3); }
+  .refresh { font-size: 0.7rem; color: var(--muted); }
+  .kanban-board { display: flex; gap: 16px; overflow-x: auto; }
+  @media (max-width: 600px) {
+    .header { flex-direction: column; gap: 12px; }
+    .metrics { justify-content: center; }
   }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div>
-    <h1>🛰️ ShemaleWiki Mission Control</h1>
-    <span class="refresh">Actualizado: <span id="timestamp">--</span> • Fuente: Supabase + Vercel</span>
+    <h1>🧠 <span>Mission Control</span> — Hermes Swarm</h1>
+    <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">
+      <span class="status-dot online"></span> Sistema activo · <span id="uptime">--</span>
+    </div>
   </div>
-  <div>
-    <span class="badge live-pulse">● LIVE</span>
-    <span class="badge" style="border-color: var(--accent2); color: var(--accent2);">FASE 2</span>
-  </div>
-</div>
-
-<!-- KPI ROW -->
-<div style="max-width:1400px; margin: 0 auto; padding: 24px 32px 0;">
-  <div class="kpi-grid" id="kpi-row">
-    <div class="kpi-card">
-      <div class="kpi-value text-accent" id="kpi-profiles">--</div>
-      <div class="kpi-label">Perfiles Totales</div>
-      <div class="kpi-sub">Supabase</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value text-green" id="kpi-phone">--</div>
-      <div class="kpi-label">Con Teléfono</div>
-      <div class="kpi-sub" id="kpi-phone-pct"></div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value text-cyan" id="kpi-wa">--</div>
-      <div class="kpi-label">Con WhatsApp</div>
-      <div class="kpi-sub" id="kpi-wa-pct"></div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value text-pink" id="kpi-email">--</div>
-      <div class="kpi-label">Con Email</div>
-      <div class="kpi-sub" id="kpi-email-pct"></div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value text-amber" id="kpi-photos">--</div>
-      <div class="kpi-label">Fotos</div>
-      <div class="kpi-sub">Storage</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value text-green" id="kpi-domains">--</div>
-      <div class="kpi-label">Dominios Live</div>
-      <div class="kpi-sub">Vercel</div>
-    </div>
+  <div class="metrics">
+    <div class="metric"><div class="val" id="m-completed">--</div><div class="lbl">Completadas</div></div>
+    <div class="metric"><div class="val" id="m-pending">--</div><div class="lbl">Pendientes</div></div>
+    <div class="metric"><div class="val" id="m-alerts" style="color:var(--green)">0</div><div class="lbl">Alertas</div></div>
   </div>
 </div>
 
-<!-- MAIN GRID -->
-<div class="main" id="main-grid">
-
-  <!-- ROADMAP -->
-  <div class="card span-2">
-    <div class="card-header">
-      <h3>🗺️ Roadmap 90 Días</h3>
-      <span class="icon">🎯</span>
-    </div>
-    <div id="roadmap"></div>
-  </div>
-
-  <!-- DATA SOURCES -->
+<div class="grid">
   <div class="card">
-    <div class="card-header">
-      <h3>📡 Fuentes de Datos</h3>
-      <span class="icon">🔍</span>
-    </div>
-    <div id="sources"></div>
+    <h3>🤖 Workers</h3>
+    <div id="workers"></div>
   </div>
-
-  <!-- DOMAINS -->
   <div class="card">
-    <div class="card-header">
-      <h3>🌐 Dominios</h3>
-      <span class="icon">🔗</span>
-    </div>
-    <div id="domains"></div>
+    <h3>💚 Health Checks</h3>
+    <div class="health-grid" id="health"></div>
+    <div class="refresh" style="margin-top:8px;">⏱ Actualización: <span id="last-update">--</span></div>
   </div>
+</div>
 
-  <!-- TIMELINE -->
-  <div class="card span-2">
-    <div class="card-header">
-      <h3>📜 Registro de Actividades</h3>
-      <span class="icon">⏱️</span>
-    </div>
-    <div class="timeline" id="timeline"></div>
-  </div>
-
-  <!-- TOP COUNTRIES -->
-  <div class="card">
-    <div class="card-header">
-      <h3>🌍 Top Países</h3>
-      <span class="icon">📍</span>
-    </div>
-    <div id="countries"></div>
-  </div>
-
-  <!-- QUICK LINKS -->
-  <div class="card">
-    <div class="card-header">
-      <h3>⚡ Accesos Rápidos</h3>
-      <span class="icon">🚀</span>
-    </div>
-    <div id="links"></div>
-  </div>
-
+<div class="card" style="margin-bottom:20px;">
+  <h3>📋 Kanban Board</h3>
+  <div class="kanban-board" id="kanban"></div>
 </div>
 
 <script>
-// ===== DATA INJECTION =====
-const DATA = {
-  profiles: 4055,
-  withPhone: 3291,
-  withWA: 1019,
-  withEmail: 223,
-  withPhotos: 40791,
-  countries: {"Netherlands":546,"Argentina":209,"Spain":147,"Belgium":51,"Germany":30,"Brazil":18,"Finland":15,"Switzerland":10,"United Kingdom":8,"France":6},
-  domains: [
-    {name:"shemalewiki.online", status:"live"},
-    {name:"buscatrans.com", status:"live"},
-    {name:"www.shemalewiki.online", status:"live"},
-    {name:"www.buscatrans.com", status:"live"},
-  ],
-  sources: [
-    {name:"kinky.nl", profiles:1846, status:"scraped", note:"Firefox Playwright"},
-    {name:"Wayback Machine", profiles:1256, status:"recovered", note:"ShemaleWiki.com 2013-25"},
-    {name:"distintas.net", profiles:206, status:"scraped", note:"+ 132 WhatsApp"},
-    {name:"topshemales.com", profiles:20, status:"scraped", note:"+ 6 Telegram"},
-  ],
-  roadmap: [
-    {phase:"FASE 1: Fundación ✅", progress:100, color:"fill-green", items:"Supabase schema, Vercel deploy, dominios live, recovery WB, age gate, disclaimer"},
-    {phase:"FASE 2: Contenido 🔄", progress:75, color:"fill-accent", items:"3,310 contactos extraídos, 40K fotos, city guides (Ámsterdam, Barcelona, Bruselas, Madrid, Helsinki)"},
-    {phase:"FASE 3: Monetización ⏳", progress:15, color:"fill-cyan", items:"Pricing page, featured listings, ad networks (ExoClick, TrafficJunky), stripe/payments"},
-    {phase:"FASE 4: Growth 🎯", progress:0, color:"fill-amber", items:"SEO indexing, backlinks, social media, email marketing, 10K daily visitors target"},
-  ],
-  timeline: [
-    {date:"May 14", text:"Supabase schema created. WB profiles imported (2,000 numeric IDs). Age gate + disclaimer added."},
-    {date:"May 15", text:"Vercel deploy live. Domains shemalewiki.online + buscatrans.com configured. Dual-brand frontend working."},
-    {date:"May 16-20", text:"Archive.org photo filters fixed. 40K photos linked to profiles. Watermark filter applied."},
-    {date:"May 21", text:"kinky.nl scraping scripts (v6.2). Firefox + requests combo works. Cloudflare bypass solved."},
-    {date:"May 26", text:"distintas.net scraping: 291 profiles (132 WA). Argentina/Brazil/Spain coverage."},
-    {date:"May 29", text:"Vercel DNS migration. Hostinger → Vercel NS. HTTPS live on both domains. Build cache fix."},
-    {date:"Jun 2", text:"Supabase SMTP config (Hostinger). Email templates ES con branding BuscaTrans. PAT token."},
-    {date:"Jun 2-5", text:"Bulk contact extraction: 3,310 perfiles con teléfono/WA/email. Excel consolidado. Linkage kinky_↔UUID."},
-    {date:"Jun 5", text:"Mission Control dashboard deployed. Registro visual de progreso del proyecto."},
-  ],
-  links: [
-    {label:"Sitio Live", url:"https://shemalewiki.online"},
-    {label:"BuscaTrans", url:"https://buscatrans.com"},
-    {label:"Supabase", url:"https://supabase.com/dashboard/project/qtuzpswxzengqoqqwtpt"},
-    {label:"Vercel", url:"https://vercel.com/maxxxcaram/shemalewiki-online"},
-    {label:"GitHub Repo", url:"https://github.com/MaxxxCaram/SHEMALEWIKI.ONLINE"},
-  ],
+const SUPABASE_URL = 'https://qtuzpswxzengqoqqwtpt.supabase.co';
+const STATUS_URL = `${SUPABASE_URL}/storage/v1/object/public/swarm-data/status.json`;
+
+async function fetchStatus() {
+  try {
+    const r = await fetch(STATUS_URL);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.json();
+  } catch(e) {
+    console.error('Fetch error:', e);
+    return null;
+  }
+}
+
+const WORKER_ICONS = {
+  'swarm-sentinel': '🛡️',
+  'swarm-engineer': '🔧',
+  'swarm-scout': '🔍',
+  'swarm-outreach': '📨'
 };
 
-// ===== RENDER =====
-document.getElementById('timestamp').textContent = new Date().toLocaleString('es-AR');
+function renderWorkers(workers) {
+  let html = '';
+  for (const [id, w] of Object.entries(workers)) {
+    const icon = WORKER_ICONS[id] || '🤖';
+    html += `
+      <div class="worker-row">
+        <div>
+          <div class="worker-name">${icon} ${id.replace('swarm-','').toUpperCase()}</div>
+          <div class="worker-task">${w.current_task}</div>
+        </div>
+        <div>
+          <span class="worker-status ${w.status}">${w.status === 'active' ? 'ACTIVO' : 'STANDBY'}</span>
+          ${w.alerts > 0 ? `<span style="color:var(--red);font-size:0.7rem;margin-left:6px;">⚠${w.alerts}</span>` : ''}
+        </div>
+      </div>`;
+  }
+  document.getElementById('workers').innerHTML = html;
+}
 
-// KPIs
-document.getElementById('kpi-profiles').textContent = DATA.profiles.toLocaleString();
-document.getElementById('kpi-phone').textContent = DATA.withPhone.toLocaleString();
-document.getElementById('kpi-phone-pct').textContent = Math.round(DATA.withPhone/DATA.profiles*100) + '% del total';
-document.getElementById('kpi-wa').textContent = DATA.withWA.toLocaleString();
-document.getElementById('kpi-wa-pct').textContent = Math.round(DATA.withWA/DATA.profiles*100) + '% del total';
-document.getElementById('kpi-email').textContent = DATA.withEmail.toLocaleString();
-document.getElementById('kpi-email-pct').textContent = Math.round(DATA.withEmail/DATA.profiles*100) + '% del total';
-document.getElementById('kpi-photos').textContent = DATA.withPhotos.toLocaleString();
-document.getElementById('kpi-domains').textContent = DATA.domains.filter(d=>d.status==='live').length;
-
-// Roadmap
-let roadmapHTML = '';
-DATA.roadmap.forEach(r => {
-  roadmapHTML += `
-    <div style="margin-bottom:16px;">
-      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-        <span style="font-weight:600;">${r.phase}</span>
-        <span style="font-size:0.75rem;color:var(--muted);">${r.progress}%</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill ${r.color}" style="width:${r.progress}%"></div></div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">${r.items}</div>
+function renderHealth(health) {
+  let html = '';
+  for (const [key, val] of Object.entries(health)) {
+    const ok = String(val).startsWith('OK');
+    const cls = ok ? 'health-ok' : 'health-fail';
+    const label = key.replace(/_/g, ' ');
+    const detail = String(val).replace('OK ', '');
+    html += `<div class="health-item ${cls}">
+      <span>${ok ? '✅' : '❌'}</span>
+      <span><strong>${label}</strong>${detail ? `<br><small>${detail}</small>` : ''}</span>
     </div>`;
-});
-document.getElementById('roadmap').innerHTML = roadmapHTML;
+  }
+  document.getElementById('health').innerHTML = html;
+}
 
-// Sources
-let sourcesHTML = '<table><tr><th>Fuente</th><th>Perfiles</th><th>Estado</th></tr>';
-DATA.sources.forEach(s => {
-  sourcesHTML += `<tr><td><strong>${s.name}</strong><br><span style="font-size:0.7rem;color:var(--muted);">${s.note}</span></td><td style="font-weight:700;">${s.profiles}</td><td><span class="tag tag-done">${s.status}</span></td></tr>`;
-});
-sourcesHTML += '</table>';
-document.getElementById('sources').innerHTML = sourcesHTML;
+function renderKanban(tasks) {
+  const cols = { done: [], in_progress: [], todo: [] };
+  for (const t of tasks) {
+    const s = t.status === 'in_progress' ? 'in_progress' : t.status;
+    if (cols[s]) cols[s].push(t);
+    else cols.todo.push(t);
+  }
+  
+  let html = '';
+  const colDefs = [
+    { key: 'todo', label: '📥 TO DO', cls: 'todo' },
+    { key: 'in_progress', label: '⚡ IN PROGRESS', cls: 'progress' },
+    { key: 'done', label: '✅ DONE', cls: 'done' }
+  ];
+  
+  for (const col of colDefs) {
+    html += `<div class="kanban-col ${col.cls}"><h4>${col.label}</h4>`;
+    for (const t of (cols[col.key] || [])) {
+      html += `<div class="kanban-card">
+        <span class="badge ${t.priority}">${t.priority.toUpperCase()}</span>
+        ${t.title}
+        <div class="worker-tag">${WORKER_ICONS[t.worker] || ''} ${t.worker}</div>
+      </div>`;
+    }
+    html += '</div>';
+  }
+  document.getElementById('kanban').innerHTML = html;
+}
 
-// Domains
-let domainsHTML = '';
-DATA.domains.forEach(d => {
-  domainsHTML += `<div class="domain-status"><span class="dot dot-live"></span><span>${d.name}</span><span class="tag tag-done">live</span></div>`;
-});
-document.getElementById('domains').innerHTML = domainsHTML;
+async function refresh() {
+  const data = await fetchStatus();
+  if (!data) {
+    document.getElementById('last-update').textContent = 'ERROR';
+    return;
+  }
+  
+  renderWorkers(data.workers);
+  renderHealth(data.health);
+  renderKanban(data.kanban);
+  
+  document.getElementById('uptime').textContent = data.system.uptime;
+  document.getElementById('m-completed').textContent = data.system.tasks_completed;
+  document.getElementById('m-pending').textContent = data.system.tasks_pending;
+  const alertEl = document.getElementById('m-alerts');
+  alertEl.textContent = data.system.alerts_active;
+  alertEl.style.color = data.system.alerts_active > 0 ? 'var(--red)' : 'var(--green)';
+  document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+}
 
-// Timeline
-let timelineHTML = '';
-DATA.timeline.forEach(t => {
-  timelineHTML += `
-    <div class="timeline-item">
-      <div class="timeline-date">${t.date}</div>
-      <div class="timeline-text">${t.text}</div>
-    </div>`;
-});
-document.getElementById('timeline').innerHTML = timelineHTML;
-
-// Countries
-let countriesHTML = '<table><tr><th>País</th><th>Perfiles</th></tr>';
-Object.entries(DATA.countries).forEach(([c,n]) => {
-  countriesHTML += `<tr><td>${c}</td><td style="font-weight:600;">${n}</td></tr>`;
-});
-countriesHTML += '</table>';
-document.getElementById('countries').innerHTML = countriesHTML;
-
-// Links
-let linksHTML = '';
-DATA.links.forEach(l => {
-  linksHTML += `<div style="margin-bottom:8px;"><a href="${l.url}" target="_blank" style="color:var(--accent2);text-decoration:none;font-size:0.85rem;">→ ${l.label}</a></div>`;
-});
-document.getElementById('links').innerHTML = linksHTML;
+refresh();
+setInterval(refresh, 10000);
 </script>
-
 </body>
 </html>
