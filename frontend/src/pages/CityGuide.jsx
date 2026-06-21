@@ -448,6 +448,76 @@ const cityContentEs = {
       { q: '¿Qué idiomas hablan las acompañantes trans en Lisboa?', a: 'El portugués es el idioma principal. El inglés es común, y muchas acompañantes de Brasil añaden un distintivo sabor lusófono a la escena.' },
     ]
   },
+  eindhoven: {
+    displayName: 'Eindhoven',
+    country: 'Países Bajos',
+    continent: 'europe',
+    intro: `Eindhoven, la capital del diseño y la tecnología de los Países Bajos, ofrece una escena sorprendentemente vibrante para encuentros con acompañantes trans. Esta dinámica ciudad en la provincia de Brabante Septentrional combina innovación de vanguardia con la calidez del sur holandés. Conocida por su Design Academy y el Dutch Design Week anual, Eindhoven atrae a un público creativo y de mente abierta que valora las conexiones auténticas.`,
+    scene: `La escena trans en Eindhoven es íntima pero bien conectada. Aunque más pequeña que Ámsterdam, el carácter internacional de la ciudad — impulsado por el High Tech Campus y la Universidad TU/e — crea un ambiente cosmopolita donde las acompañantes atienden a una clientela diversa y multilingüe. La escena se concentra en el centro de la ciudad y Stratumseind, una de las calles de ocio más largas de los Países Bajos.`,
+    districts: `El centro de la ciudad alrededor de la plaza Markt y la animada calle Stratumseind son puntos de partida naturales para encuentros. El moderno distrito Strijp-S, con sus antiguas fábricas de Philips convertidas en lofts y espacios creativos, ofrece lugares con estilo. La zona verde de Tongelre brinda privacidad bien conectada. Para quienes están cerca del campus tecnológico, la zona de Meerhoven ofrece comodidad.`,
+    tips: `Las tarifas en Eindhoven suelen oscilar entre €120-200 por hora. Se recomienda reservar con anticipación, especialmente durante eventos como el Dutch Design Week (octubre) y el festival de luces GLOW (noviembre). El centro compacto es transitable a pie y la excelente red de autobuses llega a todos los distritos. El aeropuerto de Eindhoven conecta con más de 80 destinos europeos.`,
+    keywords: ['acompañantes trans Eindhoven', 'shemale Eindhoven', 'travestis Eindhoven', 'ts Países Bajos', 'escorts trans Eindhoven'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Eindhoven?', a: 'Sí, el acompañamiento entre adultos que consienten es legal en los Países Bajos. Eindhoven opera bajo el mismo marco legal que Ámsterdam y otras ciudades holandesas.' },
+      { q: '¿Cuál es la mejor zona para encuentros en Eindhoven?', a: 'El centro alrededor de Markt y Stratumseind, y el creativo distrito Strijp-S, son las zonas más populares para encuentros.' },
+    ]
+  },
+  arnhem: {
+    displayName: 'Arnhem',
+    country: 'Países Bajos',
+    continent: 'europe',
+    intro: `Arnhem, la capital de la provincia de Güeldres, combina colinas verdes, modernismo de posguerra y una próspera escena artística para crear un escenario único para encuentros con acompañantes trans. A diferencia de las ciudades planas de canales del oeste holandés, el paisaje elevado de Arnhem y su proximidad al parque nacional Veluwe le dan un carácter distintivo.`,
+    scene: `La escena trans en Arnhem es discreta y enfocada en la calidad. La posición de la ciudad como centro regional para el este de los Países Bajos significa que las acompañantes atienden a clientes de toda Güeldres y ciudades fronterizas alemanas cercanas. Las acompañantes de Arnhem son conocidas por su enfoque cálido y personal. La escena se beneficia de las excelentes conexiones ferroviarias con Utrecht (35 min) y Ámsterdam (1 hora).`,
+    districts: `El centro alrededor de Korenmarkt y el Modekwartier en el barrio de Klarendal ofrecen entornos encantadores. El Rijnkade a lo largo del río Rin ofrece lugares pintorescos. El moderno desarrollo Rijnboog cerca de la estación central ofrece opciones de hoteles contemporáneos. Los frondosos distritos del norte de Sonsbeek y Velperweg brindan privacidad y tranquilidad.`,
+    tips: `Las tarifas en Arnhem suelen oscilar entre €100-180 por hora. Se llega fácilmente en tren desde Ámsterdam (1h), Utrecht (35min) y ciudades alemanas como Düsseldorf (1.5h). Las mejores épocas para visitar son primavera y verano. Reserve con anticipación durante las conmemoraciones aerotransportadas en septiembre y el Festival de Moda y Diseño en junio.`,
+    keywords: ['acompañantes trans Arnhem', 'shemale Arnhem', 'travestis Arnhem', 'ts Güeldres', 'escorts trans Arnhem'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Arnhem?', a: 'Sí, el acompañamiento entre adultos que consienten es legal en los Países Bajos. Arnhem tiene una escena profesional y discreta.' },
+      { q: '¿Es fácil llegar a Arnhem para visitantes internacionales?', a: 'Sí. La estación Arnhem Centraal tiene trenes ICE directos desde Alemania y conexiones frecuentes con Ámsterdam y Utrecht.' },
+    ]
+  },
+  antwerpen: {
+    displayName: 'Amberes',
+    country: 'Bélgica',
+    continent: 'europe',
+    intro: `Amberes es la capital del diamante de Bélgica, una ciudad de gusto refinado, moda vanguardista y una escena trans sorprendentemente dinámica. Esta metrópolis flamenca a orillas del río Escalda combina encanto histórico con creatividad de vanguardia. La sofisticación de Amberes se extiende a su sector de acompañamiento adulto, donde las acompañantes trans ofrecen experiencias premium a una clientela internacional exigente.`,
+    scene: `La comunidad trans en Amberes es profesional, diversa y bien establecida. El estatus de la ciudad como centro mundial de moda y diamantes atrae a visitantes de todo el mundo, creando demanda de acompañantes multilingües. Las acompañantes de Amberes son conocidas por su elegancia y sofisticación, reflejando la identidad vanguardista de la ciudad. La escena se centra en el centro histórico y el moderno distrito portuario de Eilandje.`,
+    districts: `El centro histórico cerca de Grote Markt y el distrito de la moda alrededor de Nationalestraat ofrecen ubicaciones privilegiadas. El barrio de Eilandje, centrado alrededor del museo MAS, ofrece entornos modernos frente al agua. El distrito Zuid es el barrio artístico de Amberes con excelentes restaurantes y hoteles boutique. Las zonas residenciales de Berchem ofrecen privacidad con fácil acceso en tranvía.`,
+    tips: `Las tarifas en Amberes suelen oscilar entre €120-250 por hora. Se llega fácilmente en tren de alta velocidad Thalys desde París (2h), Ámsterdam (1.5h) y Londres (3h vía Bruselas). Las mejores épocas son durante el Festival de Moda de Amberes (septiembre) y la temporada de mercados navideños. La mayoría de las acompañantes hablan holandés, inglés y francés.`,
+    keywords: ['acompañantes trans Amberes', 'shemale Amberes', 'travestis Amberes', 'ts Bélgica', 'escorts trans Bélgica'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Amberes?', a: 'Sí, el acompañamiento entre adultos que consienten es legal en Bélgica. Amberes tiene una escena profesional y bien regulada.' },
+      { q: '¿Qué idiomas hablan las acompañantes trans en Amberes?', a: 'La mayoría hablan holandés, inglés y francés. Muchas también hablan alemán o español, reflejando el carácter internacional de Amberes.' },
+    ]
+  },
+  utrecht: {
+    displayName: 'Utrecht',
+    country: 'Países Bajos',
+    continent: 'europe',
+    intro: `Utrecht, el corazón palpitante de los Países Bajos — literalmente en el centro geográfico del país — ofrece un entorno encantador e histórico para encuentros con acompañantes trans. Esta ciudad universitaria es conocida por su icónica Torre Dom, sus singulares sótanos de muelle a lo largo del canal Oudegracht y una población joven y vibrante. La belleza medieval de Utrecht combinada con su actitud moderna y progresista la convierte en una alternativa atractiva a Ámsterdam.`,
+    scene: `La escena trans en Utrecht es juvenil, educada y refrescantemente auténtica. Con una de las universidades más grandes de Europa, la ciudad tiene una población inteligente y de mente abierta que valora las conexiones genuinas. Las acompañantes de Utrecht atienden a una mezcla de profesionales locales, académicos visitantes y turistas atraídos por la rica historia de la ciudad.`,
+    districts: `La zona del canal Oudegracht, con sus distintivos muelles de dos niveles convertidos en restaurantes y boutiques, ofrece un telón de fondo romántico. El Museumkwartier proporciona sofisticación cultural. Las tranquilas zonas residenciales de Oost y Wittevrouwen ofrecen privacidad. El recién desarrollado Leidsche Rijn ofrece opciones de alojamiento modernas. Hoog Catharijne cerca de la Estación Central brinda máxima comodidad.`,
+    tips: `Las tarifas en Utrecht suelen oscilar entre €120-200 por hora. Como principal nodo ferroviario de los Países Bajos, se puede llegar desde cualquier lugar del país en menos de una hora. El centro compacto es totalmente transitable a pie. Las mejores épocas son primavera y verano cuando las terrazas junto al canal cobran vida.`,
+    keywords: ['acompañantes trans Utrecht', 'shemale Utrecht', 'travestis Utrecht', 'ts Utrecht', 'escorts trans Países Bajos'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Utrecht?', a: 'Sí, el acompañamiento entre adultos que consienten es legal en todos los Países Bajos, incluido Utrecht.' },
+      { q: '¿En qué se diferencia Utrecht de Ámsterdam?', a: 'Utrecht ofrece una experiencia más relajada y auténtica con menos turistas. La escena se centra alrededor del hermoso distrito de canales y tiene un carácter juvenil e intelectual.' },
+    ]
+  },
+  nijmegen: {
+    displayName: 'Nimega',
+    country: 'Países Bajos',
+    continent: 'europe',
+    intro: `Nimega, la ciudad más antigua de los Países Bajos, se asienta con gracia a orillas del río Waal cerca de la frontera alemana. Esta ciudad histórica — antiguo asentamiento romano — combina patrimonio milenario con un espíritu juvenil y rebelde impulsado por su reconocida Universidad Radboud. La mezcla única de historia, naturaleza y política progresista de Nimega la convierte en un destino encantador para encuentros trans en el este holandés.`,
+    scene: `La escena trans de Nimega es pequeña, selectiva y orientada a la comunidad. La fuerte tradición política de izquierda de la ciudad y su activa comunidad LGBTQ+ crean un ambiente naturalmente acogedor. Las acompañantes en Nimega atienden a una clientela mixta de residentes locales, afiliados universitarios y visitantes de ciudades alemanas cercanas como Kleve y Duisburgo.`,
+    districts: `El Benedenstad a lo largo del Waalkade ofrece animados entornos ribereños. El centro alrededor de Grote Markt proporciona puntos de encuentro convenientes. El barrio de Hunnerberg cerca del campus universitario atiende al público académico. El Ooijpolder ofrece escapadas pintorescas a minutos de la ciudad. El recientemente remodelado Waalfront combina arquitectura moderna con vistas al río.`,
+    tips: `Las tarifas en Nimega suelen ser de €100-180 por hora. Se llega en tren desde Ámsterdam (1.5h), Utrecht (1h) y ciudades alemanas como Düsseldorf (1.5h). El plato fuerte son las Vierdaagsefeesten en julio — la fiesta más grande de los Países Bajos. Reserve con mucha anticipación durante este período.`,
+    keywords: ['acompañantes trans Nimega', 'shemale Nimega', 'travestis Nimega', 'ts Güeldres', 'escorts trans Nimega'],
+    faq: [
+      { q: '¿Es legal el acompañamiento en Nimega?', a: 'Sí, el acompañamiento entre adultos que consienten es legal en los Países Bajos en todas las ciudades.' },
+      { q: '¿Vale la pena visitar Nimega?', a: 'Absolutamente. Nimega ofrece 2.000 años de historia, energía universitaria vibrante y hermosos entornos naturales con un ambiente acogedor y progresista.' },
+    ]
+  },
 };
 
 // ── HEBREW CITY CONTENT ──
