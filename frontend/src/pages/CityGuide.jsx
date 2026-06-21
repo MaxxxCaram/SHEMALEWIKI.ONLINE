@@ -202,8 +202,84 @@ const cityContent = {
       { q: 'What is the best area in Lisbon for trans companions?', a: 'Príncipe Real is the LGBTQ+ heart of Lisbon and the top area. Bairro Alto, Chiado, and Parque das Nações are also popular for their hotels, dining, and nightlife.' },
       { q: 'What languages do trans companions in Lisbon speak?', a: 'Portuguese is the primary language. English is common, and many companions from Brazil add a distinctive Lusophone flavor to the scene.' },
     ]
+  },
+  eindhoven: {
+      displayName: 'Eindhoven',
+      country: 'Netherlands',
+      continent: 'europe',
+      intro: `Eindhoven, the design and technology capital of the Netherlands, offers a surprisingly vibrant scene for trans companion encounters. This dynamic city in the province of North Brabant combines cutting-edge innovation with southern Dutch warmth. Known for its Design Academy and the annual Dutch Design Week, Eindhoven attracts a creative, open-minded crowd that values authentic connections with beautiful trans women and shemale companions.`,
+      scene: `The trans companion scene in Eindhoven is intimate but well-connected. While smaller than Amsterdam, the city's international character — driven by the High Tech Campus and TU/e university — creates a cosmopolitan environment where companions serve a diverse, multilingual clientele. The scene is centered around the city center and Stratumseind, one of the Netherlands' longest entertainment streets. Eindhoven companions are known for their professionalism and discretion.`,
+      districts: `The city center around the Markt square and the lively Stratumseind entertainment strip are natural starting points for meetings. The upscale Strijp-S district, with its converted Philips factories turned into trendy lofts and creative spaces, offers stylish venues for high-end encounters. The green residential area of Tongelre provides privacy while remaining well-connected. For those near the technology campus, the Meerhoven area offers convenience.`,
+      tips: `Eindhoven rates typically range from €120-200 per hour. Advance booking is recommended, especially during major events like Dutch Design Week (October) and GLOW light festival (November). The compact city center is walkable, and the excellent bus network reaches all districts. Eindhoven Airport connects to 80+ European destinations, making it convenient for international visitors.`,
+      keywords: ['trans companions Eindhoven', 'shemale companions Eindhoven', 'Eindhoven trans companions', 'ts companions Netherlands', 'ladyboy Eindhoven'],
+      faq: [
+      { q: 'Is companionship work legal in Eindhoven?', a: 'Yes, companionship between consenting adults is legal in the Netherlands. Eindhoven operates under the same legal framework as Amsterdam and other Dutch cities.' },
+      { q: 'What is the best area for trans companion encounters in Eindhoven?', a: 'The city center around the Markt and Stratumseind, and the creative Strijp-S district, are the most popular areas for meetings.' },
+      { q: 'How does Eindhoven compare to Amsterdam for trans companions?', a: 'Eindhoven offers a more intimate, laid-back scene compared to Amsterdam. It is ideal for those who prefer discretion and a less tourist-heavy environment.' },
+      ]
+      },
+      arnhem: {
+      displayName: 'Arnhem',
+      country: 'Netherlands',
+      continent: 'europe',
+      intro: `Arnhem, the capital of Gelderland province, combines green hills, post-war modernism, and a thriving arts scene to create a unique backdrop for trans companion encounters. Unlike the flat canal cities of western Netherlands, Arnhem's elevated landscape and proximity to the Veluwe national park give it a distinctive character. The city is known for its fashion district, the Modekwartier, and its welcoming, artistic community.`,
+      scene: `The trans companion scene in Arnhem is discreet and quality-focused. The city's position as a regional hub for eastern Netherlands means companions serve clients from across Gelderland and nearby German border towns. Arnhem's companions are known for their warm, personal approach that reflects the city's approachable character. The scene benefits from Arnhem's excellent rail connections to Utrecht (35 min) and Amsterdam (1 hour).`,
+      districts: `The city center around the Korenmarkt and the Modekwartier (Fashion Quarter) in the Klarendal neighborhood offer charming settings for meetings. The Rijnkade along the Rhine River provides scenic spots. The modern Rijnboog development near the central station offers contemporary hotel options. The leafy northern districts of Sonsbeek and Velperweg provide privacy and tranquility.`,
+      tips: `Arnhem rates typically range from €100-180 per hour. The city is easily reached by train from Amsterdam (1h), Utrecht (35min), and German cities like Düsseldorf (1.5h). The best times to visit are spring and summer when the surrounding nature is at its finest. Book in advance during the Airborne commemorations in September and the Fashion + Design Festival in June.`,
+      keywords: ['trans companions Arnhem', 'shemale Arnhem', 'trans escorts Arnhem', 'ts companions Gelderland', 'ladyboy Arnhem'],
+      faq: [
+      { q: 'Is companionship work legal in Arnhem?', a: 'Yes, companionship between consenting adults is legal in the Netherlands. Arnhem has a professional and discreet scene.' },
+      { q: 'What areas of Arnhem are best for trans companion meetings?', a: 'The Korenmarkt area, Modekwartier, and the Rijnkade riverside are popular. Hotels near the central station also offer excellent meeting venues.' },
+      { q: 'Is Arnhem easy to reach for international visitors?', a: 'Yes. Arnhem Centraal station has direct ICE trains from Germany (Düsseldorf, Frankfurt) and frequent connections to Amsterdam and Utrecht.' },
+      ]
+      },
+      antwerpen: {
+      displayName: 'Antwerp',
+      country: 'Belgium',
+      continent: 'europe',
+      intro: `Antwerp is Belgium's diamond capital, a city of refined taste, avant-garde fashion, and a surprisingly dynamic trans companion scene. This Flemish metropolis on the Scheldt River combines old-world charm with cutting-edge creativity. Antwerp's sophistication extends to its adult companionship sector, where trans companions offer premium experiences to a discerning international clientele.`,
+      scene: `The trans companion community in Antwerp is professional, diverse, and well-established. The city's status as a global fashion and diamond hub attracts visitors from around the world, creating demand for multilingual companions who can cater to international tastes. Antwerp companions are known for their elegance and sophistication — reflecting the city's fashion-forward identity. The scene is centered around the historic city center and the trendy Eilandje harbor district.`,
+      districts: `The historic center near the Grote Markt and the fashion district around Nationalestraat offer prime locations for upscale encounters. The Eilandje (Little Island) neighborhood, centered around the MAS museum, provides modern waterfront settings. The Zuid district is Antwerp's artistic quarter with excellent restaurants and boutique hotels. The residential areas of Berchem offer privacy with easy tram access.`,
+      tips: `Antwerp rates typically range from €120-250 per hour. The city is easily reached by Thalys high-speed train from Paris (2h), Amsterdam (1.5h), and London (3h via Brussels). The best times to visit are during the Antwerp Fashion Festival (September) and Christmas market season. Most companions speak Dutch, English, and French.`,
+      keywords: ['trans companions Antwerp', 'shemale Antwerp', 'trans escorts Belgium', 'ts companions Belgium', 'ladyboy Antwerp'],
+      faq: [
+      { q: 'Is companionship work legal in Antwerp?', a: 'Yes, companionship between consenting adults is legal in Belgium. Antwerp has a professional and well-regulated scene.' },
+      { q: 'What is the best area in Antwerp for trans companion encounters?', a: 'The historic center, the Eilandje waterfront district, and the fashion quarter around Nationalestraat are the preferred areas for high-end meetings.' },
+      { q: 'What languages do trans companions in Antwerp speak?', a: 'Most companions speak Dutch, English, and French. Many also speak German or Spanish, reflecting Antwerp\'s international character.' },
+      ]
+      },
+      utrecht: {
+      displayName: 'Utrecht',
+      country: 'Netherlands',
+      continent: 'europe',
+      intro: `Utrecht, the beating heart of the Netherlands — literally at the country's geographic center — offers a charming and historic setting for trans companion encounters. This university city is known for its iconic Dom Tower, unique wharf cellars along the Oudegracht canal, and a young, vibrant population. Utrecht's medieval beauty combined with its modern, progressive attitude makes it an appealing alternative to the larger Amsterdam scene.`,
+      scene: `The trans companion scene in Utrecht is youthful, educated, and refreshingly authentic. With one of Europe's largest universities, the city has an intelligent and open-minded population that values genuine connections. Utrecht's companions cater to a mix of local professionals, visiting academics, and tourists drawn to the city's rich history. The scene is concentrated around the Binnenstad and benefits from Utrecht's position as the national railway hub.`,
+      districts: `The Oudegracht canal area, with its distinctive two-level wharves now converted into restaurants and boutiques, offers a romantic backdrop for encounters. The Museumkwartier provides cultural sophistication, while the quiet residential areas of Oost and Wittevrouwen offer privacy. The newly developed Leidsche Rijn area offers modern accommodation options. Hoog Catharijne near Central Station provides maximum convenience for travelers.`,
+      tips: `Utrecht rates typically range from €120-200 per hour. As the Netherlands' main railway junction, Utrecht is accessible from virtually anywhere in the country in under an hour. The compact city center is entirely walkable. Best times to visit are spring and summer when the canal-side terraces come alive. During the Nederlands Film Festival (September), the city buzzes with cultural energy.`,
+      keywords: ['trans companions Utrecht', 'shemale Utrecht', 'ts companions Utrecht', 'ladyboy Utrecht', 'trans escorts Netherlands'],
+      faq: [
+      { q: 'Is companionship work legal in Utrecht?', a: 'Yes, companionship between consenting adults is legal throughout the Netherlands, including Utrecht.' },
+      { q: 'What makes Utrecht different from Amsterdam?', a: 'Utrecht offers a more relaxed, authentic experience with fewer tourists. The scene is centered around the beautiful canal district and has a youthful, intellectual character.' },
+      { q: 'How do I reach Utrecht from Amsterdam?', a: 'Utrecht Centraal is just 26 minutes from Amsterdam Centraal by train, with services running every 10-15 minutes.' },
+      ]
+      },
+      nijmegen: {
+      displayName: 'Nijmegen',
+      country: 'Netherlands',
+      continent: 'europe',
+      intro: `Nijmegen, the oldest city in the Netherlands, sits gracefully on the banks of the Waal River near the German border. This historic city — once a Roman settlement — combines ancient heritage with a youthful, rebellious spirit driven by its renowned Radboud University. Nijmegen's unique blend of history, nature, and progressive politics makes it a charming destination for trans companion encounters in eastern Netherlands.`,
+      scene: `Nijmegen's trans companion scene is small, selective, and community-oriented. The city's strong left-wing political tradition and active LGBTQ+ community create a naturally welcoming environment. Companions in Nijmegen serve a mixed clientele of local residents, university affiliates, and visitors from nearby German cities like Kleve and Duisburg. The scene reflects Nijmegen's character: intellectual, unpretentious, and warm.`,
+      districts: `The Benedenstad (Lower Town) along the Waalkade offers lively riverside settings. The city center around the Grote Markt provides convenient meeting spots. The Hunnerberg neighborhood near the university campus caters to the academic crowd. The Ooijpolder offers scenic countryside escapes just minutes from the city. The recently redeveloped Waalfront combines modern architecture with river views.`,
+      tips: `Nijmegen's rates are typically €100-180 per hour. The city is reached by train from Amsterdam (1.5h), Utrecht (1h), and German cities like Düsseldorf (1.5h). The highlight is the Vierdaagsefeesten (Four Days Marches festival) in July — the Netherlands' biggest party. Book well in advance during this period.`,
+      keywords: ['trans companions Nijmegen', 'shemale Nijmegen', 'ts companions Nijmegen', 'ladyboy Nijmegen', 'trans escorts Gelderland'],
+      faq: [
+      { q: 'Is companionship work legal in Nijmegen?', a: 'Yes, companionship between consenting adults is legal in the Netherlands throughout all cities.' },
+      { q: 'Is Nijmegen worth visiting for trans companion encounters?', a: 'Absolutely. Nijmegen offers 2,000 years of history, vibrant university energy, and beautiful natural surroundings with a welcoming, progressive atmosphere.' },
+      { q: 'How close is Nijmegen to Germany?', a: 'The German border is just 5 km away. Cities like Kleve and Duisburg are a short drive, and many German visitors enjoy Nijmegen\'s relaxed ambiance.' },
+    ]
   }
 };
+
 
 // ── Spanish content (es) ──
 const cityContentEs = {
