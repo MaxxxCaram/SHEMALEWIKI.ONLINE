@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Save, User, Camera, Settings, RefreshCw, Upload, Image as ImageIcon, BarChart3, ExternalLink, Plus, Trash2, CheckCircle2 } from 'lucide-react';
 import { supabase } from '../supabase';
@@ -14,9 +14,13 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('personal');
   const navigate = useNavigate();
 
+  // Brand detection
+  const isBT = typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
+
   // Media
   const [userMedia, setUserMedia] = useState([]);
-  const [newPhotoUrl, setNewPhotoUrl] = useState('');
+  const [newPhotoFiles, setNewPhotoFiles] = useState(null);
+  const fileInputRef = useRef(null);
   const [newVideoLink, setNewVideoLink] = useState('');
   const [uploadingMedia, setUploadingMedia] = useState(false);
   const [uploadMessage, setUploadMessage] = useState('');
@@ -93,25 +97,48 @@ export default function Dashboard() {
 
   const handleAddPhoto = async (e) => {
     e.preventDefault();
-    if (!newPhotoUrl.trim()) return;
+    if (!newPhotoFiles || newPhotoFiles.length === 0) return;
     setUploadingMedia(true);
     setUploadMessage('');
 
     try {
-      const { error } = await supabase.from('photos').insert([{ 
-        profile_id: profile.id, 
-        photo_url: newPhotoUrl.trim() 
-      }]);
-      if (error) throw error;
+      let uploaded = 0;
+      for (const file of newPhotoFiles) {
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const filePath = `${profile.id}/${Date.now()}_${safeName}`;
 
-      setNewPhotoUrl('');
-      setUploadMessage('✅ Photo added!');
+        // Upload to Supabase Storage
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('profile-photos')
+          .upload(filePath, file, { upsert: true });
+
+        if (uploadError) throw uploadError;
+
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('profile-photos')
+          .getPublicUrl(filePath);
+
+        // Insert into photos table
+        const { error: insertError } = await supabase.from('photos').insert([{
+          profile_id: profile.id,
+          photo_url: publicUrl
+        }]);
+        if (insertError) throw insertError;
+        uploaded++;
+      }
+
+      setNewPhotoFiles(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      setUploadMessage(isBT
+        ? `✅ ${uploaded} foto(s) agregada(s)`
+        : `✅ ${uploaded} photo(s) added!`);
       const { data: mediaData } = await supabase.from('photos').select('*').eq('profile_id', profile.id);
       if (mediaData) setUserMedia(mediaData);
       setTimeout(() => setUploadMessage(''), 3000);
     } catch (err) {
       console.error(err);
-      setUploadMessage('❌ Failed to add photo.');
+      setUploadMessage(isBT ? '❌ Error al subir foto.' : '❌ Failed to upload photo.');
     } finally {
       setUploadingMedia(false);
     }
@@ -289,31 +316,37 @@ export default function Dashboard() {
               )}
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
-                {/* Add Photo URL */}
+                {/* Add Photos — Direct Upload */}
                 <form onSubmit={handleAddPhoto} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.5rem', background: 'var(--bg-primary)', border: '1px dashed var(--accent-primary)', borderRadius: '1rem' }}>
                   <label style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '0.95rem' }}>
                     <Camera size={16} style={{ marginRight: '0.4rem', verticalAlign: 'middle' }} />
-                    Add Photo URL
+                    {isBT ? 'Agregar fotos' : 'Add Photos'}
                   </label>
-                  <input type="url" placeholder="https://i.imgur.com/photo.jpg" className="search-input"
-                    style={{ width: '100%', background: 'transparent', border: '1px solid var(--glass-border)', padding: '0.7rem' }}
-                    value={newPhotoUrl} onChange={e => setNewPhotoUrl(e.target.value)} />
-                  <button type="submit" className="btn btn-primary" disabled={uploadingMedia || !newPhotoUrl.trim()}>
-                    {uploadingMedia ? <RefreshCw className="spin" size={16} /> : <Plus size={16} />} Add Photo
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={e => setNewPhotoFiles(e.target.files)}
+                    style={{ width: '100%', background: 'transparent', border: '1px solid var(--glass-border)', padding: '0.7rem', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)' }}
+                  />
+                  <button type="submit" className="btn btn-primary" disabled={uploadingMedia || !newPhotoFiles || newPhotoFiles.length === 0}>
+                    {uploadingMedia ? <RefreshCw className="spin" size={16} /> : <Plus size={16} />}
+                    {isBT ? ' Subir fotos' : ' Upload Photos'}
                   </button>
                 </form>
 
                 {/* Add Video Link */}
                 <form onSubmit={handleAddVideo} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.5rem', background: 'var(--bg-primary)', border: '1px dashed var(--glass-border)', borderRadius: '1rem' }}>
                   <label style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '0.95rem' }}>
-                    🎥 Add Video Link
+                    🎥 {isBT ? 'Agregar enlace de video' : 'Add Video Link'}
                   </label>
                   <input type="url" placeholder="https://onlyfans.com/... or https://pornhub.com/..." className="search-input"
                     style={{ width: '100%', background: 'transparent', border: '1px solid var(--glass-border)', padding: '0.7rem' }}
                     value={newVideoLink} onChange={e => setNewVideoLink(e.target.value)} />
                   <button type="submit" className="btn" disabled={uploadingMedia || !newVideoLink.trim()}
                     style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)' }}>
-                    <Plus size={16} style={{ marginRight: '0.4rem' }} /> Add Link
+                    <Plus size={16} style={{ marginRight: '0.4rem' }} /> {isBT ? 'Agregar enlace' : 'Add Link'}
                   </button>
                 </form>
               </div>
