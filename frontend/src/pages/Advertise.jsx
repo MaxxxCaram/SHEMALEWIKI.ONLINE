@@ -81,11 +81,11 @@ const content = {
 };
 
 export default function Advertise() {
-  // Detect language from URL
+  // Detect language from URL or domain
   const path = typeof window !== 'undefined' ? window.location.pathname : '/';
-  const lang = path.startsWith('/es') ? 'es' : 'en';
-  const t = content[lang] || content.en;
   const isBuscaTrans = typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
+  const lang = path.startsWith('/es') || path.startsWith('/anunciar') || isBuscaTrans ? 'es' : 'en';
+  const t = content[lang] || content.en;
   const brandName = isBuscaTrans ? 'BuscaTrans' : 'ShemaleWiki';
 
   return (

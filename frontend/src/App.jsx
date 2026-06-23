@@ -41,7 +41,7 @@ function Navbar() {
       <div className="container">
         <div className="nav-links nav-left">
           <Link to={bt ? "/es/" : "/"}>{bt ? 'Inicio' : 'Browse'}</Link>
-          <Link to="/advertise" style={{ color: 'var(--accent-secondary)' }}>{bt ? 'Anunciar' : 'Advertise'}</Link>
+          <Link to={bt ? "/anunciar" : "/advertise"} style={{ color: 'var(--accent-secondary)' }}>{bt ? 'Anunciar' : 'Advertise'}</Link>
         </div>
         <Link to={bt ? "/es/" : "/"} className="nav-brand">
           {bt ? (
@@ -105,6 +105,7 @@ function AppContent() {
           <Route path="/dashboard/login" element={<DashboardLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/advertise" element={<Advertise />} />
+          <Route path="/anunciar" element={<Advertise />} />
           <Route path="/register" element={<Register />} />
           <Route path="/registro" element={<Register />} />
           <Route path="/terms" element={<Terms />} />
