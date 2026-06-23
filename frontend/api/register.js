@@ -2,6 +2,7 @@
 // Uses service key to bypass RLS for new profile registration
 // Sends notification email to ads@shemalewiki.online
 
+import { randomUUID } from 'crypto';
 import nodemailer from 'nodemailer';
 
 const SUPABASE_URL = 'https://qtuzpswxzengqoqqwtpt.supabase.co';
@@ -50,6 +51,7 @@ export default async function handler(req, res) {
         'Prefer': 'return=representation'
       },
       body: JSON.stringify({
+        id: randomUUID(),
         name, email, phone: phone || '', whatsapp: whatsapp || phone || '',
         location, bio: bio || '',
         age: age ? parseInt(age) : null,
