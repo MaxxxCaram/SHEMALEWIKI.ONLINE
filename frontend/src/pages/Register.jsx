@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import SEO from '../components/SEO';
+import { supabase } from '../supabase';
 
 /* ── Brand detection ── */
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
@@ -176,6 +177,32 @@ export default function Register() {
     setSubmitError('');
 
     try {
+      // 1. Upload photos to Supabase Storage (if any)
+      let photoUrls = [];
+      if (photoFiles.length > 0) {
+        const profileId = crypto.randomUUID(); // pre-generate ID for photo paths
+        for (const file of photoFiles) {
+          const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+          const filePath = `${profileId}/${Date.now()}_${safeName}`;
+          
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('profile-photos')
+            .upload(filePath, file, { upsert: true });
+          
+          if (uploadError) {
+            console.error('Photo upload failed:', uploadError);
+            continue; // skip failed uploads, continue with others
+          }
+          
+          const { data: { publicUrl } } = supabase.storage
+            .from('profile-photos')
+            .getPublicUrl(filePath);
+          
+          photoUrls.push(publicUrl);
+        }
+      }
+
+      // 2. Register profile with photo URLs and video links
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -193,6 +220,11 @@ export default function Register() {
           height: form.height || '',
           weight: form.weight || '',
           onlyfans: videoLinks.filter(Boolean).join(', '),
+          photo_urls: photoUrls,
+          services: selectedServices.join(', '),
+          availability: selectedAvailability || '',
+          photo_privacy: selectedPhotoPrivacy,
+          plan: selectedPlan,
         })
       });
 

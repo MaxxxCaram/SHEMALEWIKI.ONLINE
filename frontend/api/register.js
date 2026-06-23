@@ -1,6 +1,7 @@
 // Vercel Serverless Function: POST /api/register
 // Uses service key to bypass RLS for new profile registration
 // Sends notification email to ads@shemalewiki.online
+// Saves photos to Supabase Storage via photo_urls
 
 import { randomUUID } from 'crypto';
 import nodemailer from 'nodemailer';
@@ -31,7 +32,8 @@ export default async function handler(req, res) {
 
   try {
     const { name, email, phone, whatsapp, country, city, bio, age, languages, 
-            nationality, height, weight, onlyfans } = req.body || {};
+            nationality, height, weight, onlyfans, photo_urls, services,
+            availability, photo_privacy, plan } = req.body || {};
 
     if (!name || !email || !phone) {
       return res.status(400).json({ error: 'Name, email, and contact are required' });
@@ -40,6 +42,8 @@ export default async function handler(req, res) {
     const continent = (country && ['Argentina','Colombia','Mexico','Chile','Peru','Venezuela','Brazil'].some(c => country.includes(c)))
       ? 'Latin America' : 'Europe';
     const location = `${continent} | ${country || ''} | ${city || ''}`;
+    
+    const profileId = randomUUID();
 
     // Insert profile with service key
     const response = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
@@ -51,7 +55,7 @@ export default async function handler(req, res) {
         'Prefer': 'return=representation'
       },
       body: JSON.stringify({
-        id: randomUUID(),
+        id: profileId,
         name, email, phone: phone || '', whatsapp: whatsapp || phone || '',
         location, bio: bio || '',
         age: age ? parseInt(age) : null,
@@ -59,7 +63,8 @@ export default async function handler(req, res) {
         nationality: nationality || '',
         height: height ? parseInt(height) : null,
         weight: weight ? parseInt(weight) : null,
-        onlyfans: onlyfans || ''
+        onlyfans: onlyfans || '',
+        description: [services, availability, photo_privacy, plan].filter(Boolean).join(' | ') || ''
       })
     });
 
@@ -71,7 +76,29 @@ export default async function handler(req, res) {
     const data = await response.json();
     const profile = data[0];
 
-    // Send notification email (non-blocking — don't fail registration if email fails)
+    // Save photo URLs to photos table
+    if (photo_urls && photo_urls.length > 0) {
+      try {
+        const photoInserts = photo_urls.map(url => ({
+          profile_id: profileId,
+          photo_url: url
+        }));
+        await fetch(`${SUPABASE_URL}/rest/v1/photos`, {
+          method: 'POST',
+          headers: {
+            'apikey': SERVICE_KEY,
+            'Authorization': `Bearer ${SERVICE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(photoInserts)
+        });
+      } catch (photoErr) {
+        console.error('Photo insert failed (non-fatal):', photoErr.message);
+      }
+    }
+
+    // Send notification email (non-blocking)
     try {
       const transporter = nodemailer.createTransport({
         host: SMTP_HOST,
@@ -92,11 +119,21 @@ export default async function handler(req, res) {
         ['Altura', profile.height ? `${profile.height} cm` : ''],
         ['Peso', profile.weight ? `${profile.weight} kg` : ''],
         ['OnlyFans', profile.onlyfans],
+        ['Fotos', photo_urls && photo_urls.length > 0 ? `${photo_urls.length} foto(s)` : 'Sin fotos'],
+        ['Servicios', services || ''],
+        ['Plan', plan || 'free'],
       ].filter(([,v]) => v);
 
       const fieldsHtml = fields.map(([k, v]) => 
         `<tr><td style="padding:6px 12px;font-weight:bold;color:#555;">${k}</td><td style="padding:6px 12px;">${escapeHtml(String(v))}</td></tr>`
       ).join('');
+
+      // Photo thumbnails in email
+      const photosHtml = photo_urls && photo_urls.length > 0 
+        ? photo_urls.map((url, i) => 
+            `<img src="${url}" alt="Foto ${i+1}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;margin:4px;">`
+          ).join('')
+        : '';
 
       await transporter.sendMail({
         from: `"ShemaleWiki Registros" <${SMTP_USER}>`,
@@ -108,6 +145,7 @@ export default async function handler(req, res) {
             <table style="width:100%;border-collapse:collapse;background:#f9f9f9;border-radius:8px;">
               ${fieldsHtml}
             </table>
+            ${photosHtml ? `<div style="margin-top:16px;">${photosHtml}</div>` : ''}
             <p style="margin-top:16px;">
               <a href="https://shemalewiki.online/profile/${profile.id}" 
                  style="background:#c43a8a;color:#fff;padding:10px 24px;border-radius:6px;text-decoration:none;">

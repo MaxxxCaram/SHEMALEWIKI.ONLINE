@@ -14,6 +14,7 @@ import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Reclama from './pages/Reclama';
 import Contact from './pages/Contact';
+import Admin from './pages/Admin';
 import AgeVerification, { useAgeVerified } from './components/AgeVerification';
 import './index.css';
 import logoSw from './assets/logosw.png';
@@ -115,6 +116,7 @@ function AppContent() {
           <Route path="/es/reclama" element={<Reclama />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/contacto" element={<Contact />} />
+          <Route path="/admin" element={<Admin />} />
 
           {/* Legacy continent routes */}
           <Route path="/:continent" element={<Countries />} />
