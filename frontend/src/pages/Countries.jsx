@@ -25,9 +25,10 @@ export default function Countries() {
 
         if (error) throw error;
 
+        const arr = Array.isArray(data) ? data : [];
         // Extract unique countries
         const countrySet = new Set();
-        data.forEach(p => {
+        arr.forEach(p => {
           if (p.location) {
             const parts = p.location.split(' | ');
             if (parts.length >= 2 && parts[1] !== 'Unknown') {

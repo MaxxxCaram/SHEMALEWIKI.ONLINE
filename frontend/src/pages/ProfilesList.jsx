@@ -35,10 +35,12 @@ export default function ProfilesList() {
         .limit(1000);
 
       if (error) throw error;
-      if (!data) return;
+
+      const arr = Array.isArray(data) ? data : [];
+      if (!arr.length) return;
 
       const counts = {};
-      data.forEach(p => {
+      arr.forEach(p => {
         const parts = (p.location || '').split(' | ');
         const city = parts[parts.length - 1];
         if (city && city !== 'Unknown') {
