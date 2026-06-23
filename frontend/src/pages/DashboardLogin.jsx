@@ -53,7 +53,7 @@ export default function DashboardLogin() {
   const [createCamChat, setCreateCamChat] = useState('');
 
   // Step 3: Media
-  const [createPhotoUrls, setCreatePhotoUrls] = useState(['', '', '']);
+  const [createPhotoFiles, setCreatePhotoFiles] = useState([]);  // File objects
   const [createVideoLinks, setCreateVideoLinks] = useState(['']);
 
   const API_BASE = window.location.hostname === 'localhost' 
@@ -128,15 +128,14 @@ export default function DashboardLogin() {
     setCreateLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE}/api/drafts`, {
+      const response = await fetch(`${API_BASE}/api/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: createName,
           email: createEmail,
           phone: createPhone,
-          whatsapp: createWhatsapp,
-          continent: createContinent,
+          whatsapp: createWhatsapp || createPhone,
           country: createCountry,
           city: createCity,
           bio: createBio,
@@ -145,10 +144,7 @@ export default function DashboardLogin() {
           weight: createWeight,
           nationality: createNationality,
           languages: createLanguages,
-          onlyfans: createOnlyFans,
-          cam_chat: createCamChat,
-          photoUrls: createPhotoUrls,
-          videoLinks: createVideoLinks
+          onlyfans: createVideoLinks.filter(Boolean).join(', '),
         })
       });
 
@@ -166,16 +162,12 @@ export default function DashboardLogin() {
     }
   };
 
-  const handleAddPhotoField = () => {
-    setCreatePhotoUrls(prev => [...prev, '']);
+  const handlePhotoSelect = (e) => {
+    const files = Array.from(e.target.files);
+    setCreatePhotoFiles(prev => [...prev, ...files].slice(0, 10));
   };
-
-  const handlePhotoUrlChange = (index, value) => {
-    setCreatePhotoUrls(prev => {
-      const copy = [...prev];
-      copy[index] = value;
-      return copy;
-    });
+  const removePhoto = (idx) => {
+    setCreatePhotoFiles(prev => prev.filter((_, i) => i !== idx));
   };
 
   const handleAddVideoField = () => {
@@ -777,32 +769,44 @@ export default function DashboardLogin() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                   <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Sparkles size={18} /> Fotos y Enlaces de Vídeos</h3>
 
-                  {/* Photo URLs */}
+                  {/* Photo upload */}
                   <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <label htmlFor="createPhoto_0" style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Enlaces de tus Fotos (URLs Directas)</label>
-                    {createPhotoUrls.map((url, index) => (
-                      <div key={index} style={{ position: 'relative' }}>
-                        <Camera style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
-                        <input 
-                          type="url" 
-                          id={`createPhoto_${index}`}
-                          name={`createPhoto_${index}`}
-                          className="search-input" 
-                          style={{ width: '100%', paddingLeft: '3rem' }} 
-                          placeholder={`Enlace de Foto ${index + 1} (https://...)`} 
-                          value={url}
-                          onChange={(e) => handlePhotoUrlChange(index, e.target.value)}
-                        />
+                    <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>📷 Tus fotos (JPG/PNG · Máx 10MB c/u · Hasta 10)</label>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      multiple
+                      onChange={handlePhotoSelect}
+                      style={{
+                        width: '100%', padding: '0.75rem',
+                        border: '2px dashed var(--card-border)',
+                        borderRadius: '0.5rem', background: 'var(--card-bg)',
+                        color: 'var(--text-primary)', cursor: 'pointer'
+                      }}
+                    />
+                    {createPhotoFiles.length > 0 && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        {createPhotoFiles.map((file, i) => (
+                          <div key={i} style={{ position: 'relative', width: '80px', height: '80px' }}>
+                            <img
+                              src={URL.createObjectURL(file)}
+                              alt={`Foto ${i + 1}`}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '0.5rem' }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removePhoto(i)}
+                              style={{
+                                position: 'absolute', top: '-6px', right: '-6px',
+                                width: '22px', height: '22px', borderRadius: '50%',
+                                background: '#ef4444', color: '#fff', border: 'none',
+                                fontSize: '0.75rem', cursor: 'pointer', lineHeight: '22px', textAlign: 'center'
+                              }}
+                            >×</button>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                    <button 
-                      type="button" 
-                      onClick={handleAddPhotoField}
-                      className="btn" 
-                      style={{ alignSelf: 'flex-start', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid var(--glass-border)', fontSize: '0.85rem', padding: '0.5rem 1rem' }}
-                    >
-                      <Plus size={14} style={{ marginRight: '0.25rem' }} /> Agregar Enlace de Foto
-                    </button>
+                    )}
                   </div>
 
                   {/* Video Links */}
