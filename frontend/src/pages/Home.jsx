@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Search, MapPin, Star, Heart } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
+import { supabase } from '../supabase';
 
 /* ── Brand detection ── */
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
@@ -48,30 +49,67 @@ const t = {
   },
 };
 
-/* ── Featured profiles (demo data) ── */
-const featuredProfiles = {
-  shemalewiki: [
-    { name: 'Alicia', location: 'Bangkok, TH', badge: { label: 'Verified', type: 'verified' }, tag: 'VIP' },
-    { name: 'Jessica', location: 'London, UK', badge: { label: 'Premium', type: 'premium' }, tag: 'Verified' },
-    { name: 'Camila', location: 'Miami, US', badge: { label: 'Online', type: 'live' }, tag: 'New' },
-  ],
-  buscatrans: [
-    { name: 'Valentina', location: 'Buenos Aires', badge: { label: 'Verificada', type: 'verified' } },
-    { name: 'Daniela', location: 'Ciudad de México', badge: { label: 'Premium', type: 'premium' } },
-    { name: 'Sofía', location: 'Madrid', badge: { label: 'Nueva', type: 'new' } },
-  ],
-};
-
 export default function Home() {
   const brand = isBT() ? 'buscatrans' : 'shemalewiki';
   const content = t[brand];
-  const profiles = featuredProfiles[brand];
   const [activePill, setActivePill] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const canonPath = brand === 'buscatrans' ? '/es/' : '/';
   const lang = brand === 'buscatrans' ? 'es' : 'en';
   const siteName = brand === 'buscatrans' ? 'BuscaTrans' : 'ShemaleWiki';
+
+  // Fetch real approved profiles
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*, photos(photo_url)')
+          .or('cam_chat.is.null,cam_chat.eq.approved')
+          .order('created_at', { ascending: false })
+          .limit(6);
+
+        if (error) throw error;
+        if (data) setProfiles(data);
+      } catch (err) {
+        console.error('Home fetch failed:', err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const getCitySlug = (location) => {
+    const parts = (location || '').split(' | ');
+    const city = parts[parts.length - 1];
+    return city.toLowerCase().replace(/\s+/g, '-');
+  };
+
+  const getContinentSlug = (location) => {
+    const parts = (location || '').split(' | ');
+    return parts[0]?.toLowerCase() || 'europe';
+  };
+
+  const getCountrySlug = (location) => {
+    const parts = (location || '').split(' | ');
+    return parts[1]?.toLowerCase() || '';
+  };
+
+  const getProfilePhoto = (p) => {
+    if (p.photos && p.photos.length > 0) return p.photos[0].photo_url;
+    return null;
+  };
+
+  const getProfileLink = (p) => {
+    const continent = getContinentSlug(p.location);
+    const country = getCountrySlug(p.location);
+    const city = getCitySlug(p.location);
+    if (continent && country && city) return `/${continent}/${country}/${city}`;
+    return `/profile/${p.id}`;
+  };
 
   return (
     <>
@@ -100,10 +138,10 @@ export default function Home() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button className="btn btn-primary btn-lg">
+          <Link to={brand === 'buscatrans' ? '/es/europe' : '/europe'} className="btn btn-primary btn-lg" style={{ textDecoration: 'none' }}>
             <Search size={18} />
             {brand === 'buscatrans' ? 'Buscar' : 'Search'}
-          </button>
+          </Link>
         </div>
 
         {/* Filter pills */}
@@ -124,35 +162,56 @@ export default function Home() {
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">{content.featuredTitle}</h2>
-          <a href="#" className="section-link">{content.featuredLink}</a>
+          <Link to={brand === 'buscatrans' ? '/es/europe' : '/europe'} className="section-link">{content.featuredLink}</Link>
         </div>
 
-        <div className="profiles-grid">
-          {profiles.map((p, i) => (
-            <Link to="/europe/united-kingdom" key={i} className="glass-card" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <div style={{ height: '280px', background: 'var(--card-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '3rem' }}>
-                👤
-              </div>
-              <div className="profile-card-content">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3 className="profile-card-title">{p.name}</h3>
-                  {p.tag && (
-                    <span className="profile-card-badge badge-premium" style={{ fontSize: '0.65rem' }}>{p.tag}</span>
-                  )}
-                </div>
-                <div className="profile-card-meta">
-                  <span><MapPin size={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />{p.location}</span>
-                </div>
-                <span className={`profile-card-badge badge-${p.badge.type}`}>{p.badge.label}</span>
-              </div>
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-secondary)' }}>
+            <div className="spinner" style={{ margin: '0 auto' }}></div>
+          </div>
+        ) : profiles.length > 0 ? (
+          <div className="profiles-grid">
+            {profiles.map((p) => {
+              const photo = getProfilePhoto(p);
+              const link = getProfileLink(p);
+              return (
+                <Link to={link} key={p.id} className="glass-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <div style={{ 
+                    height: '280px', 
+                    background: photo ? `url(${photo}) center/cover` : 'var(--card-bg)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: 'var(--text-secondary)', fontSize: '3rem', position: 'relative'
+                  }}>
+                    {!photo && '👤'}
+                  </div>
+                  <div className="profile-card-content">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h3 className="profile-card-title">{p.name}</h3>
+                      {p.cam_chat === 'approved' && (
+                        <span className="profile-card-badge badge-premium" style={{ fontSize: '0.65rem', background: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>Verified</span>
+                      )}
+                    </div>
+                    <div className="profile-card-meta">
+                      <span><MapPin size={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />{getCitySlug(p.location).replace(/-/g, ' ') || p.location}</span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        ) : (
+          <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-secondary)' }}>
+            <p>{brand === 'buscatrans' ? 'No hay perfiles todavía. ¡Sé la primera en registrarte!' : 'No approved profiles yet. Be the first!'}</p>
+            <Link to={brand === 'buscatrans' ? '/registro' : '/register'} className="btn btn-primary" style={{ marginTop: '1rem', display: 'inline-block', textDecoration: 'none' }}>
+              {brand === 'buscatrans' ? 'Crear perfil' : 'List your profile'}
             </Link>
-          ))}
-        </div>
+          </div>
+        )}
 
         {/* ── CITY MAP SECTION ── */}
         <div className="section-header">
           <h2 className="section-title">{content.citiesTitle}</h2>
-          <a href="#" className="section-link">{content.citiesLink}</a>
+          <Link to={brand === 'buscatrans' ? '/es/europe' : '/europe'} className="section-link">{content.citiesLink}</Link>
         </div>
         <div className="map-placeholder">
           <MapPin size={48} style={{ opacity: 0.3 }} />
