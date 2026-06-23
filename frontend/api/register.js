@@ -1,8 +1,18 @@
 // Vercel Serverless Function: POST /api/register
 // Uses service key to bypass RLS for new profile registration
+// Sends notification email to ads@shemalewiki.online
+
+import nodemailer from 'nodemailer';
 
 const SUPABASE_URL = 'https://qtuzpswxzengqoqqwtpt.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+// Email config
+const SMTP_HOST = 'smtp.hostinger.com';
+const SMTP_PORT = 465;
+const SMTP_USER = 'ads@shemalewiki.online';
+const SMTP_PASS = process.env.ADS_EMAIL_PASSWORD || 'Maxima2026!';
+const NOTIFY_EMAIL = 'ads@shemalewiki.online';
 
 export default async function handler(req, res) {
   // CORS
@@ -31,9 +41,6 @@ export default async function handler(req, res) {
     const location = `${continent} | ${country || ''} | ${city || ''}`;
 
     // Insert profile with service key
-    const id = crypto.randomUUID();
-    const urlSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    
     const response = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
       method: 'POST',
       headers: {
@@ -43,7 +50,6 @@ export default async function handler(req, res) {
         'Prefer': 'return=representation'
       },
       body: JSON.stringify({
-        id, url: urlSlug,
         name, email, phone: phone || '', whatsapp: whatsapp || phone || '',
         location, bio: bio || '',
         age: age ? parseInt(age) : null,
@@ -61,10 +67,75 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
-    return res.status(201).json({ profile: data[0] });
+    const profile = data[0];
+
+    // Send notification email (non-blocking — don't fail registration if email fails)
+    try {
+      const transporter = nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        secure: true,
+        auth: { user: SMTP_USER, pass: SMTP_PASS },
+      });
+
+      const fields = [
+        ['Nombre', profile.name],
+        ['Email', profile.email],
+        ['WhatsApp', profile.whatsapp],
+        ['Ubicación', profile.location],
+        ['Bio', profile.bio],
+        ['Edad', profile.age],
+        ['Idiomas', profile.languages],
+        ['Nacionalidad', profile.nationality],
+        ['Altura', profile.height ? `${profile.height} cm` : ''],
+        ['Peso', profile.weight ? `${profile.weight} kg` : ''],
+        ['OnlyFans', profile.onlyfans],
+      ].filter(([,v]) => v);
+
+      const fieldsHtml = fields.map(([k, v]) => 
+        `<tr><td style="padding:6px 12px;font-weight:bold;color:#555;">${k}</td><td style="padding:6px 12px;">${escapeHtml(String(v))}</td></tr>`
+      ).join('');
+
+      await transporter.sendMail({
+        from: `"ShemaleWiki Registros" <${SMTP_USER}>`,
+        to: NOTIFY_EMAIL,
+        subject: `🆕 Nuevo perfil: ${profile.name} — ${location}`,
+        html: `
+          <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
+            <h2 style="color:#c43a8a;">🆕 Nuevo perfil registrado</h2>
+            <table style="width:100%;border-collapse:collapse;background:#f9f9f9;border-radius:8px;">
+              ${fieldsHtml}
+            </table>
+            <p style="margin-top:16px;">
+              <a href="https://shemalewiki.online/profile/${profile.id}" 
+                 style="background:#c43a8a;color:#fff;padding:10px 24px;border-radius:6px;text-decoration:none;">
+                Ver perfil →
+              </a>
+            </p>
+            <p style="color:#999;font-size:0.8rem;margin-top:24px;">
+              ID: ${profile.id} · ${new Date().toISOString()}
+            </p>
+          </div>
+        `,
+      });
+    } catch (emailErr) {
+      console.error('Notification email failed (non-fatal):', emailErr.message);
+    }
+
+    return res.status(201).json({ profile });
 
   } catch (err) {
     console.error('Register error:', err);
     return res.status(500).json({ error: err.message });
   }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }

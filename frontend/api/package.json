@@ -6,6 +6,7 @@
     "cors": "^2.8.5",
     "@supabase/supabase-js": "^2.39.0",
     "axios": "^1.6.2",
-    "cheerio": "^1.0.0-rc.12"
+    "cheerio": "^1.0.0-rc.12",
+    "nodemailer": "^6.9.0"
   }
 }
