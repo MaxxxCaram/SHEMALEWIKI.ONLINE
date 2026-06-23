@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 
 /* ── Brand detection ── */
@@ -29,8 +28,9 @@ const content = {
         { id: 'bio', label: 'About you (public bio)', type: 'textarea', placeholder: 'Describe yourself professionally...' },
         { id: 'age', label: 'Age', type: 'number' },
         { id: 'languages', label: 'Languages', type: 'text', placeholder: 'English, Spanish' },
-        { id: 'rate_hourly', label: 'Rate / hour (£/$)', type: 'number' },
-        { id: 'rate_overnight', label: 'Overnight rate', type: 'number' },
+        { id: 'height', label: 'Height (cm)', type: 'number' },
+        { id: 'weight', label: 'Weight (kg)', type: 'number' },
+        { id: 'nationality', label: 'Nationality', type: 'text', placeholder: 'e.g. Brazilian' },
       ],
       services: ['Companion', 'Dinner dates', 'Travel', 'GFE', 'Overnight'],
       availability: [
@@ -55,14 +55,10 @@ const content = {
     ctas: ['Next → Profile details', 'Next → Upload photos', 'Next → Choose plan', 'Publish my profile →'],
     note: 'Cancel or change plan at any time · No lock-in',
     legal: 'By registering you agree to our terms and privacy policy',
-    crossListLabel: 'Also list on BuscaTrans.com?',
-    crossListYes: 'Yes — appear on both directories',
-    crossListYesSub: 'Double exposure at no extra cost',
-    crossListNo: 'No — ShemaleWiki.online only',
   },
   es: {
     steps: ['Cuenta', 'Perfil', 'Fotos', 'Plan'],
-    titles: ['Creá tu cuenta', 'Tu perfil', 'Tus fotos', 'Elegí tu plan'],
+    titles: ['Creá tu perfil', 'Tu perfil', 'Tus fotos', 'Elegí tu plan'],
     subtitles: [
       'Tu espacio, tus reglas, tu mundo.',
       'Tu historia, en tus palabras.',
@@ -82,8 +78,9 @@ const content = {
         { id: 'bio', label: 'Descripción de tu perfil', type: 'textarea', placeholder: 'Presentate con tus propias palabras...' },
         { id: 'age', label: 'Edad', type: 'number' },
         { id: 'languages', label: 'Idiomas', type: 'text', placeholder: 'Español, Inglés' },
-        { id: 'rate_hourly', label: 'Tarifa por hora ($)', type: 'number' },
-        { id: 'rate_overnight', label: 'Noche completa ($)', type: 'number' },
+        { id: 'height', label: 'Altura (cm)', type: 'number' },
+        { id: 'weight', label: 'Peso (kg)', type: 'number' },
+        { id: 'nationality', label: 'Nacionalidad', type: 'text', placeholder: 'Ej: Argentina' },
       ],
       services: ['Acompañante', 'Cenas', 'Viajes', 'GFE', 'Masajes'],
       availability: [
@@ -107,20 +104,14 @@ const content = {
     ctas: ['Siguiente → Perfil', 'Siguiente → Fotos', 'Siguiente → Elegir plan', 'Publicar mi perfil →'],
     note: 'Cancelá o cambiá de plan cuando quieras · Sin permanencia',
     legal: 'Al registrarte aceptás nuestros términos y privacidad',
-    crossListLabel: '¿También aparecer en ShemaleWiki.online?',
-    crossListYes: 'Sí — aparecer en ambos directorios',
-    crossListYesSub: 'Doble exposición sin costo extra',
-    crossListNo: 'No — solo BuscaTrans.com',
   },
 };
 
 export default function Register() {
   const bt = isBT();
   const lang = bt ? 'es' : 'en';
-  const t = content[lang];
   const brand = bt ? 'BuscaTrans' : 'ShemaleWiki';
 
-  /* Detect language from URL path for /registro -> es */
   const path = typeof window !== 'undefined' ? window.location.pathname : '';
   const actualLang = path.startsWith('/registro') ? 'es' : lang;
   const actualT = content[actualLang];
@@ -131,14 +122,16 @@ export default function Register() {
   const [selectedAvailability, setSelectedAvailability] = useState(null);
   const [selectedPhotoPrivacy, setSelectedPhotoPrivacy] = useState('verified');
   const [selectedPlan, setSelectedPlan] = useState('standard');
-  const [crossList, setCrossList] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [createdProfile, setCreatedProfile] = useState(null);
 
-  const maxSteps = 4;
+  // Photo + video state
+  const [photoFiles, setPhotoFiles] = useState([]);  // File objects
+  const [videoLinks, setVideoLinks] = useState(['']);  // URL strings
 
+  const maxSteps = 4;
   const update = (id, val) => setForm(prev => ({ ...prev, [id]: val }));
 
   const toggleService = (s) => {
@@ -147,12 +140,7 @@ export default function Register() {
     );
   };
 
-  const canAdvance = () => {
-    if (step === 0) return true; // basic, let them proceed
-    if (step === 1) return true;
-    if (step === 2) return true;
-    return true;
-  };
+  const canAdvance = () => true;
 
   const nextStep = () => {
     if (step < maxSteps - 1) setStep(s => s + 1);
@@ -161,51 +149,64 @@ export default function Register() {
     if (step > 0) setStep(s => s - 1);
   };
 
+  // Photo handlers
+  const handlePhotoSelect = (e) => {
+    const files = Array.from(e.target.files);
+    setPhotoFiles(prev => [...prev, ...files].slice(0, 10));
+  };
+  const removePhoto = (idx) => {
+    setPhotoFiles(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  // Video link handlers
+  const addVideoLink = () => setVideoLinks(prev => [...prev, '']);
+  const updateVideoLink = (idx, val) => {
+    setVideoLinks(prev => prev.map((v, i) => i === idx ? val : v));
+  };
+  const removeVideoLink = (idx) => {
+    setVideoLinks(prev => prev.filter((_, i) => i !== idx));
+  };
+
   const submitInFlight = useRef(false);
 
   const handleSubmit = async () => {
-    // GUARD: prevent double submission
     if (submitInFlight.current) return;
     submitInFlight.current = true;
     setSubmitting(true);
     setSubmitError('');
 
-    const payload = {
-      name: form.display_name || '',
-      email: form.email || '',
-      phone: form.contact || '',
-      whatsapp: form.contact || '',
-      country: form.country || '',
-      city: form.city || '',
-      bio: form.bio || '',
-      age: form.age || '',
-      languages: form.languages || '',
-      nationality: '',
-      height: '',
-      weight: '',
-      onlyfans: '',
-      cam_chat: ''
-    };
-
     try {
-      const apiBase = window.location.origin;
-      const response = await fetch(`${apiBase}/api/drafts`, {
+      const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          name: form.display_name || '',
+          email: form.email || '',
+          phone: form.contact || '',
+          whatsapp: form.contact || '',
+          country: form.country || '',
+          city: form.city || '',
+          bio: form.bio || '',
+          age: form.age || '',
+          languages: form.languages || '',
+          nationality: form.nationality || '',
+          height: form.height || '',
+          weight: form.weight || '',
+          onlyfans: videoLinks.filter(Boolean).join(', '),
+        })
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || data.details || 'Registration failed');
+        throw new Error(data.error || 'Registration failed');
       }
 
       setCreatedProfile(data.profile);
       setSubmitSuccess(true);
     } catch (err) {
       console.error('Registration error:', err);
-      setSubmitError(err.message || 'Could not create profile. Please try again.');
+      setSubmitError(err.message || (actualLang === 'es' ? 'Error al crear perfil.' : 'Could not create profile.'));
     } finally {
       setSubmitting(false);
       submitInFlight.current = false;
@@ -259,24 +260,6 @@ export default function Register() {
                   />
                 </div>
               ))}
-
-              {/* Cross-list toggle */}
-              <div className="form-group">
-                <label className="form-label">{actualT.crossListLabel}</label>
-                <div className="form-radio-group">
-                  <label className={`form-radio ${crossList ? 'selected' : ''}`} onClick={() => setCrossList(true)}>
-                    <input type="radio" name="crosslist" checked={crossList} onChange={() => setCrossList(true)} />
-                    <div>
-                      <div style={{ fontWeight: 600 }}>{actualT.crossListYes}</div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{actualT.crossListYesSub}</div>
-                    </div>
-                  </label>
-                  <label className={`form-radio ${!crossList ? 'selected' : ''}`} onClick={() => setCrossList(false)}>
-                    <input type="radio" name="crosslist" checked={!crossList} onChange={() => setCrossList(false)} />
-                    <div style={{ fontWeight: 600 }}>{actualT.crossListNo}</div>
-                  </label>
-                </div>
-              </div>
 
               <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '1rem' }}>
                 {actualT.legal}
@@ -348,24 +331,96 @@ export default function Register() {
           {/* ── STEP 3: Photos ── */}
           {step === 2 && (
             <div>
-              <div className="photo-upload-zone" style={{ marginBottom: '1rem' }}>
-                <p style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📷</p>
-                <p style={{ fontWeight: 600 }}>{bt ? 'Foto de perfil principal' : 'Main profile photo'}</p>
-                <p style={{ fontSize: '0.8rem' }}>{bt ? 'JPG o PNG · Máx. 10MB · Mínimo 400×400px' : 'JPG or PNG · Max 10MB · Min 400×400px'}</p>
+              {/* Photo upload */}
+              <div className="form-group">
+                <label className="form-label" style={{ fontSize: '1.1rem' }}>
+                  📷 {bt ? 'Tus fotos' : 'Your photos'}
+                </label>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+                  {bt ? 'JPG/PNG · Máx 10MB c/u · Hasta 10 fotos' : 'JPG/PNG · Max 10MB each · Up to 10 photos'}
+                </p>
+
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  multiple
+                  onChange={handlePhotoSelect}
+                  style={{
+                    width: '100%', padding: '0.75rem',
+                    border: '2px dashed var(--card-border)',
+                    borderRadius: '0.5rem', background: 'var(--card-bg)',
+                    color: 'var(--text-primary)', cursor: 'pointer'
+                  }}
+                />
+
+                {/* Preview selected photos */}
+                {photoFiles.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.75rem' }}>
+                    {photoFiles.map((file, i) => (
+                      <div key={i} style={{ position: 'relative', width: '80px', height: '80px' }}>
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={`Foto ${i + 1}`}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '0.5rem' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removePhoto(i)}
+                          style={{
+                            position: 'absolute', top: '-6px', right: '-6px',
+                            width: '22px', height: '22px', borderRadius: '50%',
+                            background: '#ef4444', color: '#fff', border: 'none',
+                            fontSize: '0.75rem', cursor: 'pointer', lineHeight: '22px', textAlign: 'center'
+                          }}
+                        >×</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              <div className="photo-upload-zone" style={{ marginBottom: '1.5rem', opacity: 0.6 }}>
-                <p style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🖼️</p>
-                <p style={{ fontWeight: 600 }}>{bt ? 'Galería de fotos' : 'Photo gallery'}</p>
-                <p style={{ fontSize: '0.8rem' }}>{bt ? 'Hasta 10 fotos' : 'Up to 12 photos'}</p>
+              {/* Video links */}
+              <div className="form-group" style={{ marginTop: '1.5rem' }}>
+                <label className="form-label" style={{ fontSize: '1.1rem' }}>
+                  🎥 {bt ? 'Enlaces de video (opcional)' : 'Video links (optional)'}
+                </label>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+                  OnlyFans, Pornhub, xHamster, etc.
+                </p>
+                {videoLinks.map((link, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <input
+                      className="form-input"
+                      type="url"
+                      placeholder="https://..."
+                      value={link}
+                      onChange={e => updateVideoLink(i, e.target.value)}
+                      style={{ flex: 1 }}
+                    />
+                    {videoLinks.length > 1 && (
+                      <button type="button" onClick={() => removeVideoLink(i)}
+                        style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '1.2rem' }}
+                      >×</button>
+                    )}
+                  </div>
+                ))}
+                <button type="button" onClick={addVideoLink}
+                  style={{
+                    background: 'none', border: '1px dashed var(--card-border)',
+                    color: 'var(--text-secondary)', padding: '0.5rem 1rem',
+                    borderRadius: '0.5rem', cursor: 'pointer', fontSize: '0.85rem'
+                  }}
+                >
+                  + {bt ? 'Agregar enlace' : 'Add link'}
+                </button>
               </div>
 
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '1rem', fontStyle: 'italic' }}>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '1.5rem', fontStyle: 'italic' }}>
                 🔒 {actualT.fields.step3.privacy}
               </p>
 
               <div className="form-group">
-                <label className="form-label">{bt ? 'Privacidad de fotos' : 'Privacy options'}</label>
+                <label className="form-label">{bt ? 'Privacidad de fotos' : 'Photo privacy'}</label>
                 <div className="form-radio-group">
                   {actualT.fields.step3.photoOptions.map(opt => (
                     <label
