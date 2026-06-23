@@ -177,30 +177,9 @@ export default function Register() {
     setSubmitError('');
 
     try {
-      // 1. Pre-generate ID for photo paths + registration
       const profileId = crypto.randomUUID();
 
-      // 2. Upload photos via API (bypasses Storage RLS with service_role)
-      let photoUrls = [];
-      if (photoFiles.length > 0) {
-        const formData = new FormData();
-        formData.append('profile_id', profileId);
-        photoFiles.forEach(file => formData.append('files', file));
-
-        const uploadRes = await fetch('/api/upload-photos', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (uploadRes.ok) {
-          const uploadData = await uploadRes.json();
-          photoUrls = (uploadData.photos || []).filter(p => p.url).map(p => p.url);
-        } else {
-          console.error('Photo upload failed:', await uploadRes.text());
-        }
-      }
-
-      // 3. Register profile with photo URLs and video links
+      // 1. Register profile FIRST (creates the row needed for photo FK)
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -219,7 +198,6 @@ export default function Register() {
           height: form.height || '',
           weight: form.weight || '',
           onlyfans: videoLinks.filter(Boolean).join(', '),
-          photo_urls: photoUrls,
           services: selectedServices.join(', '),
           availability: selectedAvailability || '',
           photo_privacy: selectedPhotoPrivacy,
@@ -234,6 +212,19 @@ export default function Register() {
       }
 
       setCreatedProfile(data.profile);
+
+      // 2. Upload photos AFTER profile created (FK satisfied)
+      if (photoFiles.length > 0) {
+        const formData = new FormData();
+        formData.append('profile_id', profileId);
+        photoFiles.forEach(file => formData.append('files', file));
+
+        fetch('/api/upload-photos', { method: 'POST', body: formData })
+          .then(r => r.ok ? r.json() : Promise.reject(r))
+          .then(d => console.log('Photos uploaded:', d.count))
+          .catch(e => console.error('Photo upload failed:', e));
+      }
+
       setSubmitSuccess(true);
     } catch (err) {
       console.error('Registration error:', err);
