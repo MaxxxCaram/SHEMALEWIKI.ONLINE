@@ -34,7 +34,7 @@ export default function Profile() {
   const fetchProfile = async () => {
     setLoading(true);
     try {
-      const { data: profileData, error: profileError } = await supabase.from('profiles').select('*').eq('id', id).single();
+      const { data: profileData, error: profileError } = await supabase.from('profiles').select('*').eq('id', id).or('cam_chat.is.null,cam_chat.eq.approved').single();
       if (profileError) throw profileError;
       
       const { data: photos } = await supabase.from('photos').select('*').eq('profile_id', id);
@@ -257,13 +257,30 @@ export default function Profile() {
                   {profile.email && (
                     <ContactRow icon={<Mail size={18} />} color="#60a5fa" label="Email" value={profile.email} href={`mailto:${profile.email}`} />
                   )}
-                  {profile.cam_chat && (
-                    <ContactRow icon={<Globe size={18} />} color="#f472b6" label="Cam Chat" value="Open Cam Chat" href={profile.cam_chat} external />
-                  )}
-                  {profile.onlyfans && (
-                    <ContactRow icon={<Globe size={18} />} color="#f472b6" label="OnlyFans" value="View Profile" href={profile.onlyfans} external />
-                  )}
-                  {!profile.phone && !profile.whatsapp && !profile.email && !profile.cam_chat && !profile.onlyfans && (
+                  {profile.onlyfans && (() => {
+                    const links = profile.onlyfans.split(/,\s*/).filter(Boolean);
+                    if (links.length === 1) {
+                      const label = links[0].includes('onlyfans.com') ? 'OnlyFans' : 'Video Link';
+                      return <ContactRow icon={<Globe size={18} />} color="#f472b6" label={label} value="View" href={links[0]} external />;
+                    }
+                    return (
+                      <div style={{ padding: '0.5rem 0' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                          <Globe size={18} color="#f472b6" />
+                          <span style={{ fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>🎥 Video Links</span>
+                        </div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                          {links.map((url, i) => (
+                            <a key={i} href={url} target="_blank" rel="noopener noreferrer"
+                              style={{ background: 'rgba(244,114,182,0.1)', border: '1px solid rgba(244,114,182,0.3)', color: '#f472b6', padding: '0.3rem 0.7rem', borderRadius: '0.4rem', fontSize: '0.8rem', textDecoration: 'none' }}>
+                              Video {i + 1} ↗
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                  {!profile.phone && !profile.whatsapp && !profile.email && !profile.onlyfans && (
                     <p style={{ color: '#94a3b8', fontSize: '0.9rem', textAlign: 'center' }}>
                       Contact information coming soon. Check back later!
                     </p>

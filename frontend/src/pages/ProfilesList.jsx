@@ -31,6 +31,7 @@ export default function ProfilesList() {
         .from('profiles')
         .select('location')
         .ilike('location', `% | ${displayCountry} |%`)
+        .or('cam_chat.is.null,cam_chat.eq.approved')
         .limit(1000);
 
       if (error) throw error;
@@ -65,7 +66,8 @@ export default function ProfilesList() {
       let queryBuilder = supabase
         .from('profiles')
         .select('*, photos(photo_url)')
-        .ilike('location', `% | ${displayCountry} |%`);
+        .ilike('location', `% | ${displayCountry} |%`)
+        .or('cam_chat.is.null,cam_chat.eq.approved');
         
       if (searchQuery) {
         queryBuilder = queryBuilder.ilike('name', `%${searchQuery}%`);

@@ -287,7 +287,6 @@ export default function Dashboard() {
               <h3 style={{ fontSize: '1.1rem', marginTop: '2rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>Links & Social</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.25rem' }}>
                 <FormField label="OnlyFans URL" name="onlyfans" type="url" value={profile.onlyfans || ''} onChange={handleChange} placeholder="https://onlyfans.com/..." />
-                <FormField label="Cam Chat URL" name="cam_chat" type="url" value={profile.cam_chat || ''} onChange={handleChange} placeholder="https://..." />
               </div>
 
               <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'flex-end' }}>
