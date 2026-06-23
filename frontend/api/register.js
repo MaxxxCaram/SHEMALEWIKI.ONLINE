@@ -31,7 +31,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, phone, whatsapp, country, city, bio, age, languages, 
+    const { profileId: clientProfileId, name, email, phone, whatsapp, country, city, bio, age, languages, 
             nationality, height, weight, onlyfans, photo_urls, services,
             availability, photo_privacy, plan } = req.body || {};
 
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       ? 'Latin America' : 'Europe';
     const location = `${continent} | ${country || ''} | ${city || ''}`;
     
-    const profileId = randomUUID();
+    const profileId = clientProfileId || randomUUID();
 
     // Insert profile with service key
     const response = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {

@@ -102,31 +102,22 @@ export default function Dashboard() {
     setUploadMessage('');
 
     try {
-      let uploaded = 0;
-      for (const file of newPhotoFiles) {
-        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-        const filePath = `${profile.id}/${Date.now()}_${safeName}`;
+      const formData = new FormData();
+      formData.append('profile_id', profile.id);
+      newPhotoFiles.forEach(file => formData.append('files', file));
 
-        // Upload to Supabase Storage
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('profile-photos')
-          .upload(filePath, file, { upsert: true });
+      const uploadRes = await fetch('/api/upload-photos', {
+        method: 'POST',
+        body: formData,
+      });
 
-        if (uploadError) throw uploadError;
-
-        // Get public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from('profile-photos')
-          .getPublicUrl(filePath);
-
-        // Insert into photos table
-        const { error: insertError } = await supabase.from('photos').insert([{
-          profile_id: profile.id,
-          photo_url: publicUrl
-        }]);
-        if (insertError) throw insertError;
-        uploaded++;
+      if (!uploadRes.ok) {
+        const errText = await uploadRes.text();
+        throw new Error(errText);
       }
+
+      const uploadData = await uploadRes.json();
+      const uploaded = uploadData.count || 0;
 
       setNewPhotoFiles(null);
       if (fileInputRef.current) fileInputRef.current.value = '';

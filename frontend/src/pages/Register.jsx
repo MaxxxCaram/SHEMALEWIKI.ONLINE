@@ -177,36 +177,35 @@ export default function Register() {
     setSubmitError('');
 
     try {
-      // 1. Upload photos to Supabase Storage (if any)
+      // 1. Pre-generate ID for photo paths + registration
+      const profileId = crypto.randomUUID();
+
+      // 2. Upload photos via API (bypasses Storage RLS with service_role)
       let photoUrls = [];
       if (photoFiles.length > 0) {
-        const profileId = crypto.randomUUID(); // pre-generate ID for photo paths
-        for (const file of photoFiles) {
-          const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-          const filePath = `${profileId}/${Date.now()}_${safeName}`;
-          
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('profile-photos')
-            .upload(filePath, file, { upsert: true });
-          
-          if (uploadError) {
-            console.error('Photo upload failed:', uploadError);
-            continue; // skip failed uploads, continue with others
-          }
-          
-          const { data: { publicUrl } } = supabase.storage
-            .from('profile-photos')
-            .getPublicUrl(filePath);
-          
-          photoUrls.push(publicUrl);
+        const formData = new FormData();
+        formData.append('profile_id', profileId);
+        photoFiles.forEach(file => formData.append('files', file));
+
+        const uploadRes = await fetch('/api/upload-photos', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (uploadRes.ok) {
+          const uploadData = await uploadRes.json();
+          photoUrls = (uploadData.photos || []).filter(p => p.url).map(p => p.url);
+        } else {
+          console.error('Photo upload failed:', await uploadRes.text());
         }
       }
 
-      // 2. Register profile with photo URLs and video links
+      // 3. Register profile with photo URLs and video links
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          profileId,
           name: form.display_name || '',
           email: form.email || '',
           phone: form.contact || '',
