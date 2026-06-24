@@ -38,7 +38,7 @@ export default function Dashboard() {
       setProfile(data || {});
 
       const { data: mediaData } = await supabase.from('photos').select('*').eq('profile_id', id);
-      if (mediaData) setUserMedia(mediaData);
+      setUserMedia(Array.isArray(mediaData) ? mediaData : []);
     } catch (error) {
       console.error("Error fetching profile", error);
       localStorage.removeItem('dashboard_user_id');
@@ -125,7 +125,7 @@ export default function Dashboard() {
         ? `✅ ${uploaded} foto(s) agregada(s)`
         : `✅ ${uploaded} photo(s) added!`);
       const { data: mediaData } = await supabase.from('photos').select('*').eq('profile_id', profile.id);
-      if (mediaData) setUserMedia(mediaData);
+      setUserMedia(Array.isArray(mediaData) ? mediaData : []);
       setTimeout(() => setUploadMessage(''), 3000);
     } catch (err) {
       console.error(err);
@@ -151,7 +151,7 @@ export default function Dashboard() {
       setNewVideoLink('');
       setUploadMessage('✅ Video link added!');
       const { data: mediaData } = await supabase.from('photos').select('*').eq('profile_id', profile.id);
-      if (mediaData) setUserMedia(mediaData);
+      setUserMedia(Array.isArray(mediaData) ? mediaData : []);
       setTimeout(() => setUploadMessage(''), 3000);
     } catch (err) {
       console.error(err);
@@ -179,7 +179,7 @@ export default function Dashboard() {
     if (!profile) return 0;
     const fields = ['name', 'bio', 'location', 'phone', 'age', 'height', 'weight', 'nationality', 'languages'];
     const filled = fields.filter(f => profile[f] && String(profile[f]).trim().length > 0).length;
-    const hasPhotos = userMedia.length > 0;
+    const hasPhotos = Array.isArray(userMedia) && userMedia.length > 0;
     return Math.round(((filled / fields.length) * 80) + (hasPhotos ? 20 : 0));
   };
 
