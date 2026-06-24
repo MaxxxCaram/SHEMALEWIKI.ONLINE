@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { Component } from 'react';
 import Home from './pages/Home';
 import Continents from './pages/Continents';
 import Countries from './pages/Countries';
@@ -19,6 +20,42 @@ import AgeVerification, { useAgeVerified } from './components/AgeVerification';
 import './index.css';
 import logoSw from './assets/logosw.png';
 import logoBT from './assets/buscatrans-logo.svg';
+
+// Error Boundary: catches render errors (including .forEach on non-arrays)
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, info) {
+    console.error('ErrorBoundary caught:', error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          minHeight: '100vh', display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          background: 'var(--bg-primary)', color: 'var(--text-primary)',
+          textAlign: 'center', padding: '2rem'
+        }}>
+          <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>🤖</h1>
+          <h2 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Algo salió mal</h2>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+            Recargá la página y debería funcionar. Si el error persiste, avisanos.
+          </p>
+          <button onClick={() => window.location.reload()} className="btn btn-primary">
+            Recargar página
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 /* ── Domain detection ── */
 const isBuscaTrans = () => {
@@ -157,7 +194,9 @@ function AppContent() {
 function App() {
   return (
     <HelmetProvider>
-      <AppContent />
+      <ErrorBoundary>
+        <AppContent />
+      </ErrorBoundary>
     </HelmetProvider>
   );
 }
