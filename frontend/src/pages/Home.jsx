@@ -68,7 +68,7 @@ export default function Home() {
         const { data, error } = await supabase
           .from('profiles')
           .select('*, photos(photo_url, local_path)')
-          .or('cam_chat.is.null,cam_chat.eq.approved')
+          .not('cam_chat', 'eq', 'rejected')
           .order('created_at', { ascending: false })
           .limit(6);
 

@@ -34,7 +34,7 @@ export default function Profile() {
   const fetchProfile = async () => {
     setLoading(true);
     try {
-      const { data: profileData, error: profileError } = await supabase.from('profiles').select('*').eq('id', id).or('cam_chat.is.null,cam_chat.eq.approved').single();
+      const { data: profileData, error: profileError } = await supabase.from('profiles').select('*').eq('id', id).not('cam_chat', 'eq', 'rejected').single();
       if (profileError) throw profileError;
       
       const { data: photos } = await supabase.from('photos').select('*').eq('profile_id', id);

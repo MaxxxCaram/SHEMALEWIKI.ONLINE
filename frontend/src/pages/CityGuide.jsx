@@ -580,7 +580,7 @@ export default function CityGuide() {
           .from('profiles')
           .select('*, photos(photo_url, local_path)')
           .ilike('location', locationPattern)
-          .or('cam_chat.is.null,cam_chat.eq.approved')
+          .not('cam_chat', 'eq', 'rejected')
           .order('created_at', { ascending: false })
           .limit(12);
 
