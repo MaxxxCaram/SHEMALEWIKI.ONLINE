@@ -578,7 +578,7 @@ export default function CityGuide() {
         const locationPattern = `% | ${displayCity}`;
         const { data, error } = await supabase
           .from('profiles')
-          .select('*, photos(photo_url)')
+          .select('*, photos(photo_url, local_path)')
           .ilike('location', locationPattern)
           .or('cam_chat.is.null,cam_chat.eq.approved')
           .order('created_at', { ascending: false })
@@ -865,7 +865,7 @@ export default function CityGuide() {
               {profiles.map(profile => (
                 <Link to={`/profile/${profile.id}`} key={profile.id} className="glass-card">
                   <LazyImage
-                    src={profile.photos?.[0]?.photo_url}
+                    src={(profile.photos || []).find(p => p.local_path === 'cover')?.photo_url || profile.photos?.[0]?.photo_url}
                     alt={profile.name}
                     className="profile-card-img"
                   />

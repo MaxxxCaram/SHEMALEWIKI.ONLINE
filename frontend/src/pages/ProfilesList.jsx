@@ -67,7 +67,7 @@ export default function ProfilesList() {
     try {
       let queryBuilder = supabase
         .from('profiles')
-        .select('*, photos(photo_url)')
+        .select('*, photos(photo_url, local_path)')
         .ilike('location', `% | ${displayCountry} |%`)
         .or('cam_chat.is.null,cam_chat.eq.approved');
         
@@ -198,7 +198,7 @@ export default function ProfilesList() {
           {profiles.map(profile => (
             <Link to={`/profile/${profile.id}`} key={profile.id} className="glass-card profile-card">
               <LazyImage
-                src={profile.photos?.[0]?.photo_url}
+                src={(profile.photos || []).find(p => p.local_path === 'cover')?.photo_url || profile.photos?.[0]?.photo_url}
                 alt={profile.name}
                 className="profile-card-img"
               />

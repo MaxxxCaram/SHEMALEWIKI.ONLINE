@@ -1,8 +1,39 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Save, User, Camera, Settings, RefreshCw, Upload, Image as ImageIcon, BarChart3, ExternalLink, Plus, Trash2, CheckCircle2 } from 'lucide-react';
+import { LogOut, Save, User, Camera, Settings, RefreshCw, Upload, Image as ImageIcon, BarChart3, ExternalLink, Plus, Trash2, CheckCircle2, Crown } from 'lucide-react';
 import { supabase } from '../supabase';
 import { getProxiedImageUrl } from '../utils';
+
+// Compress professional photos to stay under Vercel's 4.5MB serverless limit
+// Reduces 20MB+ photos to ~2-3MB while keeping excellent web quality
+function compressImage(file, maxDim = 2048, quality = 0.85) {
+  return new Promise((resolve, reject) => {
+    if (!file.type.startsWith('image/')) return resolve(file); // skip non-images
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) { height = (height * maxDim) / width; width = maxDim; }
+          else { width = (width * maxDim) / height; height = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => {
+          resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+        }, 'image/jpeg', quality);
+      };
+      img.onerror = () => resolve(file); // fallback: send original
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(file); // fallback
+    reader.readAsDataURL(file);
+  });
+}
 
 const API_BASE = typeof window !== 'undefined' ? window.location.origin : 'https://shemalewiki.online';
 
@@ -97,33 +128,53 @@ export default function Dashboard() {
 
   const handleAddPhoto = async (e) => {
     e.preventDefault();
-    if (!newPhotoFiles || newPhotoFiles.length === 0) return;
+    const files = Array.isArray(newPhotoFiles) ? newPhotoFiles : Array.from(newPhotoFiles || []);
+    if (files.length === 0) return;
     setUploadingMedia(true);
     setUploadMessage('');
 
     try {
-      const formData = new FormData();
-      formData.append('profile_id', profile.id);
-      newPhotoFiles.forEach(file => formData.append('files', file));
+      let succeeded = 0;
+      const errors = [];
 
-      const uploadRes = await fetch('/api/upload-photos', {
-        method: 'POST',
-        body: formData,
-      });
+      // Upload one photo at a time to stay under Vercel's 4.5MB body limit
+      for (const file of files) {
+        // Compress professional photos before upload
+        const compressed = await compressImage(file);
+        const formData = new FormData();
+        formData.append('profile_id', profile.id);
+        formData.append('files', compressed);
 
-      if (!uploadRes.ok) {
-        const errText = await uploadRes.text();
-        throw new Error(errText);
+        try {
+          const uploadRes = await fetch('/api/upload-photos', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (!uploadRes.ok) {
+            const errText = await uploadRes.text();
+            errors.push(`${file.name || 'photo'}: ${errText}`);
+            continue;
+          }
+
+          const uploadData = await uploadRes.json();
+          succeeded += uploadData.count || 0;
+        } catch (fileErr) {
+          errors.push(`${file.name || 'photo'}: ${fileErr.message}`);
+        }
       }
-
-      const uploadData = await uploadRes.json();
-      const uploaded = uploadData.count || 0;
 
       setNewPhotoFiles(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
-      setUploadMessage(isBT
-        ? `✅ ${uploaded} foto(s) agregada(s)`
-        : `✅ ${uploaded} photo(s) added!`);
+      let msg = isBT
+        ? `✅ ${succeeded} foto(s) agregada(s)`
+        : `✅ ${succeeded} photo(s) added!`;
+      if (errors.length > 0) {
+        msg += isBT
+          ? ` (${errors.length} error(es))`
+          : ` (${errors.length} error(s))`;
+      }
+      setUploadMessage(msg);
       const { data: mediaData } = await supabase.from('photos').select('*').eq('profile_id', profile.id);
       setUserMedia(Array.isArray(mediaData) ? mediaData : []);
       setTimeout(() => setUploadMessage(''), 3000);
@@ -142,11 +193,15 @@ export default function Dashboard() {
     setUploadMessage('');
 
     try {
-      const { error } = await supabase.from('photos').insert([{ 
-        profile_id: profile.id, 
-        photo_url: newVideoLink.trim() 
-      }]);
-      if (error) throw error;
+      const res = await fetch('/api/manage-photos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile_id: profile.id, photo_url: newVideoLink.trim() }),
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errData.error || 'Failed to add video');
+      }
 
       setNewVideoLink('');
       setUploadMessage('✅ Video link added!');
@@ -163,14 +218,41 @@ export default function Dashboard() {
 
   const handleDeleteMedia = async (photoId) => {
     try {
-      const { error } = await supabase.from('photos').delete().eq('id', photoId);
-      if (error) throw error;
+      const res = await fetch(`/api/manage-photos?photoId=${photoId}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errData.error || 'Failed to remove');
+      }
       setUserMedia(prev => prev.filter(m => m.id !== photoId));
       setUploadMessage('🗑️ Media removed.');
       setTimeout(() => setUploadMessage(''), 3000);
     } catch (err) {
       console.error(err);
       setUploadMessage('❌ Failed to remove.');
+    }
+  };
+
+  const handleSetCover = async (photoId) => {
+    try {
+      const res = await fetch('/api/manage-photos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'set-cover', profile_id: profile.id, photo_id: photoId }),
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errData.error || 'Failed to set cover');
+      }
+      // Update local state: clear all covers, set new one
+      setUserMedia(prev => prev.map(m => ({
+        ...m,
+        local_path: m.id === photoId ? 'cover' : '',
+      })));
+      setUploadMessage(isBT ? '⭐ ¡Foto de portada actualizada!' : '⭐ Cover photo set!');
+      setTimeout(() => setUploadMessage(''), 3000);
+    } catch (err) {
+      console.error(err);
+      setUploadMessage('❌ Failed to set cover photo.');
     }
   };
 
@@ -317,7 +399,7 @@ export default function Dashboard() {
                     type="file"
                     accept="image/*"
                     multiple
-                    onChange={e => setNewPhotoFiles(e.target.files)}
+                    onChange={e => setNewPhotoFiles(Array.from(e.target.files))}
                     style={{ width: '100%', background: 'transparent', border: '1px solid var(--glass-border)', padding: '0.7rem', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)' }}
                   />
                   <button type="submit" className="btn btn-primary" disabled={uploadingMedia || !newPhotoFiles || newPhotoFiles.length === 0}>
@@ -361,14 +443,28 @@ export default function Dashboard() {
                             <span style={{ fontSize: '0.8rem', color: 'var(--accent-primary)', wordBreak: 'break-all', textAlign: 'center' }}>Watch Video</span>
                           </a>
                         ) : (
-                          <img src={getProxiedImageUrl(media.photo_url)} alt="Media" 
-                            style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', borderRadius: 'var(--radius-md)' }} />
+                          <>
+                            <img src={getProxiedImageUrl(media.photo_url)} alt="Media" 
+                              style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', borderRadius: 'var(--radius-md)' }} />
+                            {media.local_path === 'cover' && (
+                              <div style={{ position: 'absolute', top: 6, left: 6, background: 'rgba(234,179,8,0.9)', borderRadius: '50%', width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Crown size={14} color="white" />
+                              </div>
+                            )}
+                          </>
                         )}
                         <button onClick={() => handleDeleteMedia(media.id)}
                           style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(239,68,68,0.85)', border: 'none', borderRadius: '50%', width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}
                           title="Delete">
                           <Trash2 size={14} />
                         </button>
+                        {!isVideo && (
+                          <button onClick={() => handleSetCover(media.id)}
+                            style={{ position: 'absolute', bottom: 6, right: 6, background: media.local_path === 'cover' ? 'rgba(234,179,8,0.9)' : 'rgba(0,0,0,0.6)', border: 'none', borderRadius: '50%', width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}
+                            title={isBT ? 'Foto de portada' : 'Set as cover'}>
+                            <Crown size={14} />
+                          </button>
+                        )}
                       </div>
                     );
                   })}

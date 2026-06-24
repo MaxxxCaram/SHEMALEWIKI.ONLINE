@@ -54,7 +54,7 @@ export default function Profile() {
       if (city) {
         const { data: similar } = await supabase
           .from('profiles')
-          .select('*, photos(photo_url)')
+          .select('*, photos(photo_url, local_path)')
           .ilike('location', `% | ${city}`)
           .neq('id', id)
           .limit(4);
@@ -126,7 +126,7 @@ export default function Profile() {
   ].filter(Boolean).join(', ');
 
   const galleryPhotos = profile.photos || [];
-  const heroPhoto = galleryPhotos[0];
+  const heroPhoto = galleryPhotos.find(p => p.local_path === 'cover') || galleryPhotos[0];
 
   // JSON-LD structured data
   const jsonLd = {
@@ -385,7 +385,7 @@ export default function Profile() {
               {similarProfiles.map(sp => (
                 <Link to={`/profile/${sp.id}`} key={sp.id} className="glass-card profile-card" style={{ textDecoration: 'none' }}>
                   <LazyImage
-                    src={sp.photos?.[0]?.photo_url}
+                    src={(sp.photos || []).find(p => p.local_path === 'cover')?.photo_url || sp.photos?.[0]?.photo_url}
                     alt={sp.name}
                     className="profile-card-img"
                   />

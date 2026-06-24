@@ -2,6 +2,34 @@ import { useState, useRef } from 'react';
 import SEO from '../components/SEO';
 import { supabase } from '../supabase';
 
+// Compress professional photos to stay under Vercel's 4.5MB serverless limit
+function compressImage(file, maxDim = 2048, quality = 0.85) {
+  return new Promise((resolve) => {
+    if (!file.type.startsWith('image/')) return resolve(file);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) { height = (height * maxDim) / width; width = maxDim; }
+          else { width = (width * maxDim) / height; height = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => {
+          resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+        }, 'image/jpeg', quality);
+      };
+      img.onerror = () => resolve(file);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+
 /* ── Brand detection ── */
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
 
@@ -215,14 +243,24 @@ export default function Register() {
 
       // 2. Upload photos AFTER profile created (FK satisfied)
       if (photoFiles.length > 0) {
-        const formData = new FormData();
-        formData.append('profile_id', profileId);
-        photoFiles.forEach(file => formData.append('files', file));
-
-        fetch('/api/upload-photos', { method: 'POST', body: formData })
-          .then(r => r.ok ? r.json() : Promise.reject(r))
-          .then(d => console.log('Photos uploaded:', d.count))
-          .catch(e => console.error('Photo upload failed:', e));
+        // Upload one at a time with compression (Vercel 4.5MB limit)
+        (async () => {
+          for (const file of photoFiles) {
+            try {
+              const compressed = await compressImage(file);
+              const formData = new FormData();
+              formData.append('profile_id', profileId);
+              formData.append('files', compressed);
+              const r = await fetch('/api/upload-photos', { method: 'POST', body: formData });
+              if (r.ok) {
+                const d = await r.json();
+                console.log('Photo uploaded:', d.count);
+              }
+            } catch (e) {
+              console.error('Photo upload failed:', e);
+            }
+          }
+        })();
       }
 
       setSubmitSuccess(true);

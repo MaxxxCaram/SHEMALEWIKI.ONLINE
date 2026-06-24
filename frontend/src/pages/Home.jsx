@@ -67,7 +67,7 @@ export default function Home() {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('*, photos(photo_url)')
+          .select('*, photos(photo_url, local_path)')
           .or('cam_chat.is.null,cam_chat.eq.approved')
           .order('created_at', { ascending: false })
           .limit(6);
@@ -99,7 +99,10 @@ export default function Home() {
   };
 
   const getProfilePhoto = (p) => {
-    if (p.photos && p.photos.length > 0) return p.photos[0].photo_url;
+    if (p.photos && p.photos.length > 0) {
+      const cover = p.photos.find(ph => ph.local_path === 'cover');
+      return cover ? cover.photo_url : p.photos[0].photo_url;
+    }
     return null;
   };
 
