@@ -59,10 +59,10 @@ export default function Profile() {
           .neq('id', id)
           .limit(4);
         if (similar) {
-          setSimilarProfiles(similar.map(p => ({
+          setSimilarProfiles(Array.isArray(similar) ? similar.map(p => ({
             ...p,
             photos: (p.photos || []).filter(ph => !(ph.photo_url || '').includes('shemalewiki.com'))
-          })));
+          })) : []);
         }
       }
     } catch (error) {

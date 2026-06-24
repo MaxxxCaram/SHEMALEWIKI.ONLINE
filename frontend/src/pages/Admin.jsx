@@ -16,7 +16,7 @@ export default function Admin() {
     try {
       const r = await fetch(`${API_BASE}/api/admin`);
       const data = await r.json();
-      if (data.profiles) setProfiles(data.profiles);
+      if (data.profiles) setProfiles(Array.isArray(data.profiles) ? data.profiles : []);
     } catch (err) {
       console.error(err);
     } finally {

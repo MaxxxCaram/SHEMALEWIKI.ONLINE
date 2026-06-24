@@ -73,7 +73,7 @@ export default function Home() {
           .limit(6);
 
         if (error) throw error;
-        if (data) setProfiles(data);
+        setProfiles(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Home fetch failed:', err);
       } finally {
