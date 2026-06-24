@@ -18,20 +18,20 @@ const content = {
     ],
     fields: {
       step1: [
-        { id: 'display_name', label: 'Display name', type: 'text', placeholder: 'e.g. Jessica, Alicia...' },
-        { id: 'email', label: 'Email', type: 'email', placeholder: 'your@email.com' },
-        { id: 'contact', label: 'WhatsApp / Telegram', type: 'tel', placeholder: '+44 7...' },
-        { id: 'password', label: 'Password', type: 'password', placeholder: 'Min. 8 characters' },
-        { id: 'country', label: 'Country', type: 'text', placeholder: 'United Kingdom' },
-        { id: 'city', label: 'City', type: 'text', placeholder: 'London' },
+        { id: 'display_name', label: 'Display name', type: 'text', placeholder: 'e.g. Jessica, Alicia...', auto: 'nickname' },
+        { id: 'email', label: 'Email', type: 'email', placeholder: 'your@email.com', auto: 'email' },
+        { id: 'contact', label: 'WhatsApp / Telegram', type: 'tel', placeholder: '+44 7...', auto: 'tel' },
+        { id: 'password', label: 'Password', type: 'password', placeholder: 'Min. 8 characters', auto: 'new-password' },
+        { id: 'country', label: 'Country', type: 'text', placeholder: 'United Kingdom', auto: 'country-name' },
+        { id: 'city', label: 'City', type: 'text', placeholder: 'London', auto: 'address-level2' },
       ],
       step2: [
-        { id: 'bio', label: 'About you (public bio)', type: 'textarea', placeholder: 'Describe yourself professionally...' },
-        { id: 'age', label: 'Age', type: 'number' },
-        { id: 'languages', label: 'Languages', type: 'text', placeholder: 'English, Spanish' },
-        { id: 'height', label: 'Height (cm)', type: 'number' },
-        { id: 'weight', label: 'Weight (kg)', type: 'number' },
-        { id: 'nationality', label: 'Nationality', type: 'text', placeholder: 'e.g. Brazilian' },
+        { id: 'bio', label: 'About you (public bio)', type: 'textarea', placeholder: 'Describe yourself professionally...', auto: 'off' },
+        { id: 'age', label: 'Age', type: 'number', auto: 'off' },
+        { id: 'languages', label: 'Languages', type: 'text', placeholder: 'English, Spanish', auto: 'off' },
+        { id: 'height', label: 'Height (cm)', type: 'number', auto: 'off' },
+        { id: 'weight', label: 'Weight (kg)', type: 'number', auto: 'off' },
+        { id: 'nationality', label: 'Nationality', type: 'text', placeholder: 'e.g. Brazilian', auto: 'country-name' },
       ],
       services: ['Companion', 'Dinner dates', 'Travel', 'GFE', 'Overnight'],
       availability: [
@@ -68,20 +68,20 @@ const content = {
     ],
     fields: {
       step1: [
-        { id: 'display_name', label: 'Tu nombre artístico', type: 'text', placeholder: 'Ej: Valentina, Daniela...' },
-        { id: 'email', label: 'Email', type: 'email', placeholder: 'tu@email.com' },
-        { id: 'contact', label: 'WhatsApp', type: 'tel', placeholder: '+54 9...' },
-        { id: 'password', label: 'Contraseña', type: 'password', placeholder: 'Mínimo 8 caracteres' },
-        { id: 'country', label: 'País', type: 'text', placeholder: 'Argentina' },
-        { id: 'city', label: 'Ciudad principal', type: 'text', placeholder: 'Buenos Aires' },
+        { id: 'display_name', label: 'Tu nombre artístico', type: 'text', placeholder: 'Ej: Valentina, Daniela...', auto: 'nickname' },
+        { id: 'email', label: 'Email', type: 'email', placeholder: 'tu@email.com', auto: 'email' },
+        { id: 'contact', label: 'WhatsApp', type: 'tel', placeholder: '+54 9...', auto: 'tel' },
+        { id: 'password', label: 'Contraseña', type: 'password', placeholder: 'Mínimo 8 caracteres', auto: 'new-password' },
+        { id: 'country', label: 'País', type: 'text', placeholder: 'Argentina', auto: 'country-name' },
+        { id: 'city', label: 'Ciudad principal', type: 'text', placeholder: 'Buenos Aires', auto: 'address-level2' },
       ],
       step2: [
-        { id: 'bio', label: 'Descripción de tu perfil', type: 'textarea', placeholder: 'Presentate con tus propias palabras...' },
-        { id: 'age', label: 'Edad', type: 'number' },
-        { id: 'languages', label: 'Idiomas', type: 'text', placeholder: 'Español, Inglés' },
-        { id: 'height', label: 'Altura (cm)', type: 'number' },
-        { id: 'weight', label: 'Peso (kg)', type: 'number' },
-        { id: 'nationality', label: 'Nacionalidad', type: 'text', placeholder: 'Ej: Argentina' },
+        { id: 'bio', label: 'Descripción de tu perfil', type: 'textarea', placeholder: 'Presentate con tus propias palabras...', auto: 'off' },
+        { id: 'age', label: 'Edad', type: 'number', auto: 'off' },
+        { id: 'languages', label: 'Idiomas', type: 'text', placeholder: 'Español, Inglés', auto: 'off' },
+        { id: 'height', label: 'Altura (cm)', type: 'number', auto: 'off' },
+        { id: 'weight', label: 'Peso (kg)', type: 'number', auto: 'off' },
+        { id: 'nationality', label: 'Nacionalidad', type: 'text', placeholder: 'Ej: Argentina', auto: 'country-name' },
       ],
       services: ['Acompañante', 'Cenas', 'Viajes', 'GFE', 'Masajes'],
       availability: [
@@ -274,9 +274,11 @@ export default function Register() {
                   <label className="form-label" htmlFor={f.id}>{f.label}</label>
                   <input
                     id={f.id}
+                    name={f.id}
                     className="form-input"
                     type={f.type}
                     placeholder={f.placeholder}
+                    autoComplete={f.auto}
                     value={form[f.id] || ''}
                     onChange={e => update(f.id, e.target.value)}
                   />
@@ -294,19 +296,25 @@ export default function Register() {
             <div>
               {actualT.fields.step2.map(f => (
                 <div className="form-group" key={f.id}>
-                  <label className="form-label">{f.label}</label>
+                  <label className="form-label" htmlFor={f.id}>{f.label}</label>
                   {f.type === 'textarea' ? (
                     <textarea
+                      id={f.id}
+                      name={f.id}
                       className="form-textarea"
                       placeholder={f.placeholder}
+                      autoComplete={f.auto}
                       value={form[f.id] || ''}
                       onChange={e => update(f.id, e.target.value)}
                     />
                   ) : (
                     <input
+                      id={f.id}
+                      name={f.id}
                       className="form-input"
                       type={f.type}
                       placeholder={f.placeholder}
+                      autoComplete={f.auto}
                       value={form[f.id] || ''}
                       onChange={e => update(f.id, e.target.value)}
                     />
