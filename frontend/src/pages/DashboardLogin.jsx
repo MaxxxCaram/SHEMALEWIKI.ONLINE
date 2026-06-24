@@ -128,10 +128,13 @@ export default function DashboardLogin() {
     setCreateLoading(true);
 
     try {
+      const profileId = crypto.randomUUID();
+
       const response = await fetch(`${API_BASE}/api/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          profileId,
           name: createName,
           email: createEmail,
           phone: createPhone,
@@ -151,6 +154,18 @@ export default function DashboardLogin() {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to create profile');
+      }
+
+      // Upload photos after profile created (FK satisfied)
+      if (createPhotoFiles.length > 0) {
+        const formData = new FormData();
+        formData.append('profile_id', profileId);
+        createPhotoFiles.forEach(file => formData.append('files', file));
+
+        fetch('/api/upload-photos', { method: 'POST', body: formData })
+          .then(r => r.ok ? r.json() : Promise.reject(r))
+          .then(d => console.log('Photos uploaded:', d.count))
+          .catch(e => console.error('Photo upload failed:', e));
       }
 
       setCreateSuccess(true);
