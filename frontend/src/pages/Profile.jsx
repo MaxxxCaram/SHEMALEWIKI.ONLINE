@@ -62,7 +62,7 @@ export default function Profile() {
           setSimilarProfiles(Array.isArray(similar) ? similar.map(p => ({
             ...p,
             photos: (p.photos || []).filter(ph => !(ph.photo_url || '').includes('shemalewiki.com'))
-          })) : []);
+          })).filter(p => p.photos.length > 0) : []);
         }
       }
     } catch (error) {

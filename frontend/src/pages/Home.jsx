@@ -61,7 +61,7 @@ export default function Home() {
   const lang = brand === 'buscatrans' ? 'es' : 'en';
   const siteName = brand === 'buscatrans' ? 'BuscaTrans' : 'ShemaleWiki';
 
-  // Fetch real approved profiles
+  // Fetch real approved profiles — only show profiles WITH photos per Maxi's directive
   useEffect(() => {
     (async () => {
       try {
@@ -70,10 +70,13 @@ export default function Home() {
           .select('*, photos(photo_url, local_path)')
           .not('cam_chat', 'eq', 'rejected')
           .order('created_at', { ascending: false })
-          .limit(6);
+          .limit(50);
 
         if (error) throw error;
-        setProfiles(Array.isArray(data) ? data : []);
+        // Filter: only profiles that actually have photos
+        const arr = Array.isArray(data) ? data : [];
+        const withPhotos = arr.filter(p => p.photos && p.photos.length > 0);
+        setProfiles(withPhotos.slice(0, 6));
       } catch (err) {
         console.error('Home fetch failed:', err);
       } finally {

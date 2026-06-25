@@ -591,7 +591,7 @@ export default function CityGuide() {
           const cleaned = arr.map(p => ({
             ...p,
             photos: (p.photos || []).filter(ph => !(ph.photo_url || '').includes('shemalewiki.com'))
-          }));
+          })).filter(p => p.photos.length > 0); // Only show profiles WITH photos per Maxi's directive
           setProfiles(cleaned);
           // Get total count separately
           const { count } = await supabase

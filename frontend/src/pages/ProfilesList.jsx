@@ -24,12 +24,12 @@ export default function ProfilesList() {
     fetchCityCounts();
   }, [country]);
 
-  // Extract unique cities + profile counts from all profiles in this country
+  // Extract unique cities + profile counts (only profiles WITH photos)
   const fetchCityCounts = async () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('location')
+        .select('location, photos(id)')
         .ilike('location', `% | ${displayCountry} |%`)
         .not('cam_chat', 'eq', 'rejected')
         .limit(1000);
@@ -37,10 +37,12 @@ export default function ProfilesList() {
       if (error) throw error;
 
       const arr = Array.isArray(data) ? data : [];
-      if (!arr.length) return;
+      // Only count profiles that have at least 1 photo
+      const withPhotos = arr.filter(p => p.photos && p.photos.length > 0);
+      if (!withPhotos.length) return;
 
       const counts = {};
-      arr.forEach(p => {
+      withPhotos.forEach(p => {
         const parts = (p.location || '').split(' | ');
         const city = parts[parts.length - 1];
         if (city && city !== 'Unknown') {
@@ -81,7 +83,7 @@ export default function ProfilesList() {
         const cleaned = data.map(p => ({
           ...p,
           photos: (p.photos || []).filter(ph => !(ph.photo_url || '').includes('shemalewiki.com'))
-        }));
+        })).filter(p => p.photos.length > 0); // Only show profiles WITH photos per Maxi's directive
         setProfiles(cleaned);
       }
     } catch (error) {
