@@ -122,7 +122,7 @@ function RootRedirect() {
   if (isBuscaTrans()) {
     return <Navigate to="/es/" replace />;
   }
-  return <Continents />;
+  return <Home />;
 }
 
 function AppContent() {
