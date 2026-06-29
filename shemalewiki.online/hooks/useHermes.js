@@ -1,0 +1,1 @@
+﻿import { useState } from 'react'; export function useHermes() { const [loading, setLoading] = useState(false); const moderate = async (profileId) => { setLoading(true); const res = await fetch('/api/hermes/moderation', { method: 'POST', body: JSON.stringify({ profileId }) }); setLoading(false); return res.json(); }; return { moderate, loading }; }

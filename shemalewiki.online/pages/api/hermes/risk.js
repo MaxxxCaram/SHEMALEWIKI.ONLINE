@@ -1,0 +1,1 @@
+﻿export default async function handler(req, res) { const { userId } = req.body; const response = await fetch('http://187.77.68.200:3000/api/risk/score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId }) }); res.json(await response.json()); }

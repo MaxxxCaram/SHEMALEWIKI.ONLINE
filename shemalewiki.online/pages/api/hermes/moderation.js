@@ -1,0 +1,1 @@
+﻿export default async function handler(req, res) { const { profileId } = req.body; const response = await fetch('http://187.77.68.200:3000/api/moderation/profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ profileId }) }); res.json(await response.json()); }

@@ -1,0 +1,1 @@
+﻿const HERMES = 'http://187.77.68.200:3000'; export const hermesClient = { async moderate(profileId) { return fetch(${HERMES}/api/moderation/profile, { method: 'POST', body: JSON.stringify({ profileId }) }).then(r => r.json()); } };
