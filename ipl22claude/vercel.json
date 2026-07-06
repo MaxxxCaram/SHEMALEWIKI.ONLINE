@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "public": true,
+  "buildCommand": "echo 'Expo app - skipping build'",
+  "outputDirectory": "public",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    }
+  ]
+}
