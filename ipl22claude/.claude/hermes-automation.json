@@ -1,0 +1,174 @@
+{
+  "hermes_automation_config": {
+    "version": "0.18",
+    "owner": "Maxima (caramvictoria@gmail.com)",
+    "status": "fully_configured",
+    "last_updated": "2026-07-06T20:15:00Z",
+    "autonomy_level": "high",
+
+    "scheduled_tasks": {
+      "deploy_watchdog": {
+        "name": "Deploy Watchdog & Health Checks",
+        "schedule": "6:03 AM daily",
+        "script": "scripts/hermes-deploy-watchdog.sh",
+        "duration_minutes": 5,
+        "actions": [
+          "verify_site_online_shemalewiki",
+          "verify_site_online_buscatrans",
+          "check_vercel_status",
+          "verify_supabase_connection",
+          "count_profiles_without_photos",
+          "alert_on_failures"
+        ],
+        "on_failure": "escalate_to_urgent_slack"
+      },
+
+      "daily_report": {
+        "name": "Daily Status Report",
+        "schedule": "12:07 PM daily",
+        "script": "scripts/hermes-daily-report.sh",
+        "duration_minutes": 3,
+        "actions": [
+          "compile_7day_build_metrics",
+          "compile_7day_deploy_metrics",
+          "query_kpis",
+          "calculate_uptime",
+          "post_to_slack",
+          "archive_report"
+        ],
+        "on_failure": "save_partial_report"
+      },
+
+      "wayback_recovery": {
+        "name": "Wayback Machine Recovery",
+        "schedule": "Sunday 12:11 AM",
+        "script": "scripts/hermes-wayback-recovery.sh",
+        "duration_minutes": 20,
+        "batch_size": 100,
+        "actions": [
+          "query_cdx_api",
+          "filter_profile_urls",
+          "download_from_archive",
+          "extract_metadata",
+          "stage_for_review",
+          "generate_report"
+        ],
+        "estimated_total_pages": 38666,
+        "on_failure": "retry_next_week"
+      },
+
+      "database_cleanup": {
+        "name": "Database Cleanup",
+        "schedule": "Monday 6:13 AM",
+        "script": "internal",
+        "duration_minutes": 10,
+        "actions": [
+          "scan_for_duplicates",
+          "identify_orphaned_records",
+          "flag_duplicates",
+          "generate_report"
+        ],
+        "safety": "read_only_no_deletes",
+        "requires_approval_for": "merge_duplicates"
+      }
+    },
+
+    "integrations": {
+      "github": {
+        "status": "requires_token",
+        "env_var": "GITHUB_TOKEN",
+        "features": [
+          "auto_commit",
+          "create_branches",
+          "create_prs",
+          "auto_merge_on_pass",
+          "manage_workflows"
+        ],
+        "setup_url": "https://github.com/settings/tokens/new"
+      },
+
+      "google_search_console": {
+        "status": "requires_credentials",
+        "env_vars": ["GSC_API_KEY", "GSC_PROPERTY_ID"],
+        "features": [
+          "monitor_indexation",
+          "track_rankings",
+          "crawl_error_alerts",
+          "weekly_reports"
+        ],
+        "setup_url": "https://console.cloud.google.com/apis/credentials"
+      },
+
+      "playwright": {
+        "status": "ready",
+        "features": [
+          "render_testing",
+          "performance_monitoring",
+          "link_validation",
+          "seo_audit"
+        ],
+        "setup_command": "npm install -D @playwright/test && npx playwright install"
+      },
+
+      "slack": {
+        "status": "optional",
+        "env_vars": ["SLACK_WEBHOOK_HERMES", "SLACK_WEBHOOK_URGENT"],
+        "channels": {
+          "hermes_reports": "#hermes-reports",
+          "urgent": "#urgent"
+        }
+      }
+    },
+
+    "permissions_and_autonomy": {
+      "autonomous_without_confirmation": [
+        "build_and_test",
+        "npm_install",
+        "deploy_if_tests_pass",
+        "health_checks",
+        "read_operations",
+        "generate_reports"
+      ],
+
+      "requires_confirmation": [
+        "production_deploy_first_time",
+        "database_modifications",
+        "external_notifications",
+        "architectural_changes"
+      ],
+
+      "never_without_explicit_permission": [
+        "delete_data",
+        "billing_changes",
+        "contact_external_users",
+        "modify_passwords_or_keys"
+      ]
+    },
+
+    "logging_and_monitoring": {
+      "log_directory": "~/.hermes/logs/",
+      "log_types": [
+        "daily-YYYYMMDD.md",
+        "watchdog-YYYYMMDD-HHMMSS.md",
+        "session-start-YYYYMMDD-HHMMSS.md",
+        "wayback-recovery-YYYYMMDD.md"
+      ],
+      "retention_policy": "keep_all",
+      "archive_after_days": 90
+    },
+
+    "success_metrics": {
+      "uptime_target": "99.9%",
+      "build_success_rate": "95%",
+      "deploy_success_rate": "95%",
+      "health_check_response": "<5 minutes"
+    },
+
+    "documentation": {
+      "autonomy_rules": "SOUL.md",
+      "setup_instructions": ".claude/hermes-automation.json",
+      "scripts_directory": "scripts/",
+      "logs_directory": "~/.hermes/logs/"
+    }
+  }
+}
