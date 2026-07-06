@@ -1,0 +1,10 @@
+{
+  "name": "shemalewiki-online",
+  "version": "1.0.0",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "build": "echo 'Static site - no dependencies needed'"
+  }
+}
