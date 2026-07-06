@@ -1,26 +1,5 @@
 {
   "version": 2,
   "public": true,
-  "buildCommand": "mkdir -p public && echo '<!DOCTYPE html><html><body><h1>ShemaleWiki & BuscaTrans - Hermes v0.18</h1><p>Status: Online</p></body></html>' > public/index.html",
-  "outputDirectory": "public",
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        }
-      ]
-    }
-  ]
+  "outputDirectory": "public"
 }
