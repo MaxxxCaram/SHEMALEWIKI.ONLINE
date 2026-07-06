@@ -1,8 +1,8 @@
 {
   "version": 2,
   "public": true,
-  "buildCommand": "echo 'Expo app - skipping build'",
-  "outputDirectory": "public",
+  "buildCommand": "mkdir -p site && cp -r public/* site/ 2>/dev/null || mkdir -p site && echo '<h1>ShemaleWiki & BuscaTrans</h1>' > site/index.html",
+  "outputDirectory": "site",
   "env": {
     "NODE_ENV": "production"
   },
