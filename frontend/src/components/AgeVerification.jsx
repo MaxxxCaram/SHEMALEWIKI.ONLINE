@@ -17,84 +17,35 @@ export function useAgeVerified() {
   return { verified, verify };
 }
 
-/* ── Brand detection ── */
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
 
-/* ── Content ── */
 const t = {
   en: {
-    title: 'Welcome — Access Verification',
-    intro: 'To browse this website you must accept the following terms:',
-    terms: [
-      'You must be 18 years of age or older to continue browsing.',
-      'The publication of any advertisement containing references to sexual services in exchange for money is not permitted.',
-      'It is not permitted to attach pornographic images that explicitly show genital organs.',
-      'The insertion of pedophile material, including all access data, will be immediately reported to the competent authorities in order to reach those responsible.',
-      'By publishing a listing on ShemaleWiki, the User certifies that they can access the content with all rights and also declares that any person represented in the uploaded images is of legal age (over 18 years), and has given their consent to publish them on ShemaleWiki.',
-    ],
-    confirmText: 'By clicking "Accept", the User declares to be over 18 years of age and releases the service providers, owners and creators of ShemaleWiki from all liability regarding the contents and the use made of the section.',
-    privacyText: 'Likewise, by clicking "Accept", the User declares to know and expressly accept the Privacy Policy of the site, regarding the processing of their personal data.',
-    moreInfo: 'For more information, please read our Terms and Conditions.',
-    enterYear: 'Enter your birth year',
-    checkbox: 'I am 18 years of age or older and accept all the above terms',
-    accept: 'Accept',
-    errorValid: 'Please enter a valid birth year.',
-    errorAge: 'You must be 18 or older to enter this site.',
-    errorCheckbox: 'Please accept the terms to continue.',
+    title: 'Age Verification',
+    question: 'Are you 18 years of age or older?',
+    accept: 'Yes, I am 18+',
+    decline: 'No, I am under 18',
   },
   es: {
-    title: 'Bienvenida — Verificación de Acceso',
-    intro: 'Para navegar por este sitio web debe aceptar los siguientes términos:',
-    terms: [
-      'Para seguir navegando has de ser mayor de 18 años.',
-      'No se permite la publicación de ningún anuncio que contenga referencias sobre servicios sexuales a cambio de dinero.',
-      'No se permite adjuntar imágenes pornográficas que muestren órganos genitales explícitamente.',
-      'La inserción de material pedófilo, incluidos todos los datos de acceso, se comunicará inmediatamente a las autoridades competentes a fin de llegar a los responsables implicados.',
-      'Al publicar un anuncio en BuscaTrans, el Usuario certifica que puede acceder al contenido con todos los derechos y también declara que cualquier persona representada en las imágenes cargadas es mayor de edad (más de 18 años), y que ha dado su consentimiento para publicarlas en BuscaTrans.',
-    ],
-    confirmText: 'Al hacer clic en el botón "Aceptar", el Usuario declara ser mayor de 18 años y exime de toda responsabilidad a los proveedores de estos servicios, propietarios y creadores de BuscaTrans sobre los contenidos y sobre el uso que se haga de la sección.',
-    privacyText: 'Asimismo, al hacer clic en el botón "Aceptar", el Usuario declara conocer y aceptar expresamente la Política de Privacidad del sitio, relativa al tratamiento de sus datos personales.',
-    moreInfo: 'Para obtener más información, lea nuestros Términos y Condiciones.',
-    enterYear: 'Ingresá tu año de nacimiento',
-    checkbox: 'Soy mayor de 18 años y acepto todos los términos anteriores',
-    accept: 'Aceptar',
-    errorValid: 'Por favor ingresá un año de nacimiento válido.',
-    errorAge: 'Debés ser mayor de 18 años para entrar a este sitio.',
-    errorCheckbox: 'Por favor aceptá los términos para continuar.',
+    title: 'Verificación de Edad',
+    question: '¿Sos mayor de 18 años?',
+    accept: 'Sí, soy mayor de 18',
+    decline: 'No, soy menor de 18',
   },
   pt: {
-    title: 'Bem-vinda — Verificação de Acesso',
-    intro: 'Para navegar neste site você deve aceitar os seguintes termos:',
-    terms: [
-      'Você deve ter 18 anos ou mais para continuar navegando.',
-      'Não é permitida a publicação de anúncios que contenham referências a serviços sexuais em troca de dinheiro.',
-      'Não é permitido anexar imagens pornográficas que mostrem explicitamente órgãos genitais.',
-      'A inserção de material pedófilo, incluindo todos os dados de acesso, será comunicada imediatamente às autoridades competentes para localizar os responsáveis.',
-      'Ao publicar um anúncio no ShemaleWiki, o Usuário certifica que pode acessar o conteúdo com todos os direitos e também declara que qualquer pessoa representada nas imagens enviadas é maior de idade (mais de 18 anos) e deu seu consentimento para publicá-las no ShemaleWiki.',
-    ],
-    confirmText: 'Ao clicar em "Aceitar", o Usuário declara ter mais de 18 anos e isenta os provedores de serviços, proprietários e criadores do ShemaleWiki de toda responsabilidade sobre os conteúdos e o uso feito da seção.',
-    privacyText: 'Da mesma forma, ao clicar em "Aceitar", o Usuário declara conhecer e aceitar expressamente a Política de Privacidade do site, relativa ao tratamento de seus dados pessoais.',
-    moreInfo: 'Para mais informações, leia nossos Termos e Condições.',
-    enterYear: 'Digite seu ano de nascimento',
-    checkbox: 'Tenho 18 anos ou mais e aceito todos os termos acima',
-    accept: 'Aceitar',
-    errorValid: 'Por favor, insira um ano de nascimento válido.',
-    errorAge: 'Você deve ter 18 anos ou mais para entrar neste site.',
-    errorCheckbox: 'Por favor, aceite os termos para continuar.',
+    title: 'Verificação de Idade',
+    question: 'Você tem 18 anos ou mais?',
+    accept: 'Sim, tenho 18+',
+    decline: 'Não, sou menor de 18',
   },
 };
 
 export default function AgeVerification({ onVerify }) {
-  const [confirmed, setConfirmed] = useState(false);
-  const [year, setYear] = useState('');
-  const [error, setError] = useState('');
-  const currentYear = new Date().getFullYear();
-  const minYear = currentYear - 100;
+  const [declined, setDeclined] = useState(false);
 
   const bt = isBT();
   const brandName = bt ? 'BuscaTrans' : 'ShemaleWiki';
 
-  /* Detect language: domain-based or path-based */
   let lang = 'en';
   if (typeof window !== 'undefined') {
     if (bt || window.location.pathname.startsWith('/es') || window.location.pathname.startsWith('/registro')) {
@@ -105,38 +56,69 @@ export default function AgeVerification({ onVerify }) {
   }
   const txt = t[lang] || t.en;
 
-  const handleCheckbox = (e) => {
-    setConfirmed(e.target.checked);
-    setError('');
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const birthYear = parseInt(year, 10);
-    if (!birthYear || birthYear < minYear || birthYear > currentYear) {
-      setError(txt.errorValid);
-      return;
-    }
-
-    const age = currentYear - birthYear;
-    if (age < 18) {
-      setError(txt.errorAge);
-      return;
-    }
-
-    if (!confirmed) {
-      setError(txt.errorCheckbox);
-      return;
-    }
-
+  const handleAccept = () => {
     onVerify();
   };
 
-  const bgColor = bt ? 'linear-gradient(135deg, #1a0a2e 0%, #2d1052 50%, #1a0a2e 100%)' : 'linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%)';
+  const handleDecline = () => {
+    setDeclined(true);
+  };
+
   const cardBg = bt ? 'rgba(30, 15, 53, 0.9)' : 'rgba(17, 17, 17, 0.9)';
   const cardBorder = bt ? 'rgba(192, 38, 211, 0.2)' : 'rgba(255,255,255,0.08)';
   const btnBg = bt ? 'linear-gradient(135deg, #c026d3, #e040a0)' : 'linear-gradient(135deg, #c9a227, #e8c84a)';
+  const declineBg = 'rgba(255,255,255,0.06)';
+
+  if (declined) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: bt ? 'linear-gradient(135deg, #1a0a2e 0%, #2d1052 50%, #1a0a2e 100%)' : 'linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%)',
+        padding: '1rem',
+      }}>
+        <div style={{
+          maxWidth: '420px',
+          width: '100%',
+          background: cardBg,
+          backdropFilter: 'blur(20px)',
+          borderRadius: '1.25rem',
+          border: `1px solid ${cardBorder}`,
+          padding: '2.5rem 2rem',
+          textAlign: 'center',
+          boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+            {bt ? (
+              <img src={logoBT} alt="BuscaTrans" style={{ height: '80px' }} />
+            ) : (
+              <img src={logoSw} alt="ShemaleWiki" style={{ height: '45px' }} />
+            )}
+          </div>
+          <h1 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#f87171', marginBottom: '1rem' }}>
+            {lang === 'es' ? 'Acceso Denegado' : lang === 'pt' ? 'Acesso Negado' : 'Access Denied'}
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+            {lang === 'es' ? 'Debes ser mayor de 18 años para acceder a este sitio.' : lang === 'pt' ? 'Você precisa ter 18 anos ou mais para acessar este site.' : 'You must be 18 or older to access this site.'}
+          </p>
+          <a href="https://www.google.com" style={{
+            display: 'inline-block',
+            padding: '0.8rem 2rem',
+            borderRadius: '0.5rem',
+            background: declineBg,
+            color: 'var(--text-primary)',
+            fontSize: '0.95rem',
+            textDecoration: 'none',
+            fontWeight: 600,
+          }}>
+            {lang === 'es' ? 'Volver a Google' : lang === 'pt' ? 'Voltar ao Google' : 'Back to Google'}
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -144,70 +126,28 @@ export default function AgeVerification({ onVerify }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: bgColor,
+      background: bt ? 'linear-gradient(135deg, #1a0a2e 0%, #2d1052 50%, #1a0a2e 100%)' : 'linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%)',
       padding: '1rem',
     }}>
       <div style={{
-        maxWidth: '560px',
+        maxWidth: '420px',
         width: '100%',
         background: cardBg,
         backdropFilter: 'blur(20px)',
         borderRadius: '1.25rem',
         border: `1px solid ${cardBorder}`,
         padding: '2.5rem 2rem',
+        textAlign: 'center',
         boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
       }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           {bt ? (
-            <img src={logoBT} alt="BuscaTrans" style={{ height: '100px' }} />
+            <img src={logoBT} alt="BuscaTrans" style={{ height: '80px' }} />
           ) : (
-            <img src={logoSw} alt="ShemaleWiki" style={{ height: '55px' }} />
+            <img src={logoSw} alt="ShemaleWiki" style={{ height: '45px' }} />
           )}
         </div>
-
-        {/* Tagline — brand-specific */}
-        <p style={{
-          color: bt ? 'var(--accent-primary)' : 'var(--accent-secondary)',
-          fontSize: '0.95rem',
-          lineHeight: 1.5,
-          textAlign: 'center',
-          marginBottom: '1.25rem',
-          fontFamily: bt ? "'Playfair Display', serif" : "'Space Grotesk', sans-serif",
-          fontStyle: bt ? 'italic' : 'normal',
-          fontWeight: bt ? 400 : 300,
-          letterSpacing: bt ? '0.01em' : '0.03em',
-          opacity: 0.9,
-        }}>
-          {bt
-            ? 'La primera plataforma integral de trabajo independiente autogestionada por mujeres trans'
-            : 'The first exclusive platform for premium experiences and companionship, created and self-managed by trans women'
-          }
-        </p>
-
-        {/* App Download Button — BuscaTrans only */}
-        {bt && (
-          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-            <a
-              href="https://shemalewiki.online/downloads/vivas.apk"
-              style={{
-                display: 'inline-block',
-                padding: '0.85rem 2rem',
-                borderRadius: '0.5rem',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                fontSize: '1.1rem',
-                fontWeight: 700,
-                textDecoration: 'none',
-                fontFamily: "'DM Sans', sans-serif",
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 20px rgba(118, 75, 162, 0.4)',
-              }}
-            >
-              📱 Descargar App
-            </a>
-          </div>
-        )}
 
         {/* Title */}
         <h1 style={{
@@ -215,153 +155,60 @@ export default function AgeVerification({ onVerify }) {
           fontWeight: 700,
           color: 'var(--text-primary)',
           marginBottom: '1rem',
-          textAlign: 'center',
           fontFamily: bt ? "'Playfair Display', serif" : "'Bebas Neue', sans-serif",
-          letterSpacing: bt ? '-0.01em' : '0.02em',
         }}>
           {txt.title}
         </h1>
 
-        {/* Intro */}
+        {/* Question */}
         <p style={{
           color: 'var(--text-secondary)',
-          fontSize: '0.9rem',
-          lineHeight: 1.7,
-          marginBottom: '1rem',
-        }}>
-          {txt.intro}
-        </p>
-
-        {/* Terms list */}
-        <ol style={{
-          color: 'var(--text-secondary)',
-          fontSize: '0.82rem',
-          lineHeight: 1.7,
-          paddingLeft: '1.25rem',
-          marginBottom: '1.25rem',
-        }}>
-          {txt.terms.map((term, i) => (
-            <li key={i} style={{ marginBottom: '0.4rem' }}>{term}</li>
-          ))}
-        </ol>
-
-        {/* Confirm text */}
-        <p style={{
-          color: 'var(--text-secondary)',
-          fontSize: '0.82rem',
+          fontSize: '1.05rem',
           lineHeight: 1.6,
-          marginBottom: '0.5rem',
+          marginBottom: '2rem',
         }}>
-          {txt.confirmText}
-        </p>
-        <p style={{
-          color: 'var(--text-secondary)',
-          fontSize: '0.82rem',
-          lineHeight: 1.6,
-          marginBottom: '1rem',
-        }}>
-          {txt.privacyText}
-        </p>
-        <p style={{
-          color: 'var(--text-secondary)',
-          fontSize: '0.8rem',
-          marginBottom: '1.5rem',
-        }}>
-          {txt.moreInfo}{' '}
-          <a href="/terms" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>
-            {lang === 'es' ? 'Términos y Condiciones' : lang === 'pt' ? 'Termos e Condições' : 'Terms and Conditions'}
-          </a>.
+          {txt.question}
         </p>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{
-              display: 'block',
-              color: 'var(--text-secondary)',
-              fontSize: '0.8rem',
-              marginBottom: '0.4rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              textAlign: 'left',
-            }}>
-              {txt.enterYear}
-            </label>
-            <input
-              type="number"
-              placeholder="YYYY"
-              value={year}
-              onChange={(e) => { setYear(e.target.value); setError(''); }}
-              min={minYear}
-              max={currentYear}
-              style={{
-                width: '100%',
-                padding: '0.8rem 1rem',
-                borderRadius: '0.5rem',
-                border: '1px solid var(--card-border)',
-                background: 'var(--input-bg)',
-                color: 'var(--text-primary)',
-                fontSize: '1rem',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
-            />
-          </div>
-
-          <label style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '0.6rem',
-            marginBottom: '1.25rem',
-            cursor: 'pointer',
-            textAlign: 'left',
-          }}>
-            <input
-              type="checkbox"
-              checked={confirmed}
-              onChange={handleCheckbox}
-              style={{
-                width: '16px',
-                height: '16px',
-                accentColor: bt ? '#c026d3' : '#c9a227',
-                marginTop: '3px',
-                flexShrink: 0,
-              }}
-            />
-            <span style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', lineHeight: 1.5 }}>
-              {txt.checkbox}
-            </span>
-          </label>
-
-          {error && (
-            <p style={{
-              color: '#f87171',
-              fontSize: '0.85rem',
-              marginBottom: '1rem',
-            }}>
-              {error}
-            </p>
-          )}
-
+        {/* Buttons */}
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
           <button
-            type="submit"
+            type="button"
+            onClick={handleDecline}
             style={{
-              width: '100%',
-              padding: '0.9rem',
+              flex: 1,
+              padding: '0.85rem',
+              borderRadius: '0.5rem',
+              border: '1px solid rgba(255,255,255,0.1)',
+              background: declineBg,
+              color: 'var(--text-secondary)',
+              fontSize: '0.95rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            {txt.decline}
+          </button>
+          <button
+            type="button"
+            onClick={handleAccept}
+            style={{
+              flex: 1,
+              padding: '0.85rem',
               borderRadius: '0.5rem',
               border: 'none',
               background: btnBg,
               color: bt ? 'white' : '#0a0a0a',
-              fontSize: '1.05rem',
+              fontSize: '0.95rem',
               fontWeight: 700,
               cursor: 'pointer',
               transition: 'all 0.3s ease',
-              fontFamily: bt ? "'DM Sans', sans-serif" : "'Space Grotesk', sans-serif",
             }}
           >
             {txt.accept}
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );
