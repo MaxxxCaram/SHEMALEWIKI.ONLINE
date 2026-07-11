@@ -1,13 +1,6 @@
 {
-  "framework": "vite",
   "buildCommand": "npm install --prefix frontend --omit=dev && npx --prefix frontend vite build",
   "outputDirectory": "frontend/dist",
-  "experimentalServices": [
-    {
-      "name": "api",
-      "entrypoint": "api"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -20,18 +13,19 @@
     }
   ],
   "rewrites": [
-    { "source": "/api/image", "destination": "/api/image.js" },
-    { "source": "/api/claims", "destination": "/api/claims.js" },
-    { "source": "/api/drafts", "destination": "/api/drafts.js" },
-    { "source": "/api/update-profile", "destination": "/api/update-profile.js" },
-    { "source": "/api/vivas/chat", "destination": "/api/vivas-chat.js" },
-    { "source": "/api/travel-plans(.*)", "destination": "/api/travel-plans.js" },
-    { "source": "/api/register", "destination": "/api/register.js" },
-    { "source": "/api/contact", "destination": "/api/contact.js" },
-    { "source": "/api/admin", "destination": "/api/admin.js" },
-    { "source": "/api/upload-photos", "destination": "/api/upload-photos.js" },
-    { "source": "/api/manage-photos", "destination": "/api/manage-photos.js" },
-    { "source": "/api/(.*)", "destination": "/api/profiles.js" },
+    { "source": "/api/image", "destination": "/frontend/api/image.js" },
+    { "source": "/api/admin(.*)", "destination": "/frontend/api/admin.js" },
+    { "source": "/api/register", "destination": "/frontend/api/register.js" },
+    { "source": "/api/claims", "destination": "/frontend/api/claims.js" },
+    { "source": "/api/contact", "destination": "/frontend/api/contact.js" },
+    { "source": "/api/upload-photos", "destination": "/frontend/api/upload-photos.js" },
+    { "source": "/api/manage-photos", "destination": "/frontend/api/manage-photos.js" },
+    { "source": "/api/update-profile", "destination": "/frontend/api/update-profile.js" },
+    { "source": "/api/drafts", "destination": "/frontend/api/drafts.js" },
+    { "source": "/api/vivas/chat", "destination": "/frontend/api/vivas-chat.js" },
+    { "source": "/api/travel-plans(.*)", "destination": "/frontend/api/travel-plans.js" },
+    { "source": "/api/auth/(.*)", "destination": "/frontend/api/auth/login.js" },
+    { "source": "/api/profiles(.*)", "destination": "/frontend/api/profiles.js" },
     { "source": "/vivas/_expo/(.*)", "destination": "/vivas/_expo/$1" },
     { "source": "/vivas/assets/(.*)", "destination": "/vivas/assets/$1" },
     { "source": "/vivas/favicon.ico", "destination": "/vivas/favicon.ico" },
