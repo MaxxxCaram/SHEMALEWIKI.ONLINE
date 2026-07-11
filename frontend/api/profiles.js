@@ -1,5 +1,5 @@
 // Vercel Serverless Function: GET /api/profiles
-// Also routes: /api/drafts, /api/vivas/chat, /api/profiles (default)
+// Also routes: /api/drafts, /api/vivas/chat (consolidated to save serverless function limit)
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qtuzpswxzengqoqqwtpt.supabase.co';
 
@@ -30,27 +30,15 @@ function buildQueryString(params) {
     return parts.length ? '?' + parts.join('&') : '';
 }
 
-async function handleDrafts(queryParams, headers) {
+async function fetchTable(table, params, headers) {
     let query = buildQueryString({
         select: '*',
         order: 'created_at.desc',
-        ...queryParams,
+        ...params,
     });
-    const apiPath = `/rest/v1/drafts${query}`;
+    const apiPath = `/rest/v1/${table}${query}`;
     const response = await fetch(`${SUPABASE_URL}${apiPath}`, { method: 'GET', headers });
-    if (!response.ok) throw new Error(`Drafts error: ${response.status}`);
-    return response.json();
-}
-
-async function handleVivasChat(queryParams, headers) {
-    let query = buildQueryString({
-        select: '*',
-        order: 'created_at.desc',
-        ...queryParams,
-    });
-    const apiPath = `/rest/v1/vivas_chat${query}`;
-    const response = await fetch(`${SUPABASE_URL}${apiPath}`, { method: 'GET', headers });
-    if (!response.ok) throw new Error(`Vivas chat error: ${response.status}`);
+    if (!response.ok) throw new Error(`${table} error: ${response.status}`);
     return response.json();
 }
 
@@ -66,16 +54,16 @@ module.exports = async (req, res) => {
     // Internal routing
     const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
     const path = url.pathname;
+    const headers = supabaseHeaders({ "Prefer": "count=exact" });
 
     // Route: /api/drafts
     if (path === '/api/drafts' || path.startsWith('/api/drafts/')) {
-        const headers = supabaseHeaders({ "Prefer": "count=exact" });
         try {
             const queryParams = {
                 page: parseInt(url.searchParams.get('page') || '1', 10),
                 limit: parseInt(url.searchParams.get('limit') || '50', 10),
             };
-            const data = await handleDrafts(queryParams, headers);
+            const data = await fetchTable('drafts', queryParams, headers);
             return res.json(data);
         } catch (err) {
             console.error('Drafts handler error:', err.message);
@@ -85,131 +73,70 @@ module.exports = async (req, res) => {
 
     // Route: /api/vivas/chat
     if (path === '/api/vivas/chat' || path.startsWith('/api/vivas/chat/')) {
-        const headers = supabaseHeaders({ "Prefer": "count=exact" });
         try {
             const queryParams = {
-                async function handleDrafts(queryParams, headers) {
-                    let query = buildQueryString({
-                        select: '*',
-                        order: 'created_at.desc',
-                        ...queryParams,
-                    });
-                    const apiPath = `/rest/v1/drafts${query}`;
-                    const response = await fetch(`${SUPABASE_URL}${apiPath}`, { method: 'GET', headers });
-                    if (!response.ok) throw new Error(`Drafts error: ${response.status}`);
-                    return response.json();
-                }
+                page: parseInt(url.searchParams.get('page') || '1', 10),
+                limit: parseInt(url.searchParams.get('limit') || '50', 10),
+            };
+            const data = await fetchTable('vivas_chat', queryParams, headers);
+            return res.json(data);
+        } catch (err) {
+            console.error('Vivas chat handler error:', err.message);
+            return res.status(500).json({ error: err.message });
+        }
+    }
 
-                async function handleVivasChat(queryParams, headers) {
-                    let query = buildQueryString({
-                        select: '*',
-                        order: 'created_at.desc',
-                        ...queryParams,
-                    });
-                    const apiPath = `/rest/v1/vivas_chat${query}`;
-                    const response = await fetch(`${SUPABASE_URL}${apiPath}`, { method: 'GET', headers });
-                    if (!response.ok) throw new Error(`Vivas chat error: ${response.status}`);
-                    return response.json();
-                }
+    // Default: /api/profiles
+    const searchParams = url.searchParams;
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = parseInt(searchParams.get('limit') || '50', 10);
+    const search = searchParams.get('search') || '';
+    const offset = (page - 1) * limit;
 
-                module.exports = async (req, res) => {
-                    // CORS
-                    res.setHeader('Access-Control-Allow-Origin', '*');
-                    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-                    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-                    if (req.method === 'OPTIONS') {
-                        return res.status(200).end();
-                    }
+    try {
+        let select = '*';
+        let query = buildQueryString({
+            select,
+            limit: String(limit),
+            offset: String(offset),
+            order: 'created_at.desc',
+        });
 
-                    // Internal routing
-                    const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
-                    const path = url.pathname;
+        if (search) {
+            const orClause = `name.ilike.%${search}%,location.ilike.%${search}%,bio.ilike.%${search}%`;
+            query += (query.includes('?') ? '&' : '?') + `or=${encodeURIComponent(orClause)}`;
+        }
 
-                    // Route: /api/drafts
-                    if (path === '/api/drafts' || path.startsWith('/api/drafts/')) {
-                        const headers = supabaseHeaders({ "Prefer": "count=exact" });
-                        try {
-                            const queryParams = {
-                                page: parseInt(url.searchParams.get('page') || '1', 10),
-                                limit: parseInt(url.searchParams.get('limit') || '50', 10),
-                            };
-                            const data = await handleDrafts(queryParams, headers);
-                            return res.json(data);
-                        } catch (err) {
-                            console.error('Drafts handler error:', err.message);
-                            return res.status(500).json({ error: err.message });
-                        }
-                    }
+        const apiPath = `/rest/v1/profiles${query}`;
 
-                    // Route: /api/vivas/chat
-                    if (path === '/api/vivas/chat' || path.startsWith('/api/vivas/chat/')) {
-                        const headers = supabaseHeaders({ "Prefer": "count=exact" });
-                        try {
-                            const queryParams = {
-                                page: parseInt(url.searchParams.get('page') || '1', 10),
-                                limit: parseInt(url.searchParams.get('limit') || '50', 10),
-                            };
-                            const data = await handleVivasChat(queryParams, headers);
-                            return res.json(data);
-                        } catch (err) {
-                            console.error('Vivas chat handler error:', err.message);
-                            return res.status(500).json({ error: err.message });
-                        }
-                    }
+        const response = await fetch(`${SUPABASE_URL}${apiPath}`, {
+            method: 'GET',
+            headers,
+        });
 
-                    // Default: /api/profiles
-                    const searchParams = url.searchParams;
-                    const page = parseInt(searchParams.get('page') || '1', 10);
-                    const limit = parseInt(searchParams.get('limit') || '50', 10);
-                    const search = searchParams.get('search') || '';
-                    const offset = (page - 1) * limit;
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Supabase error:', response.status, errorText);
+            return res.status(500).json({ error: 'Database query failed', details: errorText.substring(0, 500) });
+        }
 
-                    const headers = supabaseHeaders({ "Prefer": "count=exact" });
+        const data = await response.json();
+        const countHeader = response.headers.get('content-range');
+        let total = 0;
+        if (countHeader) {
+            const match = countHeader.match(/\d+\/(\d+)/);
+            if (match) total = parseInt(match[1], 10);
+        }
 
-                    try {
-                        let select = '*';
-                        let query = buildQueryString({
-                            select,
-                            limit: String(limit),
-                            offset: String(offset),
-                            order: 'created_at.desc',
-                        });
+        return res.json({
+            data,
+            page,
+            limit,
+            total: total || data.length,
+        });
 
-                        if (search) {
-                            const orClause = `name.ilike.%${search}%,location.ilike.%${search}%,bio.ilike.%${search}%`;
-                            query += (query.includes('?') ? '&' : '?') + `or=${encodeURIComponent(orClause)}`;
-                        }
-
-                        const apiPath = `/rest/v1/profiles${query}`;
-
-                        const response = await fetch(`${SUPABASE_URL}${apiPath}`, {
-                            method: 'GET',
-                            headers,
-                        });
-
-                        if (!response.ok) {
-                            const errorText = await response.text();
-                            console.error('Supabase error:', response.status, errorText);
-                            return res.status(500).json({ error: 'Database query failed', details: errorText.substring(0, 500) });
-                        }
-
-                        const data = await response.json();
-                        const countHeader = response.headers.get('content-range');
-                        let total = 0;
-                        if (countHeader) {
-                            const match = countHeader.match(/\d+\/(\d+)/);
-                            if (match) total = parseInt(match[1], 10);
-                        }
-
-                        return res.json({
-                            data,
-                            page,
-                            limit,
-                            total: total || data.length,
-                        });
-
-                    } catch (err) {
-                        console.error('Profiles handler error:', err.message);
-                        return res.status(500).json({ error: err.message });
-                    }
-                };
+    } catch (err) {
+        console.error('Profiles handler error:', err.message);
+        return res.status(500).json({ error: err.message });
+    }
+};
