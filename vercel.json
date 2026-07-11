@@ -1,6 +1,13 @@
 {
+  "framework": "vite",
   "buildCommand": "npm install --prefix frontend --omit=dev && npx --prefix frontend vite build",
   "outputDirectory": "frontend/dist",
+  "experimentalServices": [
+    {
+      "name": "api",
+      "entrypoint": "api"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
