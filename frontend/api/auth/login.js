@@ -1,5 +1,5 @@
 // Login endpoint - generates session token from email+password
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
 

@@ -44,7 +44,7 @@ async function fetchTable(table, params, headers) {
 
 const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
     // CORS — restrict to official domains only
     const origin = req.headers.origin || '';
     if (ALLOWED_ORIGINS.includes(origin)) {

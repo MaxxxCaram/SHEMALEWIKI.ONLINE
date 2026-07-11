@@ -4,7 +4,7 @@
  * Requires: SUPABASE_SERVICE_ROLE_KEY env var on Vercel
  */
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
