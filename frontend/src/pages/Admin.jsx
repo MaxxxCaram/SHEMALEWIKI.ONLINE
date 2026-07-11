@@ -251,26 +251,26 @@ function ProfileCard({ profile, onAction }) {
           className="btn" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '0.4rem 0.8rem', fontSize: '0.85rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
           <ExternalLink size={14} /> Ver
         </a>
-        {profile.cam_chat !== 'approved' && (
-          <button onClick={() => onAction(profile.id, 'approve')} className="btn"
-            style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', color: '#22c55e', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
-            <CheckCircle2 size={14} style={{ marginRight: '0.25rem' }} /> Aprobar
-          </button>
-        )}
-        {profile.cam_chat !== 'rejected' && (
-          <button onClick={() => onAction(profile.id, 'reject')} className="btn"
-            style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
-            <XCircle size={14} style={{ marginRight: '0.25rem' }} /> Rechazar
-          </button>
-        )}
+        {profile.cam_chat !== 'approved'
+          ? <button onClick={() => onAction(profile.id, 'approve')} className="btn"
+              style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', color: '#22c55e', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
+              <CheckCircle2 size={14} style={{ marginRight: '0.25rem' }} /> Aprobar
+            </button>
+          : null}
+        {profile.cam_chat !== 'rejected'
+          ? <button onClick={() => onAction(profile.id, 'reject')} className="btn"
+              style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
+              title="Reject profile">
+              <XCircle size={14} style={{ marginRight: '0.25rem' }} /> Rechazar
+            </button>
+          : null}
         <button onClick={() => {
-          const secret = prompt('Confirma el secret para eliminar este perfil:');
-          if (secret) {
-            document.getElementById('admin-delete-secret') && (document.getElementById('admin-delete-secret').value = secret);
+          if (confirm(`¿Eliminar el perfil "${profile.name}"? Esta acción no se puede deshacer.`)) {
             onAction(profile.id, 'delete');
           }
         }} className="btn"
-          style={{ background: 'transparent', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
+          style={{ background: 'transparent', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
+          title="Delete profile">
           <Trash2 size={14} />
         </button>
       </div>

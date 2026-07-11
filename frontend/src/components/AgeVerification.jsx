@@ -103,7 +103,7 @@ export default function AgeVerification({ onVerify }) {
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
             {lang === 'es' ? 'Debes ser mayor de 18 años para acceder a este sitio.' : lang === 'pt' ? 'Você precisa ter 18 anos ou mais para acessar este site.' : 'You must be 18 or older to access this site.'}
           </p>
-          <a href="https://www.google.com" style={{
+          <a href="https://www.google.com/search?q=buscatrans" style={{
             display: 'inline-block',
             padding: '0.8rem 2rem',
             borderRadius: '0.5rem',
@@ -112,8 +112,8 @@ export default function AgeVerification({ onVerify }) {
             fontSize: '0.95rem',
             textDecoration: 'none',
             fontWeight: 600,
-          }}>
-            {lang === 'es' ? 'Volver a Google' : lang === 'pt' ? 'Voltar ao Google' : 'Back to Google'}
+          }} target="_blank" rel="noopener noreferrer">
+            {lang === 'es' ? 'Cerrar este sitio' : lang === 'pt' ? 'Fechar este site' : 'Leave this site'}
           </a>
         </div>
       </div>
