@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="ShemaleWiki Online — The world's premier multilingual directory of trans companions. Browse verified profiles by country and city." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://shemalewiki.online/" />
+    <title>ShemaleWiki Online — Trans Companion Directory</title>
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ShemaleWiki Online — Trans Companion Directory" />
+    <meta property="og:description" content="The world's premier multilingual directory of trans companions. Browse verified profiles by country and city." />
+    <meta property="og:image" content="https://shemalewiki.online/logosw.png" />
+    <meta property="og:url" content="https://shemalewiki.online/" />
+    <meta property="og:site_name" content="ShemaleWiki" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ShemaleWiki Online — Trans Companion Directory" />
+    <meta name="twitter:description" content="The world's premier multilingual directory of trans companions. Browse verified profiles by country and city." />
+    <meta name="twitter:image" content="https://shemalewiki.online/logosw.png" />
+
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="https://qtuzpswxzengqoqqwtpt.supabase.co" />
+
+    <!-- Google Fonts: both brands -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700&family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@300;400;500;700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <script>
+      // Dual-brand + RTL + OG: swap meta before React mounts
+      (function() {
+        var host = window.location.hostname;
+        var path = window.location.pathname;
+        if (host.indexOf('buscatrans') !== -1) {
+          document.documentElement.lang = 'es';
+          document.documentElement.setAttribute('data-brand', 'buscatrans');
+          document.title = 'BuscaTrans — Comunidad de Acompañantes Trans';
+          var meta = document.querySelector('meta[name="description"]');
+          if (meta) meta.content = 'BuscaTrans — Red de acompañantes trans verificadas. Experiencias y compañía premium en español. Encontrá perfiles verificados en tu ciudad.';
+          var link = document.querySelector('link[rel="canonical"]');
+          if (link) link.href = 'https://buscatrans.com/';
+          // Swap OG tags for BuscaTrans
+          ['og:title','og:description','og:url','og:site_name','twitter:title','twitter:description'].forEach(function(p) {
+            var el = document.querySelector('meta[property="'+p+'"]') || document.querySelector('meta[name="'+p+'"]');
+            if (!el) return;
+            if (p === 'og:title' || p === 'twitter:title') el.content = 'BuscaTrans — Comunidad de Acompañantes Trans';
+            else if (p === 'og:url') el.content = 'https://buscatrans.com/';
+            else if (p === 'og:site_name') el.content = 'BuscaTrans';
+            else el.content = 'BuscaTrans — Red de acompañantes trans verificadas. Encontrá perfiles verificados en tu ciudad.';
+          });
+        } else {
+          document.documentElement.setAttribute('data-brand', 'shemalewiki');
+          if (path.startsWith('/he/') || path === '/he') {
+            document.documentElement.lang = 'he';
+            document.documentElement.dir = 'rtl';
+          }
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

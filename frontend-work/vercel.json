@@ -1,0 +1,38 @@
+{
+  "buildCommand": "vite build",
+  "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self' https://qtuzpswxzengqoqqwtpt.supabase.co https://openrouter.ai; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://qtuzpswxzengqoqqwtpt.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://frontend-cdn.perplexity.ai; img-src 'self' data: blob: https: http:; connect-src 'self' https://qtuzpswxzengqoqqwtpt.supabase.co wss://qtuzpswxzengqoqqwtpt.supabase.co https://shemalewiki.online https://buscatrans.com https://openrouter.ai;"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/api/image", "destination": "/api/image.js" },
+    { "source": "/api/claims", "destination": "/api/claims.js" },
+    { "source": "/api/drafts", "destination": "/api/drafts.js" },
+    { "source": "/api/update-profile", "destination": "/api/update-profile.js" },
+    { "source": "/api/vivas/chat", "destination": "/api/vivas-chat.js" },
+    { "source": "/api/travel-plans(.*)", "destination": "/api/travel-plans.js" },
+    { "source": "/api/register", "destination": "/api/register.js" },
+    { "source": "/api/contact", "destination": "/api/contact.js" },
+    { "source": "/api/admin", "destination": "/api/admin.js" },
+    { "source": "/api/upload-photos", "destination": "/api/upload-photos.js" },
+    { "source": "/api/manage-photos", "destination": "/api/manage-photos.js" },
+    { "source": "/api/(.*)", "destination": "/api/profiles.js" },
+    { "source": "/vivas/_expo/(.*)", "destination": "/vivas/_expo/$1" },
+    { "source": "/vivas/assets/(.*)", "destination": "/vivas/assets/$1" },
+    { "source": "/vivas/favicon.ico", "destination": "/vivas/favicon.ico" },
+    { "source": "/vivas/(.*)", "destination": "/vivas/index.html" },
+    { "source": "/vivas", "destination": "/vivas/index.html" },
+    { "source": "/_expo/(.*)", "destination": "/vivas/_expo/$1" },
+    { "source": "/assets/node_modules/(.*)", "destination": "/vivas/assets/node_modules/$1" },
+    { "source": "/favicon-vivas.ico", "destination": "/vivas/favicon.ico" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

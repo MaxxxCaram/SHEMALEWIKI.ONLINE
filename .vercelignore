@@ -1,19 +1,10 @@
-# Vercel ignore - solo frontend + API routes
 node_modules/
 .git/
 backend/
 scripts/
-.vercel/
 git_export/
 shemalewiki_recovery/
 docs/
-*.py
-audit_*
-trend_data.json
-build_*.py
-recovering_*.py
-*.md
-*.html
-public/
-site/
-vivas-app/
+frontend-bt/
+frontend-work/
+recuperar_shemalewiki.py
