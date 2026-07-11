@@ -155,6 +155,7 @@ export default function Register() {
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [createdProfile, setCreatedProfile] = useState(null);
+  const [honeypot, setHoneypot] = useState('');
 
   // Photo + video state
   const [photoFiles, setPhotoFiles] = useState([]);  // File objects
@@ -200,6 +201,8 @@ export default function Register() {
 
   const handleSubmit = async () => {
     if (submitInFlight.current) return;
+    // Honeypot: bot detected
+    if (honeypot) { setSubmitError('Bot detected.'); return; }
     submitInFlight.current = true;
     setSubmitting(true);
     setSubmitError('');

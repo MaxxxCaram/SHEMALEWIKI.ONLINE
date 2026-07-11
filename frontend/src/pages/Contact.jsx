@@ -38,6 +38,7 @@ export default function Contact() {
   const brand = bt ? 'BuscaTrans' : 'ShemaleWiki';
 
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [honeypot, setHoneypot] = useState('');
   const [status, setStatus] = useState(null); // null | 'sending' | 'success' | 'error'
   const [errMsg, setErrMsg] = useState('');
 
@@ -45,6 +46,8 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Honeypot: if hidden field filled, bot submitting — reject silently
+    if (honeypot) return;
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
       setStatus('error');
       setErrMsg(t.required);
@@ -104,6 +107,20 @@ export default function Contact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
+              {/* Honeypot — hidden from real users, bots fill it */}
+              <div style={{ position: 'absolute', left: '-9999px', opacity: 0 }}>
+                <label htmlFor="hp-field">{bt ? 'No completá este campo' : 'Do not fill this field'}</label>
+                <input
+                  id="hp-field"
+                  type="text"
+                  name="hp"
+                  value={honeypot}
+                  onChange={e => setHoneypot(e.target.value)}
+                  tabIndex="-1"
+                  autoComplete="off"
+                />
+              </div>
+
               <div className="form-group">
                 <label className="form-label">{t.name}</label>
                 <input
