@@ -6,8 +6,12 @@ import os, sys, time, argparse, re
 import requests
 from playwright.sync_api import sync_playwright
 
-SUPABASE_URL = "https://qtuzpswxzengqoqqwtpt.supabase.co"
-SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0dXpwc3d4emVuZ3FvcXF3dHB0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODc3NjEwOSwiZXhwIjoyMDk0MzUyMTA5fQ.uWpUtFDsYFqDwndAbAEzbnQIOnKDfzS6V5_Xsrsbv1E"
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://qtuzpswxzengqoqqwtpt.supabase.co")
+SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
+if not SERVICE_KEY:
+    print("ERROR: SUPABASE_SERVICE_KEY environment variable is required.")
+    print("Set it: export SUPABASE_SERVICE_KEY='your-key-here'")
+    sys.exit(1)
 BUCKET = "profile-photos"
 
 def supabase_headers(extra=None):

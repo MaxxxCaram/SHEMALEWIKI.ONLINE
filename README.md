@@ -1,51 +1,16 @@
-# shemalewiki.online
+# React + Vite
 
-Recovered data, static site generator, and exported HTML from public web archives.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Repo layout
+Currently, two official plugins are available:
 
-| Path | Description |
-|------|-------------|
-| `recuperar_shemalewiki.py` | Wayback CDX + download + JSON export |
-| `build_recovery_site.py` | Builds `shemalewiki_recovery/site/` from JSON |
-| `shemalewiki_recovery/` | `html/`, `json/`, `site/` |
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Regenerate static site
+## React Compiler
 
-```bash
-pip install requests
-python build_recovery_site.py
-```
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-Output: `shemalewiki_recovery/site/` (upload this folder for static hosting).
+## Expanding the ESLint configuration
 
-## GitHub repository
-
-**https://github.com/MaxxxCaram/SHEMALEWIKI.ONLINE**
-
-Clone URL:
-
-```text
-https://github.com/MaxxxCaram/SHEMALEWIKI.ONLINE.git
-```
-
-## First-time push
-
-From this folder (`shemalewiki.online`):
-
-```bash
-git init
-git add .
-git commit -m "Initial import: recovery data and static site builder"
-git branch -M main
-git remote add origin https://github.com/MaxxxCaram/SHEMALEWIKI.ONLINE.git
-git push -u origin main
-```
-
-If `git add` is slow or you see `index.lock`, wait for it to finish, or close other Git tools, delete `.git/index.lock`, and run `git add` again.
-
-## GitHub Pages (optional)
-
-Repository **Settings → Pages → Build from branch `main`**, folder `/shemalewiki_recovery/site` (or move `site/` to root and set `/`).
-
-Large repo (~80MB+): cloning may take a minute.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

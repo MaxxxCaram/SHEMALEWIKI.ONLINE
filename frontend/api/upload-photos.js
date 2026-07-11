@@ -3,9 +3,38 @@
 // Uses service_role key to bypass Storage RLS
 // Uploads to profile-photos bucket + inserts into photos table
 // Returns [{url, path, id}]
+//
+// Security:
+// - Validates magic bytes (JPEG, PNG, WebP, GIF)
+// - Max 10MB per file
+// - Renames files with UUID to prevent path traversal
+// - CORS restricted to official domains
 
-const SUPABASE_URL = 'https://qtuzpswxzengqoqqwtpt.supabase.co';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qtuzpswxzengqoqqwtpt.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+// CORS: only allow official domains
+const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
+
+// Max file size: 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+// Magic bytes for image validation
+const MAGIC_BYTES = {
+  'FFD8FF': 'image/jpeg',    // JPEG
+  '89504E47': 'image/png',   // PNG
+  '52494646': 'image/webp',  // WebP (RIFF header)
+  '47494638': 'image/gif',   // GIF (GIF8)
+};
+
+function getMagicByteClass(buffer) {
+  if (buffer.length < 4) return null;
+  const hex = buffer.slice(0, 4).toString('hex').toUpperCase();
+  for (const [magic, type] of Object.entries(MAGIC_BYTES)) {
+    if (hex.startsWith(magic)) return type;
+  }
+  return null;
+}
 
 // Simple multipart parser (no dependencies needed)
 function parseMultipart(buffer, boundary) {
@@ -49,8 +78,11 @@ function parseMultipart(buffer, boundary) {
 }
 
 export default async function handler(req, res) {
-  // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // CORS: validate origin
+  const origin = req.headers.origin || '';
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -128,10 +160,27 @@ export default async function handler(req, res) {
     const results = [];
 
     for (const file of files) {
-      const safeName = (file.filename || 'photo.jpg').replace(/[^a-zA-Z0-9._-]/g, '_');
-      const storagePath = `${profileId}/${Date.now()}_${nextId}_${safeName}`;
+      // 1. Validate size
+      if (file.data.length > MAX_FILE_SIZE) {
+        results.push({ error: `File too large (${(file.data.length / 1024 / 1024).toFixed(1)}MB, max 10MB)`, filename: file.filename });
+        continue;
+      }
 
-      // Upload to Supabase Storage with service_role key
+      // 2. Validate magic bytes
+      const mimeType = getMagicByteClass(file.data);
+      if (!mimeType) {
+        results.push({ error: 'Invalid image file (magic bytes check failed)', filename: file.filename });
+        continue;
+      }
+
+      // 3. Generate safe filename with UUID
+      const ext = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };
+      const safeExt = ext[mimeType] || 'jpg';
+      const uuid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      const safeFilename = `${uuid}.${safeExt}`;
+      const storagePath = `${profileId}/${nextId}_${safeFilename}`;
+
+      // 4. Upload to Supabase Storage with service_role key
       const uploadRes = await fetch(
         `${SUPABASE_URL}/storage/v1/object/profile-photos/${storagePath}`,
         {
@@ -139,7 +188,7 @@ export default async function handler(req, res) {
           headers: {
             'apikey': SERVICE_KEY,
             'Authorization': `Bearer ${SERVICE_KEY}`,
-            'Content-Type': file.contentType,
+            'Content-Type': mimeType,
             'x-upsert': 'true',
           },
           body: file.data,
@@ -152,10 +201,10 @@ export default async function handler(req, res) {
         continue;
       }
 
-      // Generate public URL
+      // 5. Generate public URL
       const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/profile-photos/${storagePath}`;
 
-      // Insert into photos table
+      // 6. Insert into photos table
       const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/photos`, {
         method: 'POST',
         headers: {
@@ -187,7 +236,8 @@ export default async function handler(req, res) {
         id: nextId,
         url: publicUrl,
         path: storagePath,
-        filename: file.filename,
+        filename: safeFilename,
+        mimeType,
       });
 
       nextId++;

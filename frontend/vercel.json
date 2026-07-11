@@ -1,5 +1,5 @@
 {
-  "buildCommand": "bash build.sh",
+  "buildCommand": "vite build",
   "outputDirectory": "dist",
   "headers": [
     {

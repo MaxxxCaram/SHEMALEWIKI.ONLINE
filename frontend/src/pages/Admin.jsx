@@ -1,71 +1,121 @@
+// Admin Panel — password NEVER on frontend, only server-side verification
+// Login POST /api/admin/login {secret} → returns {token}
+// Subsequent requests use: Authorization: Bearer <token>
+
 import { useState, useEffect, useCallback } from 'react';
-import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw } from 'lucide-react';
+import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut } from 'lucide-react';
 
 const API_BASE = typeof window !== 'undefined' ? window.location.origin : 'https://shemalewiki.online';
+
+function getToken() {
+  return typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
+}
 
 export default function Admin() {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState('');
-  const [auth, setAuth] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passInput, setPassInput] = useState('');
+  const [token, setToken] = useState(getToken());
 
-  const ADMIN_PASS = 'Maxima2026!';
+  const apiHeaders = { 'Content-Type': 'application/json' };
+  if (token) {
+    apiHeaders['Authorization'] = `Bearer ${token}`;
+  }
 
   const fetchProfiles = useCallback(async () => {
+    setLoading(true);
     try {
-      const r = await fetch(`${API_BASE}/api/admin`);
+      const r = await fetch(`${API_BASE}/api/admin`, { headers: apiHeaders });
+      if (!r.ok) {
+        const data = await r.json().catch(() => ({}));
+        if (r.status === 401 || r.status === 403) {
+          // Token expired or invalid
+          localStorage.removeItem('admin_token');
+          setToken(null);
+          setIsAuthenticated(false);
+          setMsg('Sesión expirada. Ingresá tu secret de nuevo.');
+        } else {
+          setMsg('❌ Error: ' + (data.error || 'no disponible'));
+        }
+        return;
+      }
       const data = await r.json();
-      if (data.profiles) setProfiles(Array.isArray(data.profiles) ? data.profiles : []);
+      if (data.profiles) {
+        setProfiles(Array.isArray(data.profiles) ? data.profiles : []);
+      }
     } catch (err) {
       console.error(err);
+      setMsg('❌ Error de conexión');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [apiHeaders]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin_auth');
-    if (saved === ADMIN_PASS) {
-      setAuth(true);
+    if (token) {
+      setIsAuthenticated(true);
       fetchProfiles();
-    } else {
-      setLoading(false);
     }
-  }, [fetchProfiles]);
+  }, [token, fetchProfiles]);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (passInput === ADMIN_PASS) {
-      localStorage.setItem('admin_auth', ADMIN_PASS);
-      setAuth(true);
-      setLoading(true);
-      fetchProfiles();
-    } else {
-      setMsg('❌ Contraseña incorrecta');
+    setLoading(true);
+    try {
+      const r = await fetch(`${API_BASE}/api/admin/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: passInput }),
+      });
+      const data = await r.json();
+      if (r.ok && data.token) {
+        localStorage.setItem('admin_token', data.token);
+        setToken(data.token);
+        setMsg('✅ Acceso concedido');
+      } else {
+        setMsg('❌ Secret incorrecto');
+      }
+    } catch (err) {
+      setMsg('❌ Error de conexión');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleAction = async (profileId, action) => {
     setMsg('');
     try {
+      const body = { profileId, action };
+      // Delete requires secret for safety
+      if (action === 'delete') {
+        body.secret = document.getElementById('admin-delete-secret')?.value || '';
+      }
       const r = await fetch(`${API_BASE}/api/admin`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profileId, action }),
+        headers: apiHeaders,
+        body: JSON.stringify(body),
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data.error || 'Failed');
 
       const labels = { approve: '✅ Aprobado', reject: '❌ Rechazado', delete: '🗑️ Eliminado' };
       setMsg(labels[action] || 'OK');
-
-      // Refresh list
       fetchProfiles();
       setTimeout(() => setMsg(''), 3000);
     } catch (err) {
       setMsg('❌ ' + err.message);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('admin_token');
+    setToken(null);
+    setIsAuthenticated(false);
+    setProfiles([]);
+    setPassInput('');
+    setMsg('Sesión cerrada');
   };
 
   const getStatus = (p) => {
@@ -74,24 +124,25 @@ export default function Admin() {
     return { label: '⏳ Pendiente', color: '#f59e0b' };
   };
 
-  if (!auth) {
+  // Login form — no password on frontend
+  if (!isAuthenticated) {
     return (
       <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
         <div className="glass-card" style={{ padding: '2.5rem', maxWidth: '400px', width: '100%', textAlign: 'center' }}>
           <h1 style={{ marginBottom: '1.5rem' }}>🔐 Admin Panel</h1>
-          {msg && <p style={{ color: '#ef4444', marginBottom: '1rem' }}>{msg}</p>}
+          {msg && <p style={{ color: msg.startsWith('✅') ? '#22c55e' : '#ef4444', marginBottom: '1rem' }}>{msg}</p>}
           <form onSubmit={handleLogin}>
             <input
               type="password"
               className="search-input"
-              placeholder="Contraseña"
+              placeholder="Secret de admin"
               value={passInput}
               onChange={e => setPassInput(e.target.value)}
               style={{ width: '100%', padding: '0.75rem 1rem', marginBottom: '1rem' }}
               autoFocus
             />
-            <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-              Entrar
+            <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
+              {loading ? '...' : 'Entrar'}
             </button>
           </form>
         </div>
@@ -118,8 +169,8 @@ export default function Admin() {
           <button onClick={fetchProfiles} className="btn" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)' }}>
             <RefreshCw size={16} style={{ marginRight: '0.5rem' }} /> Refrescar
           </button>
-          <button onClick={() => { localStorage.removeItem('admin_auth'); setAuth(false); }} className="btn" style={{ background: 'transparent', border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}>
-            Salir
+          <button onClick={handleLogout} className="btn" style={{ background: 'transparent', border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}>
+            <LogOut size={16} style={{ marginRight: '0.25rem' }} /> Salir
           </button>
         </div>
       </div>
@@ -212,7 +263,13 @@ function ProfileCard({ profile, onAction }) {
             <XCircle size={14} style={{ marginRight: '0.25rem' }} /> Rechazar
           </button>
         )}
-        <button onClick={() => { if (confirm('¿Eliminar definitivamente?')) onAction(profile.id, 'delete'); }} className="btn"
+        <button onClick={() => {
+          const secret = prompt('Confirma el secret para eliminar este perfil:');
+          if (secret) {
+            document.getElementById('admin-delete-secret') && (document.getElementById('admin-delete-secret').value = secret);
+            onAction(profile.id, 'delete');
+          }
+        }} className="btn"
           style={{ background: 'transparent', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
           <Trash2 size={14} />
         </button>
