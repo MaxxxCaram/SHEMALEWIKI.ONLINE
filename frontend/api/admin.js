@@ -2,12 +2,10 @@
 // Uses a shared secret verified by the server, returns JWT-like token
 // The secret is configurable via Vercel env: ADMIN_SECRET
 
+import { createHmac, randomBytes } from 'crypto';
+
 const ADMIN_SECRET = process.env.ADMIN_SECRET;
 const SESSION_TTL = 24 * 60 * 60 * 1000; // 24h
-
-// Generate simple token (not real JWT, but opaque enough for this scale)
-// Uses crypto for HMAC: secret + timestamp + random => token
-import { createHmac, randomBytes } from 'crypto';
 
 function generateToken() {
   const rand = randomBytes(32).toString('hex');
