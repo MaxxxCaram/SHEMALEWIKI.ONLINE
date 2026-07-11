@@ -2,7 +2,7 @@
 // Uses a shared secret verified by the server, returns JWT-like token
 // The secret is configurable via Vercel env: ADMIN_SECRET
 
-const ADMIN_SECRET = process.env.ADMIN_SECRET || 'CHANGE_ME_SETUP_ADMIN_SECRET';
+const ADMIN_SECRET = process.env.ADMIN_SECRET;
 const SESSION_TTL = 24 * 60 * 60 * 1000; // 24h
 
 // Generate simple token (not real JWT, but opaque enough for this scale)

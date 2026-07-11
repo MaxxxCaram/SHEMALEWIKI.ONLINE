@@ -94,20 +94,27 @@ export default function DashboardLogin() {
     setLoginLoading(true);
 
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, name, email')
-        .or(`email.eq.${loginIdentifier},name.eq.${loginIdentifier}`)
-        .limit(1);
+      // Use server-side admin auth — never pass password to frontend auth
+      const tokenResponse = await fetch(`${API_BASE}/api/admin/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: loginPassword }),
+      });
 
-      if (error) throw error;
+      if (!tokenResponse.ok) {
+        const errData = await tokenResponse.json();
+        setLoginError(errData.error || 'Usuario, correo electrónico o contraseña no válidos');
+        setLoginLoading(false);
+        return;
+      }
 
-      if (data && data.length > 0) {
-        const profile = data[0];
-        localStorage.setItem('dashboard_user_id', profile.id);
+      const tokenData = await tokenResponse.json();
+      if (tokenData.token) {
+        localStorage.setItem('dashboard_token', tokenData.token);
+        localStorage.setItem('dashboard_token_expires', tokenData.expires);
         navigate('/dashboard');
       } else {
-        setLoginError('Usuario, correo electrónico o contraseña no válidos');
+        setLoginError('Credenciales inválidas');
       }
     } catch (err) {
       setLoginError('Ocurrió un error durante el inicio de sesión. Por favor, inténtelo de nuevo.');
@@ -973,7 +980,7 @@ export default function DashboardLogin() {
                   autoComplete="current-password"
                   className="search-input" 
                   style={{ width: '100%', paddingLeft: '3rem' }} 
-                  placeholder="Introduce tu contraseña" 
+                  placeholder="Tu contraseña" 
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   required
@@ -981,16 +988,16 @@ export default function DashboardLogin() {
               </div>
             </div>
 
-            <button 
-              type="submit" 
-              className="btn btn-primary" 
+            <button
+              type="submit"
+              className="btn btn-primary"
               style={{ width: '100%', marginTop: '0.5rem', display: 'flex', justifyContent: 'center' }}
               disabled={loginLoading}
             >
               {loginLoading ? (
                 <span className="spin" style={{ display: 'inline-block', width: '20px', height: '20px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }}></span>
               ) : (
-                <>Entrar <ArrowRight size={18} style={{ marginLeft: '0.5rem' }} /></>
+                <>Acceder <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} /></>
               )}
             </button>
           </form>
