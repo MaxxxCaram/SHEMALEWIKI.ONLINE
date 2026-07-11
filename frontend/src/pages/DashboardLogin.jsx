@@ -84,9 +84,7 @@ export default function DashboardLogin() {
   const [createPhotoFiles, setCreatePhotoFiles] = useState([]);  // File objects
   const [createVideoLinks, setCreateVideoLinks] = useState(['']);
 
-  const API_BASE = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3001' 
-    : window.location.origin;
+  const API_BASE = typeof window !== 'undefined' ? window.location.origin : '';
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -94,30 +92,26 @@ export default function DashboardLogin() {
     setLoginLoading(true);
 
     try {
-      // Use server-side admin auth — never pass password to frontend auth
-      const tokenResponse = await fetch(`${API_BASE}/api/admin/login`, {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ secret: loginPassword }),
+        body: JSON.stringify({
+          email: loginIdentifier,
+          password: loginPassword,
+        }),
       });
 
-      if (!tokenResponse.ok) {
-        const errData = await tokenResponse.json();
-        setLoginError(errData.error || 'Usuario, correo electrónico o contraseña no válidos');
-        setLoginLoading(false);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setLoginError(data.error || 'Credenciales inválidas');
         return;
       }
 
-      const tokenData = await tokenResponse.json();
-      if (tokenData.token) {
-        localStorage.setItem('dashboard_token', tokenData.token);
-        localStorage.setItem('dashboard_token_expires', tokenData.expires);
-        navigate('/dashboard');
-      } else {
-        setLoginError('Credenciales inválidas');
-      }
+      localStorage.setItem('dashboard_user_id', data.profile.id);
+      navigate('/dashboard');
     } catch (err) {
-      setLoginError('Ocurrió un error durante el inicio de sesión. Por favor, inténtelo de nuevo.');
+      setLoginError('Ocurrió un error. Verificá tu conexión.');
       console.error(err);
     } finally {
       setLoginLoading(false);
@@ -505,28 +499,371 @@ export default function DashboardLogin() {
             <h1 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Crear perfil</h1>
             <p style={{ color: 'var(--text-secondary)' }}>Paso {createStep} de 3 — Anuncio Profesional</p>
             
-            {/* Step Progress Indicators */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem' }}>
-              <div style={{ width: '40px', height: '4px', borderRadius: '2px', background: createStep >= 1 ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)' }}></div>
-              <div style={{ width: '40px', height: '4px', borderRadius: '2px', background: createStep >= 2 ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)' }}></div>
-              <div style={{ width: '40px', height: '4px', borderRadius: '2px', background: createStep >= 3 ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)' }}></div>
-            </div>
           </div>
 
-          {createError && (
-            <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1.5rem', textAlign: 'center', fontSize: '0.9rem', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-              {createError}
-            </div>
+          {createStep === 1 && (
+            <form onSubmit={handleCreateProfile} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label htmlFor="createName" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nombre / Apodo *</label>
+                  <div style={{ position: 'relative' }}>
+                    <User style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
+                    <input 
+                      type="text" 
+                      id="createName"
+                      name="createName"
+                      className="search-input" 
+                      style={{ width: '100%', paddingLeft: '3rem' }} 
+                      placeholder="Ej. Maria Martinez" 
+                      value={createName}
+                      onChange={(e) => setCreateName(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="createEmail" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Email de Contacto *</label>
+                  <div style={{ position: 'relative' }}>
+                    <Mail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
+                    <input 
+                      type="email" 
+                      id="createEmail"
+                      name="createEmail"
+                      autoComplete="email"
+                      className="search-input" 
+                      style={{ width: '100%', paddingLeft: '3rem' }} 
+                      placeholder="tuemail@ejemplo.com" 
+                      value={createEmail}
+                      onChange={(e) => setCreateEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label htmlFor="createPhone" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Teléfono de Contacto *</label>
+                  <div style={{ position: 'relative' }}>
+                    <Phone style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
+                    <input 
+                      type="text" 
+                      id="createPhone"
+                      name="createPhone"
+                      autoComplete="tel"
+                      className="search-input" 
+                      style={{ width: '100%', paddingLeft: '3rem' }} 
+                      placeholder="+34 600 000 000" 
+                      value={createPhone}
+                      onChange={(e) => setCreatePhone(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="createWhatsapp" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>WhatsApp (opcional, si es distinto)</label>
+                  <div style={{ position: 'relative' }}>
+                    <Phone style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
+                    <input 
+                      type="text" 
+                      id="createWhatsapp"
+                      name="createWhatsapp"
+                      autoComplete="tel"
+                      className="search-input" 
+                      style={{ width: '100%', paddingLeft: '3rem' }} 
+                      placeholder="Si es distinto al teléfono" 
+                      value={createWhatsapp}
+                      onChange={(e) => setCreateWhatsapp(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label htmlFor="createCountry" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>País *</label>
+                  <div style={{ position: 'relative' }}>
+                    <Globe style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
+                    <input 
+                      type="text" 
+                      id="createCountry"
+                      name="createCountry"
+                      autoComplete="country-name"
+                      className="search-input" 
+                      style={{ width: '100%', paddingLeft: '3rem' }} 
+                      placeholder="Ej. España" 
+                      value={createCountry}
+                      onChange={(e) => setCreateCountry(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="createCity" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Ciudad *</label>
+                  <div style={{ position: 'relative' }}>
+                    <MapPin style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
+                    <input 
+                      type="text" 
+                      id="createCity"
+                      name="createCity"
+                      autoComplete="address-level2"
+                      className="search-input" 
+                      style={{ width: '100%', paddingLeft: '3rem' }} 
+                      placeholder="Ej. Madrid" 
+                      value={createCity}
+                      onChange={(e) => setCreateCity(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                type="button"
+                onClick={() => setCreateStep(2)}
+                className="btn btn-primary"
+                style={{ width: '100%', marginTop: '1rem', display: 'flex', justifyContent: 'center' }}
+              >
+                Siguiente <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
+              </button>
+            </form>
           )}
 
-          {createSuccess ? (
+          {createStep === 2 && (
+            <form onSubmit={handleCreateProfile} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              
+              <div className="form-group">
+                <label htmlFor="createBio" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Biografía (mínimo 50 caracteres) *</label>
+                <textarea 
+                  id="createBio"
+                  name="createBio"
+                  style={{ width: '100%', minHeight: '150px', resize: 'vertical', padding: '0.75rem 1rem' }} 
+                  placeholder="Cuenta un poco sobre ti, lo que ofreces, tu estilo, disponibilidad..."
+                  value={createBio}
+                  onChange={(e) => setCreateBio(e.target.value)}
+                  required
+                  minLength={50}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label htmlFor="createAge" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Edad *</label>
+                  <input 
+                    type="number" 
+                    id="createAge"
+                    name="createAge"
+                    style={{ width: '100%', padding: '0.75rem 1rem' }} 
+                    placeholder="Ej. 25" 
+                    value={createAge}
+                    onChange={(e) => setCreateAge(e.target.value)}
+                    required
+                    min={18}
+                    max={100}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="createHeight" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Altura (cm)</label>
+                  <input 
+                    type="number" 
+                    id="createHeight"
+                    name="createHeight"
+                    style={{ width: '100%', padding: '0.75rem 1rem' }} 
+                    placeholder="Ej. 165" 
+                    value={createHeight}
+                    onChange={(e) => setCreateHeight(e.target.value)}
+                    min={100}
+                    max={250}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label htmlFor="createWeight" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Peso (kg)</label>
+                  <input 
+                    type="number" 
+                    id="createWeight"
+                    name="createWeight"
+                    style={{ width: '100%', padding: '0.75rem 1rem' }} 
+                    placeholder="Ej. 55" 
+                    value={createWeight}
+                    onChange={(e) => setCreateWeight(e.target.value)}
+                    min={20}
+                    max={300}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="createNationality" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nacionalidad</label>
+                  <input 
+                    type="text" 
+                    id="createNationality"
+                    name="createNationality"
+                    autoComplete="country-name"
+                    style={{ width: '100%', padding: '0.75rem 1rem' }} 
+                    placeholder="Ej. Argentina" 
+                    value={createNationality}
+                    onChange={(e) => setCreateNationality(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="createLanguages" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Idiomas que hablas</label>
+                <input 
+                  type="text" 
+                  id="createLanguages"
+                  name="createLanguages"
+                  style={{ width: '100%', padding: '0.75rem 1rem' }} 
+                  placeholder="Ej. Español, Inglés, Portugués" 
+                  value={createLanguages}
+                  onChange={(e) => setCreateLanguages(e.target.value)}
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+                <button 
+                  type="button"
+                  onClick={() => setCreateStep(1)}
+                  className="btn"
+                  style={{ flex: 1, background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-primary)' }}
+                >
+                  <ArrowLeft size={16} style={{ marginRight: '0.5rem' }} /> Anterior
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setCreateStep(3)}
+                  className="btn btn-primary"
+                  style={{ flex: 1, display: 'flex', justifyContent: 'center' }}
+                >
+                  Siguiente <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
+                </button>
+              </div>
+            </form>
+          )}
+
+          {createStep === 3 && (
+            <form onSubmit={handleCreateProfile} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              
+              <div className="form-group">
+                <label htmlFor="createOnlyFans" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Enlaces de redes sociales / OnlyFans</label>
+                <textarea 
+                  id="createOnlyFans"
+                  name="createOnlyFans"
+                  style={{ width: '100%', minHeight: '80px', resize: 'vertical', padding: '0.75rem 1rem' }} 
+                  placeholder="Uno por línea. Ejemplo:\nhttps://onlyfans.com/...\nhttps://tinder.com/..." 
+                  value={createOnlyFans}
+                  onChange={(e) => setCreateOnlyFans(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group">
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Fotos (opcional, máx. 10)</label>
+                <input 
+                  type="file" 
+                  multiple
+                  accept="image/*"
+                  onChange={handlePhotoSelect}
+                  style={{ width: '100%', background: 'transparent' }}
+                />
+                {createPhotoFiles.length > 0 && (
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                    {createPhotoFiles.map((file, idx) => (
+                      <div key={idx} style={{ position: 'relative', width: '80px', height: '80px' }}>
+                        <img 
+                          src={URL.createObjectURL(file)} 
+                          alt={`Foto ${idx + 1}`}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '0.5rem' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removePhoto(idx)}
+                          style={{
+                            position: 'absolute', top: '-6px', right: '-6px',
+                            width: '22px', height: '22px', borderRadius: '50%',
+                            background: '#ef4444', color: '#fff', border: 'none',
+                            fontSize: '0.75rem', cursor: 'pointer', lineHeight: '22px', textAlign: 'center'
+                          }}
+                        >×</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Enlaces de videos (opcional)</label>
+                {createVideoLinks.map((link, index) => (
+                  <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <input 
+                      type="url"
+                      className="search-input"
+                      style={{ flex: 1, padding: '0.75rem 1rem' }} 
+                      placeholder="https://onlyfans.com/... o https://tinder.com/..." 
+                      value={link}
+                      onChange={(e) => handleVideoLinkChange(index, e.target.value)}
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        const newLinks = [...createVideoLinks];
+                        newLinks.splice(index, 1);
+                        setCreateVideoLinks(newLinks);
+                      }}
+                      style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', borderRadius: '0.5rem', padding: '0.5rem 0.75rem', cursor: 'pointer' }}
+                    >
+                      <XCircle size={18} />
+                    </button>
+                  </div>
+                ))}
+                <button 
+                  type="button"
+                  onClick={handleAddVideoField}
+                  className="btn"
+                  style={{ background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-secondary)', width: 'auto', padding: '0.5rem 1rem' }}
+                >
+                  <Plus size={16} style={{ marginRight: '0.5rem' }} /> Agregar enlace
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+                <button 
+                  type="button"
+                  onClick={() => setCreateStep(2)}
+                  className="btn"
+                  style={{ flex: 1, background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-primary)' }}
+                >
+                  <ArrowLeft size={16} style={{ marginRight: '0.5rem' }} /> Anterior
+                </button>
+                <button 
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ flex: 1, display: 'flex', justifyContent: 'center', gap: '0.5rem' }}
+                  disabled={createLoading}
+                >
+                  {createLoading ? (
+                    <span className="spin" style={{ display: 'inline-block', width: '20px', height: '20px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }}></span>
+                  ) : (
+                    <>Crear Perfil <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} /></>
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {createSuccess && (
             <div style={{ textAlign: 'center', padding: '2rem 0' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(34, 197, 94, 0.1)', marginBottom: '1.5rem', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
                 <CheckCircle2 size={32} style={{ color: '#22c55e' }} />
               </div>
-              <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>¡Borrador guardado con éxito!</h2>
+              <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>¡Perfil creado!</h2>
               <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '2rem' }}>
-                Tu perfil profesional ha sido guardado correctamente como borrador pendiente. Nuestro equipo lo revisará y, tras la aprobación, tu anuncio estará disponible para miles de usuarios.
+                Tu perfil ha sido registrado correctamente. Nuestro equipo lo revisará en las próximas horas y te notificaremos cuando esté activo.
               </p>
               <button 
                 onClick={() => { setView('options'); setCreateSuccess(false); setCreateStep(1); }}
@@ -536,392 +873,6 @@ export default function DashboardLogin() {
                 Entendido
               </button>
             </div>
-          ) : (
-            <form onSubmit={handleCreateProfile} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              
-              {/* STEP 1: CONTACT & LOCATION */}
-              {createStep === 1 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Sparkles size={18} /> Datos de Contacto y Ubicación</h3>
-                  
-                  <div className="form-group">
-                    <label htmlFor="createName" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nombre Artístico</label>
-                    <input 
-                      type="text" 
-                      id="createName"
-                      name="createName"
-                      autoComplete="name"
-                      className="search-input" 
-                      style={{ width: '100%' }} 
-                      placeholder="Ej. Isabella Rossini" 
-                      value={createName}
-                      onChange={(e) => setCreateName(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="createEmail" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Correo Electrónico (Mail)</label>
-                    <input 
-                      type="email" 
-                      id="createEmail"
-                      name="createEmail"
-                      autoComplete="email"
-                      className="search-input" 
-                      style={{ width: '100%' }} 
-                      placeholder="tuemail@ejemplo.com" 
-                      value={createEmail}
-                      onChange={(e) => setCreateEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <div className="form-group">
-                      <label htmlFor="createPhone" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Teléfono</label>
-                      <input 
-                        type="text" 
-                        id="createPhone"
-                        name="createPhone"
-                        autoComplete="tel"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="+34 600 000 000" 
-                        value={createPhone}
-                        onChange={(e) => setCreatePhone(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="createWhatsapp" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>WhatsApp</label>
-                      <input 
-                        type="text" 
-                        id="createWhatsapp"
-                        name="createWhatsapp"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="+34 600 000 000" 
-                        value={createWhatsapp}
-                        onChange={(e) => setCreateWhatsapp(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="createContinent" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Continente</label>
-                    <select 
-                      id="createContinent"
-                      name="createContinent"
-                      className="search-input" 
-                      style={{ width: '100%', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', height: '48px', borderRadius: '0.5rem', padding: '0 1rem' }}
-                      value={createContinent}
-                      onChange={(e) => setCreateContinent(e.target.value)}
-                    >
-                      <option value="Europe">Europa</option>
-                      <option value="North America">Norteamérica</option>
-                      <option value="South America">Sudamérica</option>
-                      <option value="Asia">Asia</option>
-                      <option value="Oceania">Oceanía</option>
-                      <option value="Africa">África</option>
-                      <option value="Other">Otro</option>
-                    </select>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <div className="form-group">
-                      <label htmlFor="createCountry" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>País</label>
-                      <input 
-                        type="text" 
-                        id="createCountry"
-                        name="createCountry"
-                        autoComplete="country-name"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="Ej. España" 
-                        value={createCountry}
-                        onChange={(e) => setCreateCountry(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="createCity" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Ciudad</label>
-                      <input 
-                        type="text" 
-                        id="createCity"
-                        name="createCity"
-                        autoComplete="address-level2"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="Ej. Madrid" 
-                        value={createCity}
-                        onChange={(e) => setCreateCity(e.target.value)}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <button 
-                    type="button" 
-                    className="btn btn-primary" 
-                    style={{ marginTop: '1rem', width: '100%', display: 'flex', justifyContent: 'center' }}
-                    onClick={() => {
-                      if (createName && createEmail && createPhone && createCountry && createCity) {
-                        setCreateStep(2);
-                      } else {
-                        setCreateError('Por favor, rellene todos los campos obligatorios.');
-                      }
-                    }}
-                  >
-                    Siguiente Paso <ArrowRight size={18} style={{ marginLeft: '0.5rem' }} />
-                  </button>
-                </div>
-              )}
-
-              {/* STEP 2: PHYSICAL & AD DETAILS */}
-              {createStep === 2 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Sparkles size={18} /> Datos Físicos y del Anuncio</h3>
-
-                  <div className="form-group">
-                    <label htmlFor="createBio" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Biografía / Presentación</label>
-                    <textarea 
-                      id="createBio"
-                      name="createBio"
-                      className="search-input" 
-                      style={{ width: '100%', minHeight: '120px', resize: 'vertical', padding: '0.75rem 1rem' }} 
-                      placeholder="Cuéntanos un poco sobre ti, tus servicios, tarifas, etc..."
-                      value={createBio}
-                      onChange={(e) => setCreateBio(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-                    <div className="form-group">
-                      <label htmlFor="createAge" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Edad</label>
-                      <input 
-                        type="text" 
-                        id="createAge"
-                        name="createAge"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="Ej. 24" 
-                        value={createAge}
-                        onChange={(e) => setCreateAge(e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="createHeight" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Altura (cm)</label>
-                      <input 
-                        type="text" 
-                        id="createHeight"
-                        name="createHeight"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="Ej. 175" 
-                        value={createHeight}
-                        onChange={(e) => setCreateHeight(e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="createWeight" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Peso (kg)</label>
-                      <input 
-                        type="text" 
-                        id="createWeight"
-                        name="createWeight"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="Ej. 62" 
-                        value={createWeight}
-                        onChange={(e) => setCreateWeight(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-                    <div className="form-group">
-                      <label htmlFor="createNationality" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nacionalidad</label>
-                      <input 
-                        type="text" 
-                        id="createNationality"
-                        name="createNationality"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="Ej. Brasileña" 
-                        value={createNationality}
-                        onChange={(e) => setCreateNationality(e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="createLanguages" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Idiomas</label>
-                      <input 
-                        type="text" 
-                        id="createLanguages"
-                        name="createLanguages"
-                        autoComplete="off"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="Español, Inglés" 
-                        value={createLanguages}
-                        onChange={(e) => setCreateLanguages(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <div className="form-group">
-                      <label htmlFor="createOnlyFans" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>OnlyFans Link</label>
-                      <input 
-                        type="url" 
-                        id="createOnlyFans"
-                        name="createOnlyFans"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="https://onlyfans.com/..." 
-                        value={createOnlyFans}
-                        onChange={(e) => setCreateOnlyFans(e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="createCamChat" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Cam Chat Link</label>
-                      <input 
-                        type="url" 
-                        id="createCamChat"
-                        name="createCamChat"
-                        className="search-input" 
-                        style={{ width: '100%' }} 
-                        placeholder="https://..." 
-                        value={createCamChat}
-                        onChange={(e) => setCreateCamChat(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
-                    <button 
-                      type="button" 
-                      className="btn" 
-                      style={{ width: '100%', background: 'transparent', border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}
-                      onClick={() => setCreateStep(1)}
-                    >
-                      Atrás
-                    </button>
-                    <button 
-                      type="button" 
-                      className="btn btn-primary" 
-                      style={{ width: '100%' }}
-                      onClick={() => {
-                        if (createBio) {
-                          setCreateStep(3);
-                        } else {
-                          setCreateError('Por favor, rellene la biografía.');
-                        }
-                      }}
-                    >
-                      Siguiente Paso <ArrowRight size={18} style={{ marginLeft: '0.5rem' }} />
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 3: MEDIA & VIDEO LINKS */}
-              {createStep === 3 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Sparkles size={18} /> Fotos y Enlaces de Vídeos</h3>
-
-                  {/* Photo upload */}
-                  <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>📷 Tus fotos (JPG/PNG · Máx 10MB c/u · Hasta 10)</label>
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      multiple
-                      onChange={handlePhotoSelect}
-                      style={{
-                        width: '100%', padding: '0.75rem',
-                        border: '2px dashed var(--card-border)',
-                        borderRadius: '0.5rem', background: 'var(--card-bg)',
-                        color: 'var(--text-primary)', cursor: 'pointer'
-                      }}
-                    />
-                    {createPhotoFiles.length > 0 && (
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
-                        {createPhotoFiles.map((file, i) => (
-                          <div key={i} style={{ position: 'relative', width: '80px', height: '80px' }}>
-                            <img
-                              src={URL.createObjectURL(file)}
-                              alt={`Foto ${i + 1}`}
-                              style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '0.5rem' }}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => removePhoto(i)}
-                              style={{
-                                position: 'absolute', top: '-6px', right: '-6px',
-                                width: '22px', height: '22px', borderRadius: '50%',
-                                background: '#ef4444', color: '#fff', border: 'none',
-                                fontSize: '0.75rem', cursor: 'pointer', lineHeight: '22px', textAlign: 'center'
-                              }}
-                            >×</button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Video Links */}
-                  <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <label htmlFor="createVideo_0" style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Enlaces de Vídeos (OnlyFans, Pornhub, xHamster, etc.)</label>
-                    {createVideoLinks.map((url, index) => (
-                      <div key={index} style={{ position: 'relative' }}>
-                        <Video style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
-                        <input 
-                          type="url" 
-                          id={`createVideo_${index}`}
-                          name={`createVideo_${index}`}
-                          className="search-input" 
-                          style={{ width: '100%', paddingLeft: '3rem' }} 
-                          placeholder={`Enlace de Vídeo ${index + 1} (https://...)`} 
-                          value={url}
-                          onChange={(e) => handleVideoLinkChange(index, e.target.value)}
-                        />
-                      </div>
-                    ))}
-                    <button 
-                      type="button" 
-                      onClick={handleAddVideoField}
-                      className="btn" 
-                      style={{ alignSelf: 'flex-start', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid var(--glass-border)', fontSize: '0.85rem', padding: '0.5rem 1rem' }}
-                    >
-                      <Plus size={14} style={{ marginRight: '0.25rem' }} /> Agregar Enlace de Vídeo
-                    </button>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1.5rem' }}>
-                    <button 
-                      type="button" 
-                      className="btn" 
-                      style={{ width: '100%', background: 'transparent', border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}
-                      onClick={() => setCreateStep(2)}
-                    >
-                      Atrás
-                    </button>
-                    <button 
-                      type="submit" 
-                      className="btn btn-primary" 
-                      style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
-                      disabled={createLoading}
-                    >
-                      {createLoading ? (
-                        <span className="spin" style={{ display: 'inline-block', width: '20px', height: '20px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }}></span>
-                      ) : (
-                        <>Guardar Borrador <Send size={18} style={{ marginLeft: '0.5rem' }} /></>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              )}
-            </form>
           )}
         </div>
       )}
@@ -988,16 +939,16 @@ export default function DashboardLogin() {
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="btn btn-primary"
+            <button 
+              type="submit" 
+              className="btn btn-primary" 
               style={{ width: '100%', marginTop: '0.5rem', display: 'flex', justifyContent: 'center' }}
               disabled={loginLoading}
             >
               {loginLoading ? (
                 <span className="spin" style={{ display: 'inline-block', width: '20px', height: '20px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }}></span>
               ) : (
-                <>Acceder <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} /></>
+                <>Entrar <ArrowRight size={18} style={{ marginLeft: '0.5rem' }} /></>
               )}
             </button>
           </form>

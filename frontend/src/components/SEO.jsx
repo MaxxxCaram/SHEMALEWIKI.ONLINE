@@ -14,10 +14,14 @@ export default function SEO({
   jsonLd = null,
   ogImage = null,
 }) {
-  const baseUrl = 'https://shemalewiki.online';
+  const isBuscaTrans = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
+  const baseUrl = isBuscaTrans() ? 'https://buscatrans.com' : 'https://shemalewiki.online';
+  const brandName = isBuscaTrans() ? 'BuscaTrans' : 'ShemaleWiki Online';
   const fullTitle = title 
-    ? `${title} | ShemaleWiki Online` 
-    : 'ShemaleWiki Online — Trans Community Directory';
+    ? `${title} | ${brandName}` 
+    : (isBuscaTrans() 
+      ? 'BuscaTrans — Comunidad de Mujeres Trans Verificadas'
+      : 'ShemaleWiki Online — Trans Community Directory');
   const fullCanonical = canonicalPath ? `${baseUrl}${canonicalPath}` : baseUrl;
 
   return (

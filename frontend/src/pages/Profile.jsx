@@ -208,7 +208,7 @@ export default function Profile() {
                 </button>
                 <button title="Report" aria-label="Report profile"
                   style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)', transition: 'var(--transition)' }}
-                  onClick={() => alert('To report this profile, please email report@shemalewiki.online')}>
+                  onClick={() => window.location.href = 'mailto:report@shemalewiki.online?subject=Report+Profile+' + encodeURIComponent(profile.name)}>
                   <Flag size={18} />
                 </button>
               </div>
