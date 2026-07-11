@@ -140,9 +140,11 @@ export default function Home() {
           <input
             className="search-input"
             type="text"
+            aria-label={brand === 'buscatrans' ? 'Buscar perfiles por ciudad o país' : 'Search profiles by city or country'}
             placeholder={content.searchPlaceholder}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') { window.location.href = brand === 'buscatrans' ? `/es/europe${searchQuery ? '?search=' + encodeURIComponent(searchQuery) : ''}` : `/europe${searchQuery ? '?search=' + encodeURIComponent(searchQuery) : ''}`; } }}
           />
           <Link to={brand === 'buscatrans' ? '/es/europe' : '/europe'} className="btn btn-primary btn-lg" style={{ textDecoration: 'none' }}>
             <Search size={18} />
@@ -150,17 +152,24 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Filter pills */}
-        <div className="filter-pills">
-          {content.pills.map((pill, i) => (
-            <button
-              key={pill}
-              className={`filter-pill ${i === activePill ? 'active' : ''}`}
-              onClick={() => setActivePill(i)}
-            >
-              {pill}
-            </button>
-          ))}
+        {/* Filter pills — functional: navigate to city search */}
+        <div className="filter-pills" role="group" aria-label={brand === 'buscatrans' ? 'Filtrar por ciudad' : 'Filter by city'}>
+          {content.pills.map((pill, i) => {
+            const isAll = pill === 'All' || pill === 'Todas';
+            const searchTarget = isAll
+              ? (brand === 'buscatrans' ? '/es/europe' : '/europe')
+              : (brand === 'buscatrans' ? `/es/europe?search=${encodeURIComponent(pill)}` : `/europe?search=${encodeURIComponent(pill)}`);
+            return (
+              <Link
+                key={pill}
+                to={searchTarget}
+                className={`filter-pill ${i === activePill ? 'active' : ''}`}
+                onClick={() => setActivePill(i)}
+              >
+                {pill}
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -230,18 +239,32 @@ export default function Home() {
       <div style={{ height: '80px' }} />
 
       {/* ── BOTTOM NAV (mobile) ── */}
-      <nav className="bottom-nav">
+      <nav className="bottom-nav" aria-label={brand === 'buscatrans' ? 'Navegación' : 'Navigation'}>
         <div className="bottom-nav-items">
-          {content.bottomNav.map((item, i) => (
-            <a key={i} className={`bottom-nav-item ${item.active ? 'active' : ''}`} href="#">
-              {item.icon === 'home' && '🏠'}
-              {item.icon === 'search' && '🔍'}
-              {item.icon === 'star' && '⭐'}
-              {item.icon === 'heart' && '❤️'}
-              {item.icon === 'user' && '👤'}
-              {item.label}
-            </a>
-          ))}
+          {content.bottomNav.map((item, i) => {
+            const linkMap = {
+              home: brand === 'buscatrans' ? '/es/' : '/',
+              search: brand === 'buscatrans' ? '/es/europe' : '/europe',
+              star: brand === 'buscatrans' ? '/es/europe' : '/europe',
+              heart: brand === 'buscatrans' ? '/es/europe' : '/europe',
+              user: '/dashboard/login',
+            };
+            return (
+              <Link
+                key={i}
+                to={linkMap[item.icon] || '/'}
+                className={`bottom-nav-item ${item.active ? 'active' : ''}`}
+                aria-label={item.label}
+              >
+                {item.icon === 'home' && '🏠'}
+                {item.icon === 'search' && '🔍'}
+                {item.icon === 'star' && '⭐'}
+                {item.icon === 'heart' && '❤️'}
+                {item.icon === 'user' && '👤'}
+                {item.label}
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </>

@@ -2,7 +2,7 @@
 // Handles INSERT (video links) and DELETE with service_role
 // Methods: POST (insert), DELETE (remove)
 
-const SUPABASE_URL = 'https://qtuzpswxzengqoqqwtpt.supabase.co';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qtuzpswxzengqoqqwtpt.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
 export default async function handler(req, res) {

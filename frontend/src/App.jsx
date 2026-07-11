@@ -1,25 +1,27 @@
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { Component } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import Home from './pages/Home';
-import Continents from './pages/Continents';
-import Countries from './pages/Countries';
-import ProfilesList from './pages/ProfilesList';
-import Profile from './pages/Profile';
-import CityGuide from './pages/CityGuide';
-import DashboardLogin from './pages/DashboardLogin';
-import Dashboard from './pages/Dashboard';
-import Advertise from './pages/Advertise';
-import Register from './pages/Register';
-import Terms from './pages/Terms';
-import Privacy from './pages/Privacy';
-import Reclama from './pages/Reclama';
-import Contact from './pages/Contact';
-import Admin from './pages/Admin';
 import AgeVerification, { useAgeVerified } from './components/AgeVerification';
 import './index.css';
 import logoSw from './assets/logosw.png';
 import logoBT from './assets/buscatrans-logo.svg';
+
+// Lazy load all pages except Home (critical for first paint)
+const Continents = lazy(() => import('./pages/Continents'));
+const Countries = lazy(() => import('./pages/Countries'));
+const ProfilesList = lazy(() => import('./pages/ProfilesList'));
+const Profile = lazy(() => import('./pages/Profile'));
+const CityGuide = lazy(() => import('./pages/CityGuide'));
+const DashboardLogin = lazy(() => import('./pages/DashboardLogin'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Advertise = lazy(() => import('./pages/Advertise'));
+const Register = lazy(() => import('./pages/Register'));
+const Terms = lazy(() => import('./pages/Terms'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Reclama = lazy(() => import('./pages/Reclama'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Admin = lazy(() => import('./pages/Admin'));
 
 // Error Boundary: catches render errors (including .forEach on non-arrays)
 class ErrorBoundary extends Component {
@@ -84,7 +86,7 @@ function Navbar() {
         </div>
         <Link to={bt ? "/es/" : "/"} className="nav-brand">
           {bt ? (
-            <img src={logoBT} alt="BuscaTrans" style={{ height: '90px' }} />
+            <img src={logoBT} alt="BuscaTrans" style={{ height: '45px' }} />
           ) : (
             <>
               <img src={logoSw} alt="ShemaleWiki Online" style={{ height: '36px', marginRight: '8px' }} />
@@ -136,6 +138,7 @@ function AppContent() {
     <Router>
       <Navbar />
       <main>
+        <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}><div className="spinner" style={{ margin: '0 auto' }}></div></div>}>
         <Routes>
           {/* Root: redirects / → /es/ on BuscaTrans, shows Home on ShemaleWiki */}
           <Route path="/" element={<RootRedirect />} />
@@ -186,6 +189,7 @@ function AppContent() {
           <Route path="/he/:continent/:country/:city" element={<CityGuide />} />
           <Route path="/he/profile/:id" element={<Profile />} />
         </Routes>
+        </Suspense>
       </main>
     </Router>
   );

@@ -25,6 +25,7 @@ export default function Profile() {
   const [contactVisible, setContactVisible] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [toast, setToast] = useState('');
 
   useEffect(() => {
     fetchProfile();
@@ -82,7 +83,8 @@ export default function Profile() {
       navigator.share({ title: profile.name, url: window.location.href });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert('Link copied!');
+      setToast('✓ Link copied!');
+      setTimeout(() => setToast(''), 3000);
     }
   };
 
@@ -174,9 +176,13 @@ export default function Profile() {
 
         {/* Profile Header */}
         <div className="profile-header">
-          <div 
+          <div
             className="profile-hero-wrapper"
             onClick={() => heroPhoto && openLightbox(0)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); heroPhoto && openLightbox(0); } }}
+            role={heroPhoto ? 'button' : undefined}
+            tabIndex={heroPhoto ? 0 : undefined}
+            aria-label={heroPhoto ? `View gallery — ${galleryPhotos.length} photos` : 'No photos yet'}
             style={{ cursor: heroPhoto ? 'pointer' : 'default' }}
           >
             <LazyImage 
@@ -426,6 +432,20 @@ export default function Profile() {
           onClose={() => setLightboxOpen(false)}
           onNavigate={setLightboxIndex}
         />
+      )}
+
+      {toast && (
+        <div role="status" aria-live="polite"
+          style={{
+            position: 'fixed', bottom: '2rem', left: '50%', transform: 'translateX(-50%)',
+            background: 'var(--glass-bg)', border: '1px solid var(--glass-border)',
+            color: 'var(--text-primary)', padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-md)',
+            zIndex: 9999, fontSize: '0.9rem', backdropFilter: 'blur(10px)',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
+          }}
+        >
+          {toast}
+        </div>
       )}
     </>
   );

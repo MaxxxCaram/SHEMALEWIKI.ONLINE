@@ -42,10 +42,15 @@ async function fetchTable(table, params, headers) {
     return response.json();
 }
 
+const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
+
 module.exports = async (req, res) => {
-    // CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    // CORS — restrict to official domains only
+    const origin = req.headers.origin || '';
+    if (ALLOWED_ORIGINS.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     if (req.method === 'OPTIONS') {
         return res.status(200).end();

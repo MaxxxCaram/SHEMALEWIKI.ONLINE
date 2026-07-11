@@ -27,8 +27,13 @@ function verifyToken(tokenStr) {
   return age < SESSION_TTL; // expires after 24h
 }
 
+const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  const origin = req.headers.origin || '';
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-admin-secret');
 
@@ -47,31 +52,9 @@ export default async function handler(req, res) {
     'Content-Type': 'application/json',
   };
 
-  // ====== POST /api/admin/login — authenticate ======
-  // Distinguish login POST from action POST by body shape:
-  // login body = {secret: string}
-  // action body = {profileId, action}
-  if (req.method === 'POST') {
-    const body = req.body || {};
-    if (body.secret && !body.profileId && !body.action) {
-    try {
-      const { secret } = req.body || {};
-      if (!secret) {
-        return res.status(400).json({ error: 'Secret required' });
-      }
-      if (secret !== ADMIN_SECRET) {
-        return res.status(401).json({ error: 'Invalid secret' });
-      }
-      const token = generateToken();
-      return res.status(200).json({ success: true, token, expires: new Date(Date.now() + SESSION_TTL).toISOString() });
-    } catch (err) {
-      return res.status(500).json({ error: err.message });
-    }
-  }
-
   // ====== GET /api/admin — list profiles (authenticated) ======
   if (req.method === 'GET') {
-    // Check auth: token in header OR legacy admin_secret header
+    // Check auth
     const authHeader = req.headers.authorization || '';
     const secretHeader = req.headers['x-admin-secret'] || '';
 
@@ -83,7 +66,6 @@ export default async function handler(req, res) {
     if (authHeader.startsWith('Bearer ') && verifyToken(authHeader.substring(7))) {
       validAuth = true;
     } else if (secretHeader === ADMIN_SECRET) {
-      // Legacy fallback: raw secret in header (deprecated, migrate to token)
       validAuth = true;
     }
 
@@ -108,9 +90,30 @@ export default async function handler(req, res) {
     }
   }
 
-  // ====== POST /api/admin — approve/reject/delete (authenticated) ======
+  // ====== POST /api/admin/login — authenticate ======
+  // Distinguish login POST from action POST by body shape:
+  // login body = {secret: string} (no profileId, no action)
+  // action body = {profileId, action}
   if (req.method === 'POST') {
-    // Check auth
+    const body = req.body || {};
+    // === LOGIN ===
+    if (body.secret && !body.profileId && !body.action) {
+      try {
+        const { secret } = body;
+        if (!secret) {
+          return res.status(400).json({ error: 'Secret required' });
+        }
+        if (secret !== ADMIN_SECRET) {
+          return res.status(401).json({ error: 'Invalid secret' });
+        }
+        const token = generateToken();
+        return res.status(200).json({ success: true, token, expires: new Date(Date.now() + SESSION_TTL).toISOString() });
+      } catch (err) {
+        return res.status(500).json({ error: err.message });
+      }
+    }
+
+    // === ACTION (approve/reject/delete) — authenticated ===
     const authHeader = req.headers.authorization || '';
     const secretHeader = req.headers['x-admin-secret'] || '';
 
@@ -126,7 +129,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      const { profileId, action, secret: actionSecret } = req.body || {};
+      const { profileId, action, secret: actionSecret } = body;
 
       if (!profileId || !action) {
         return res.status(400).json({ error: 'profileId and action required' });

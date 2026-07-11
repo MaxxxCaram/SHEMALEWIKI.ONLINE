@@ -1,13 +1,38 @@
 // Login endpoint - generates session token from email+password
 const crypto = require('crypto');
 
+const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
+
+// Rate limiting for brute-force protection
+const loginAttempts = {};
+const RATE_LIMIT_WINDOW = 900000; // 15 min
+const RATE_LIMIT_MAX = 10; // 10 attempts per 15 min per IP
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  if (!loginAttempts[ip]) loginAttempts[ip] = [];
+  loginAttempts[ip] = loginAttempts[ip].filter(t => now - t < RATE_LIMIT_WINDOW);
+  if (loginAttempts[ip].length >= RATE_LIMIT_MAX) return false;
+  loginAttempts[ip].push(now);
+  return true;
+}
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin || '';
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Rate limit check
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
+  if (!checkRateLimit(ip)) {
+    return res.status(429).json({ error: 'Too many login attempts. Try again in 15 minutes.' });
+  }
 
   const { email, password } = req.body || {};
   if (!email || !password) {
@@ -49,7 +74,10 @@ export default async function handler(req, res) {
     }
 
     // Generate session token
-    const secret = process.env.ADMIN_SECRET || 'CHANGE_ME_SETUP_ADMIN_SECRET';
+    const secret = process.env.ADMIN_SECRET;
+    if (!secret) {
+      return res.status(500).json({ error: 'Server config error: ADMIN_SECRET not set' });
+    }
     const ts = Date.now();
     const sig = crypto.createHmac('sha256', secret)
       .update(`${profile.id}:${ts}`)
