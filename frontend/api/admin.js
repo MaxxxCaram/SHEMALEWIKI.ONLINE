@@ -48,7 +48,12 @@ export default async function handler(req, res) {
   };
 
   // ====== POST /api/admin/login — authenticate ======
-  if (req.method === 'POST' && req.url.includes('/login')) {
+  // Distinguish login POST from action POST by body shape:
+  // login body = {secret: string}
+  // action body = {profileId, action}
+  if (req.method === 'POST') {
+    const body = req.body || {};
+    if (body.secret && !body.profileId && !body.action) {
     try {
       const { secret } = req.body || {};
       if (!secret) {
