@@ -27,26 +27,20 @@
     { "source": "/_expo/(.*)", "destination": "/vivas/_expo/$1" },
     { "source": "/assets/node_modules/(.*)", "destination": "/vivas/assets/node_modules/$1" },
     { "source": "/favicon-vivas.ico", "destination": "/vivas/favicon.ico" },
-    { "source": "/assets/(.*)", "destination": "/assets/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|logosw|icons|city-guides|downloads|mision).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "default-src 'self' https://qtuzpswxzengqoqqwtpt.supabase.co; script-src 'self' 'unsafe-inline' https://qtuzpswxzengqoqqwtpt.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' https://qtuzpswxzengqoqqwtpt.supabase.co wss://qtuzpswxzengqoqqwtpt.supabase.co https://shemalewiki.online https://buscatrans.com;"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "no-store, must-revalidate"
-        },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
-      ]
-    }
+      "key": "Content-Security-Policy",
+      "value": "default-src 'self' https://qtuzpswxzengqoqqwtpt.supabase.co; script-src 'self' 'unsafe-inline' https://qtuzpswxzengqoqqwtpt.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' https://qtuzpswxzengqoqqwtpt.supabase.co wss://qtuzpswxzengqoqqwtpt.supabase.co https://shemalewiki.online https://buscatrans.com;"
+    },
+    {
+      "key": "Cache-Control",
+      "value": "no-store, must-revalidate"
+    },
+    { "key": "X-Frame-Options", "value": "DENY" },
+    { "key": "X-Content-Type-Options", "value": "nosniff" },
+    { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+    { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
   ]
 }
