@@ -68,26 +68,32 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       try {
-        // 1. Get profile_ids that have at least one real photo
+        // 1. Get profile_ids that have at least one REAL photo in Supabase Storage
+        //    (web.archive.org URLs are blocked by the browser, so we exclude them)
         const { data: photoRows, error: e0 } = await supabase
           .from('photos')
-          .select('profile_id')
+          .select('profile_id, photo_url')
           .not('photo_url', 'is', null)
-          .limit(500);
+          .limit(2000);
 
         if (e0) throw e0;
 
-        const photoIds = Array.from(
-          new Set((photoRows || []).map(p => p.profile_id).filter(Boolean))
+        const STORAGE = 'qtuzpswxzengqoqqwtpt.supabase.co/storage';
+        const validIds = Array.from(
+          new Set(
+            (photoRows || [])
+              .filter(p => p.profile_id && p.photo_url && p.photo_url.includes(STORAGE))
+              .map(p => p.profile_id)
+          )
         );
 
         let arr = [];
-        if (photoIds.length > 0) {
+        if (validIds.length > 0) {
           // 2. Fetch those profiles (with their photos embedded)
           const { data: withPhotos, error: e1 } = await supabase
             .from('profiles')
             .select('*, photos(photo_url, local_path)')
-            .in('id', photoIds.slice(0, 100))
+            .in('id', validIds.slice(0, 100))
             .not('cam_chat', 'eq', 'rejected')
             .order('created_at', { ascending: false })
             .limit(12);
@@ -140,8 +146,14 @@ export default function Home() {
 
   const getProfilePhoto = (p) => {
     if (p.photos && p.photos.length > 0) {
-      const cover = p.photos.find(ph => ph.local_path === 'cover');
-      return cover ? cover.photo_url : p.photos[0].photo_url;
+      // Preferir fotos de Supabase Storage (cargan en el navegador).
+      // web.archive.org no permite hotlinking y el browser las bloquea.
+      const storagePhotos = p.photos.filter(ph =>
+        ph.photo_url && ph.photo_url.includes('qtuzpswxzengqoqqwtpt.supabase.co/storage')
+      );
+      const pool = storagePhotos.length > 0 ? storagePhotos : p.photos;
+      const cover = pool.find(ph => ph.local_path === 'cover');
+      return cover ? cover.photo_url : pool[0].photo_url;
     }
     return null;
   };
