@@ -61,28 +61,59 @@ export default function Home() {
   const lang = brand === 'buscatrans' ? 'es' : 'en';
   const siteName = brand === 'buscatrans' ? 'BuscaTrans' : 'ShemaleWiki';
 
-  // Fetch real approved profiles. Show them even if they have no linked photos
-  // (most profiles in BD have empty photos[]); the grid renders a placeholder for those.
+  // Fetch real approved profiles that HAVE photos. The DB stores 42k+ photos
+  // in Supabase Storage, linked from the `photos` table by profile_id. Most
+  // recent profiles lack photos, so we query the photo table first to get the
+  // profile_ids that actually have images, then fetch those profiles.
   useEffect(() => {
     (async () => {
       try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*, photos(photo_url, local_path)')
-          .not('cam_chat', 'eq', 'rejected')
-          .order('created_at', { ascending: false })
-          .limit(50);
+        // 1. Get profile_ids that have at least one real photo
+        const { data: photoRows, error: e0 } = await supabase
+          .from('photos')
+          .select('profile_id')
+          .not('photo_url', 'is', null)
+          .limit(500);
 
-        if (error) throw error;
-        // Show approved profiles regardless of photos; getProfilePhoto() falls back to a placeholder.
-        // Order: profiles WITH photos first (prettier grid), then the rest.
-        const arr = Array.isArray(data) ? data : [];
-        const withPhotosFirst = [...arr].sort((a, b) => {
-          const aHas = (a.photos && a.photos.length > 0) ? 1 : 0;
-          const bHas = (b.photos && b.photos.length > 0) ? 1 : 0;
-          return bHas - aHas;
-        });
-        setProfiles(withPhotosFirst.slice(0, 12));
+        if (e0) throw e0;
+
+        const photoIds = Array.from(
+          new Set((photoRows || []).map(p => p.profile_id).filter(Boolean))
+        );
+
+        let arr = [];
+        if (photoIds.length > 0) {
+          // 2. Fetch those profiles (with their photos embedded)
+          const { data: withPhotos, error: e1 } = await supabase
+            .from('profiles')
+            .select('*, photos(photo_url, local_path)')
+            .in('id', photoIds.slice(0, 100))
+            .not('cam_chat', 'eq', 'rejected')
+            .order('created_at', { ascending: false })
+            .limit(12);
+
+          if (e1) throw e1;
+          arr = Array.isArray(withPhotos) ? withPhotos : [];
+        }
+
+        // 3. If we still need more to fill the grid, grab recent approved profiles
+        if (arr.length < 12) {
+          const { data: recent, error: e2 } = await supabase
+            .from('profiles')
+            .select('*, photos(photo_url, local_path)')
+            .not('cam_chat', 'eq', 'rejected')
+            .order('created_at', { ascending: false })
+            .limit(12);
+          if (!e2 && Array.isArray(recent)) {
+            const have = new Set(arr.map(p => p.id));
+            for (const p of recent) {
+              if (!have.has(p.id)) arr.push(p);
+              if (arr.length >= 12) break;
+            }
+          }
+        }
+
+        setProfiles(arr.slice(0, 12));
       } catch (err) {
         console.error('Home fetch failed:', err);
       } finally {
