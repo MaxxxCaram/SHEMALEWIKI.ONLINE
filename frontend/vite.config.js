@@ -8,11 +8,11 @@ export default defineConfig({
     sourcemap: 'hidden',
     rollupOptions: {
       output: {
-        // Hash fijo por contenido; cambia el nombre del archivo en cada build
-        // para romper cualquier cache de navegador/CDN.
-        entryFileNames: 'assets/index.js',
-        chunkFileNames: 'assets/chunk-[name].js',
-        assetFileNames: 'assets/[name][extname]',
+        // Hash por contenido: cada build genera un nombre UNICO.
+        // Esto ROMPE el cache del edge de Vercel (el POP debe buscar el archivo nuevo).
+        entryFileNames: 'assets/index-[hash].js',
+        chunkFileNames: 'assets/chunk-[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]',
       },
     },
   },
