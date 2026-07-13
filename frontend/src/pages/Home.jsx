@@ -13,7 +13,7 @@ const t = {
     eyebrow: 'International Trans Community Directory',
     heading: 'Discover verified trans profiles',
     highlight: 'worldwide.',
-    subtitle: '10,000+ profiles · 80 countries · Updated daily',
+    subtitle: '10,000+ profiles · 80 countries · Updated daily · v2-photos',
     searchPlaceholder: 'City, country or region...',
     pills: ['All', 'Bangkok', 'London', 'Miami', 'Amsterdam', 'São Paulo', 'Tokyo'],
     featuredTitle: 'Featured profiles',
