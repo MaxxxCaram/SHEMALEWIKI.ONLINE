@@ -61,7 +61,8 @@ export default function Home() {
   const lang = brand === 'buscatrans' ? 'es' : 'en';
   const siteName = brand === 'buscatrans' ? 'BuscaTrans' : 'ShemaleWiki';
 
-  // Fetch real approved profiles — only show profiles WITH photos per Maxi's directive
+  // Fetch real approved profiles. Show them even if they have no linked photos
+  // (most profiles in BD have empty photos[]); the grid renders a placeholder for those.
   useEffect(() => {
     (async () => {
       try {
@@ -73,10 +74,9 @@ export default function Home() {
           .limit(50);
 
         if (error) throw error;
-        // Filter: only profiles that actually have photos
+        // Show approved profiles regardless of photos; getProfilePhoto() falls back to a placeholder.
         const arr = Array.isArray(data) ? data : [];
-        const withPhotos = arr.filter(p => p.photos && p.photos.length > 0);
-        setProfiles(withPhotos.slice(0, 6));
+        setProfiles(arr.slice(0, 12));
       } catch (err) {
         console.error('Home fetch failed:', err);
       } finally {
