@@ -4,6 +4,7 @@ import { Phone, Mail, MessageCircle, MapPin, Globe, Share2, Flag, ChevronLeft, A
 import SEO from '../components/SEO';
 import Lightbox from '../components/Lightbox';
 import LazyImage from '../components/LazyImage';
+import { isLoadablePhoto } from '../utils/photoFilter';
 import { supabase } from '../supabase';
 import { getProxiedImageUrl } from '../utils';
 
@@ -41,7 +42,7 @@ export default function Profile() {
       const { data: photos } = await supabase.from('photos').select('*').eq('profile_id', id);
       const { data: services } = await supabase.from('services').select('*').eq('profile_id', id);
       
-      const cleanPhotos = (photos || []).filter(p => !(p.photo_url || '').includes('shemalewiki.com'));
+      const cleanPhotos = (photos || []).filter(p => isLoadablePhoto(p.photo_url));
       
       setProfile({
         ...profileData,

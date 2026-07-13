@@ -1,0 +1,100 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-label="BuscaTrans">
+  <defs>
+    <!-- Pink → Purple → Blue gradient for symbol -->
+    <linearGradient id="bt-symbol-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF2E93"/>
+      <stop offset="55%" stop-color="#7B3BFF"/>
+      <stop offset="100%" stop-color="#4F1AD6"/>
+    </linearGradient>
+
+    <!-- Cyan glow gradient -->
+    <radialGradient id="bt-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                    gradientTransform="translate(115 118) scale(42)">
+      <stop offset="0%" stop-color="#6FF5FF" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#6FF5FF" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#6FF5FF" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Neon filter -->
+    <filter id="bt-neon" x="-120%" y="-120%" width="340%" height="340%">
+      <feGaussianBlur stdDeviation="5.5" result="far"/>
+      <feGaussianBlur stdDeviation="1.6" result="near"/>
+      <feMerge>
+        <feMergeNode in="far"/>
+        <feMergeNode in="far"/>
+        <feMergeNode in="near"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Glow filter -->
+    <filter id="bt-glow-filter" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.4" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Trans symbol mask -->
+    <mask id="bt-mask">
+      <rect x="0" y="0" width="240" height="240" fill="black"/>
+      <g transform="translate(80 80) scale(1.3) translate(-49 -47)"
+         fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="#fff" stroke-width="11">
+        <circle cx="46" cy="46" r="27"/>
+        <line x1="65" y1="65" x2="101" y2="101" stroke-width="15"/>
+        <line x1="65" y1="27" x2="94" y2="4"/>
+        <line x1="94" y1="4" x2="94" y2="22"/>
+        <line x1="94" y1="4" x2="76" y2="4"/>
+        <line x1="27" y1="27" x2="4" y2="4"/>
+        <line x1="4" y1="4" x2="4" y2="22"/>
+        <line x1="4" y1="4" x2="22" y2="4"/>
+        <line x1="46" y1="73" x2="46" y2="103"/>
+        <line x1="33" y1="89" x2="59" y2="89"/>
+      </g>
+    </mask>
+  </defs>
+
+  <!-- Dark background -->
+  <rect width="240" height="240" fill="#09070F"/>
+
+  <!-- Cyan glow behind symbol -->
+  <circle cx="115" cy="118" r="42" fill="url(#bt-glow)" clip-path="url(#bt-lens)"/>
+  <clipPath id="bt-lens">
+    <circle cx="115" cy="118" r="42"/>
+  </clipPath>
+
+  <!-- Trans symbol with gradient + neon glow -->
+  <g filter="url(#bt-neon)">
+    <rect x="0" y="0" width="240" height="240" fill="url(#bt-symbol-grad)" mask="url(#bt-mask)"/>
+  </g>
+
+  <!-- "buscatrans" text in gradient -->
+  <text x="120" y="208" fill="url(#bt-symbol-grad)" filter="url(#bt-glow-filter)"
+        font-family="'Space Grotesk', 'Space Mono', 'Syne', monospace"
+        font-size="40" font-weight="700" text-anchor="middle" letter-spacing="-1.5">
+    buscatrans
+  </text>
+
+  <!-- Glitter sparkles ✨ -->
+  <g filter="url(#bt-neon)">
+    <g transform="translate(96 96)">
+      <path fill="#FFFFFF" d="M0,-6 L1.2,-1.2 L6,0 L1.2,1.2 L0,6 L-1.2,1.2 L-6,0 L-1.2,-1.2 Z"/>
+    </g>
+    <g transform="translate(150 150)">
+      <path fill="#6FF5FF" d="M0,-5.5 L1.1,-1.1 L5.5,0 L1.1,1.1 L0,5.5 L-1.1,1.1 L-5.5,0 L-1.1,-1.1 Z"/>
+    </g>
+    <g transform="translate(176 108)">
+      <path fill="#FFFFFF" d="M0,-5 L1,-1 L5,0 L1,1 L0,5 L-1,1 L-5,0 L-1,-1 Z"/>
+    </g>
+    <g transform="translate(120 72)">
+      <path fill="#6FF5FF" d="M0,-5 L1,-1 L5,0 L1,1 L0,5 L-1,1 L-5,0 L-1,-1 Z"/>
+    </g>
+    <g transform="translate(92 150)">
+      <path fill="#FFFFFF" d="M0,-5.5 L1.1,-1.1 L5.5,0 L1.1,1.1 L0,5.5 L-1.1,1.1 L-5.5,0 L-1.1,-1.1 Z"/>
+    </g>
+    <g transform="translate(160 128)">
+      <path fill="#6FF5FF" d="M0,-4.5 L0.9,-0.9 L4.5,0 L0.9,0.9 L0,4.5 L-0.9,0.9 L-4.5,0 L-0.9,-0.9 Z"/>
+    </g>
+  </g>
+</svg>

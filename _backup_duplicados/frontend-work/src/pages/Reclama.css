@@ -1,0 +1,118 @@
+.reclama-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.reclama-hero {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.reclama-hero h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #7C3AED, #EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.75rem;
+}
+
+.reclama-subtitle {
+  color: #A1A1AA;
+  font-size: 1.1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.reclama-card {
+  background: #18181B;
+  border: 1px solid #27272A;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.reclama-intro {
+  margin-bottom: 1.5rem;
+  color: #D4D4D8;
+  line-height: 1.7;
+}
+
+.reclama-intro strong {
+  color: #FFFFFF;
+}
+
+.reclama-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #0A0A0A;
+  border-radius: 10px;
+  border: 1px solid #27272A;
+  color: #D4D4D8;
+  font-size: 0.95rem;
+}
+
+.benefit-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.benefit strong {
+  color: #FFFFFF;
+}
+
+.reclama-cta {
+  text-align: center;
+}
+
+.reclama-cta .btn-lg {
+  font-size: 1.15rem;
+  padding: 0.9rem 2.5rem;
+  border-radius: 12px;
+}
+
+.reclama-note {
+  margin-top: 1rem;
+  color: #A1A1AA;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.reclama-footer-note {
+  text-align: center;
+  color: #71717A;
+  font-size: 0.9rem;
+}
+
+.reclama-footer-note a {
+  color: #A78BFA;
+  text-decoration: none;
+}
+
+.reclama-footer-note a:hover {
+  text-decoration: underline;
+}
+
+.reclama-contact {
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .reclama-hero h1 {
+    font-size: 1.5rem;
+  }
+  .reclama-card {
+    padding: 1.25rem;
+  }
+}

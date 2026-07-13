@@ -4,6 +4,7 @@ import { MapPin, ArrowLeft, Building2, Users, Star } from 'lucide-react';
 import SEO from '../components/SEO';
 import { supabase } from '../supabase';
 import LazyImage from '../components/LazyImage';
+import { isLoadablePhoto } from '../utils/photoFilter';
 import { getProxiedImageUrl } from '../utils';
 
 // City guide content data — rich SEO text for each supported city
@@ -590,7 +591,7 @@ export default function CityGuide() {
           const arr = Array.isArray(data) ? data : [];
           const cleaned = arr.map(p => ({
             ...p,
-            photos: (p.photos || []).filter(ph => !(ph.photo_url || '').includes('shemalewiki.com'))
+            photos: (p.photos || []).filter(ph => isLoadablePhoto(ph.photo_url))
           })).filter(p => p.photos.length > 0); // Only show profiles WITH photos per Maxi's directive
           setProfiles(cleaned);
           // Get total count separately

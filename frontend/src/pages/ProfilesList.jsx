@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Search, MapPin, ArrowLeft, Building2 } from 'lucide-react';
 import { supabase } from '../supabase';
 import LazyImage from '../components/LazyImage';
+import { isLoadablePhoto } from '../utils/photoFilter';
 
 // City → slug matching CityGuide.jsx routing
 function cityToSlug(city) {
@@ -82,7 +83,7 @@ export default function ProfilesList() {
       if (data) {
         const cleaned = data.map(p => ({
           ...p,
-          photos: (p.photos || []).filter(ph => !(ph.photo_url || '').includes('shemalewiki.com'))
+          photos: (p.photos || []).filter(ph => isLoadablePhoto(ph.photo_url))
         })).filter(p => p.photos.length > 0); // Only show profiles WITH photos per Maxi's directive
         setProfiles(cleaned);
       }
