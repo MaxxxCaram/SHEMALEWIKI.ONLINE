@@ -75,8 +75,14 @@ export default function Home() {
 
         if (error) throw error;
         // Show approved profiles regardless of photos; getProfilePhoto() falls back to a placeholder.
+        // Order: profiles WITH photos first (prettier grid), then the rest.
         const arr = Array.isArray(data) ? data : [];
-        setProfiles(arr.slice(0, 12));
+        const withPhotosFirst = [...arr].sort((a, b) => {
+          const aHas = (a.photos && a.photos.length > 0) ? 1 : 0;
+          const bHas = (b.photos && b.photos.length > 0) ? 1 : 0;
+          return bHas - aHas;
+        });
+        setProfiles(withPhotosFirst.slice(0, 12));
       } catch (err) {
         console.error('Home fetch failed:', err);
       } finally {
