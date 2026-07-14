@@ -82,11 +82,13 @@ export default function Home() {
 
         if (e0) throw e0;
 
-        const STORAGE = 'qtuzpswxzengqoqqwtpt.supabase.co/storage';
+        // Aceptar fotos que CARGAN en el browser: Supabase Storage + static2.eros.bz
+        // (Spain tiene 138 perfiles con foto cargable entre ambos; NL solo kinky.nl bloqueado)
+        const LOADABLE = ['qtuzpswxzengqoqqwtpt.supabase.co/storage', 'static2.eros.bz'];
         const validIds = Array.from(
           new Set(
             (photoRows || [])
-              .filter(p => p.profile_id && p.photo_url && p.photo_url.includes(STORAGE))
+              .filter(p => p.profile_id && p.photo_url && LOADABLE.some(h => p.photo_url.includes(h)))
               .map(p => p.profile_id)
           )
         );
