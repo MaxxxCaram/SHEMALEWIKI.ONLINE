@@ -16,6 +16,7 @@ export default function SEO({
 }) {
   const isBuscaTrans = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
   const baseUrl = isBuscaTrans() ? 'https://buscatrans.com' : 'https://shemalewiki.online';
+  const otherUrl = isBuscaTrans() ? 'https://shemalewiki.online' : 'https://buscatrans.com';
   const brandName = isBuscaTrans() ? 'BuscaTrans' : 'ShemaleWiki Online';
   const fullTitle = title 
     ? `${title} | ${brandName}` 
@@ -56,6 +57,8 @@ export default function SEO({
           href={`${baseUrl}${alt.path}`} 
         />
       ))}
+      {/* Cross-domain hreflang: reference the sibling site as alternate */}
+      <link rel="alternate" hreflang={isBuscaTrans() ? 'en' : 'es'} href={`${otherUrl}${canonicalPath || '/'}`} />
       {/* Self-referencing hreflang */}
       <link rel="alternate" hreflang={lang} href={fullCanonical} />
       {/* x-default hreflang */}
