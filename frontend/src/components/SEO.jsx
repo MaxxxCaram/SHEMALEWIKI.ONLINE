@@ -25,6 +25,22 @@ export default function SEO({
       : 'ShemaleWiki Online — Trans Community Directory');
   const fullCanonical = canonicalPath ? `${baseUrl}${canonicalPath}` : baseUrl;
 
+  // Cross-domain (sibling site) hreflang alternates — language-matched & reciprocal.
+  // Every language version of THIS page gets a counterpart link on the OTHER domain,
+  // so Google sees a symmetric set and does NOT flag the two sites as duplicate content.
+  const crossVersions = [{ lang, path: canonicalPath || '/' }, ...alternates];
+  const seenLang = new Set();
+  const crossDomainLinks = crossVersions
+    .filter((v) => (seenLang.has(v.lang) ? false : (seenLang.add(v.lang), true)))
+    .map((v) => (
+      <link
+        key={`x-${v.lang}`}
+        rel="alternate"
+        hreflang={v.lang}
+        href={`${otherUrl}${v.path}`}
+      />
+    ));
+
   return (
     <Helmet>
       <html lang={lang} />
@@ -48,7 +64,7 @@ export default function SEO({
       <meta name="twitter:description" content={description} />
       {ogImage && <meta name="twitter:image" content={ogImage} />}
 
-      {/* Hreflang */}
+      {/* Hreflang — intra-site language alternates */}
       {alternates.map((alt) => (
         <link 
           key={alt.lang}
@@ -57,11 +73,11 @@ export default function SEO({
           href={`${baseUrl}${alt.path}`} 
         />
       ))}
-      {/* Cross-domain hreflang: reference the sibling site as alternate */}
-      <link rel="alternate" hreflang={isBuscaTrans() ? 'en' : 'es'} href={`${otherUrl}${canonicalPath || '/'}`} />
-      {/* Self-referencing hreflang */}
+      {/* Hreflang — cross-domain (sibling site) alternates, language-matched & reciprocal */}
+      {crossDomainLinks}
+      {/* Self-referencing hreflang (required by Google) */}
       <link rel="alternate" hreflang={lang} href={fullCanonical} />
-      {/* x-default hreflang */}
+      {/* x-default hreflang (own-domain catch-all) */}
       <link rel="alternate" hreflang="x-default" href={`${baseUrl}${canonicalPath || '/'}`} />
 
       {/* JSON-LD Structured Data */}
