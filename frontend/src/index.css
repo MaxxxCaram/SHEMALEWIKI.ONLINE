@@ -4,37 +4,41 @@
 
 /* ── Google Fonts loaded in index.html ──
    BuscaTrans:  Playfair Display (display) + DM Sans (body)
-   ShemaleWiki: Bebas Neue (display) + Space Grotesk (body)
+   ShemaleWiki: Cormorant Garamond (display) + Space Grotesk (body)
 */
 
-/* ===== SHEMALEWIKI THEME (default) ===== */
+/* ===== SHEMALEWIKI THEME — "Velvet Noir" skin =====
+   Distinct from BuscaTrans (Playfair + magenta). Here: Cormorant Garamond
+   display + Space Grotesk body, warm noir base with champagne-gold + soft-rose
+   accents. Premium / sensual / elegant. Liquid-glass + vanguard animations. */
 :root,
 [data-brand="shemalewiki"] {
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #111111;
-  --text-primary: #f5f0e8;
-  --text-secondary: #777777;
-  --accent-primary: #c9a227;
-  --accent-secondary: #e8c84a;
-  --accent-tertiary: #c9a227;
-  --glass-bg: rgba(17, 17, 17, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.06);
-  --card-bg: #161616;
-  --card-border: #2a2a2a;
-  --tag-bg: rgba(201, 162, 39, 0.1);
-  --tag-border: rgba(201, 162, 39, 0.25);
-  --input-bg: #1a1a1a;
-  --input-border: #333;
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --transition: all 0.25s ease;
-  --font-display: 'Bebas Neue', 'Impact', sans-serif;
+  --bg-primary: #0b0709;
+  --bg-secondary: #14100f;
+  --text-primary: #f4ece4;
+  --text-secondary: #b09a8f;
+  --accent-primary: #e7c084;
+  --accent-secondary: #d99a7c;
+  --accent-tertiary: #c75d6b;
+  --glass-bg: rgba(28, 22, 24, 0.55);
+  --glass-border: rgba(231, 192, 132, 0.16);
+  --card-bg: rgba(30, 24, 26, 0.62);
+  --card-border: rgba(231, 192, 132, 0.18);
+  --tag-bg: rgba(231, 192, 132, 0.1);
+  --tag-border: rgba(231, 192, 132, 0.32);
+  --input-bg: rgba(28, 22, 24, 0.7);
+  --input-border: rgba(231, 192, 132, 0.22);
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   --font-body: 'Space Grotesk', -apple-system, sans-serif;
-  --font-weight-display: 400;
-  --letter-spacing-display: 0.02em;
-  --shadow-glow: 0 0 30px rgba(201, 162, 39, 0.15);
+  --font-weight-display: 600;
+  --letter-spacing-display: 0.01em;
+  --shadow-glow: 0 0 36px rgba(231, 192, 132, 0.22);
+  --accent-grad: linear-gradient(135deg, #e7c084 0%, #d99a7c 50%, #c75d6b 100%);
 }
 
 /* ===== BUSCATRANS THEME ===== */
@@ -842,7 +846,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 [dir="rtl"] [data-brand="shemalewiki"] {
-  --font-display: 'Frank Ruhl Libre', 'Bebas Neue', serif;
+  --font-display: 'Cormorant Garamond', 'Playfair Display', serif;
   --font-body: 'Heebo', 'Space Grotesk', sans-serif;
 }
 
@@ -892,4 +896,248 @@ h1, h2, h3, h4, h5, h6 {
 /* RTL: responsive */
 @media (max-width: 768px) {
   [dir="rtl"] .search-container { flex-direction: column; }
+}
+
+/* ============================================================
+   SHEMALEWIKI — "Velvet Noir" liquid-glass + vanguard motion
+   Scoped STRICTLY to [data-brand="shemalewiki"] so BuscaTrans
+   (and any future viva skin) keep their own distinct look.
+   ============================================================ */
+
+/* ── Animated aurora backdrop (behind all content) ── */
+[data-brand="shemalewiki"] body {
+  background:
+    radial-gradient(60% 50% at 16% 6%, rgba(231, 192, 132, 0.10), transparent 60%),
+    radial-gradient(45% 45% at 86% 16%, rgba(199, 93, 107, 0.12), transparent 62%),
+    radial-gradient(55% 55% at 72% 96%, rgba(217, 154, 124, 0.10), transparent 60%),
+    var(--bg-primary);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+[data-brand="shemalewiki"] body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 40% at 20% 30%, rgba(231, 192, 132, 0.12), transparent 70%),
+    radial-gradient(35% 35% at 80% 70%, rgba(199, 93, 107, 0.12), transparent 70%);
+  filter: blur(40px);
+  animation: swAurora 24s ease-in-out infinite alternate;
+}
+@keyframes swAurora {
+  0%   { transform: translate3d(-4%, -3%, 0) scale(1.05); }
+  50%  { transform: translate3d(5%, 4%, 0) scale(1.15); }
+  100% { transform: translate3d(-2%, 6%, 0) scale(1.08); }
+}
+
+/* ── Liquid-glass surfaces (navbar, cards, footers) ── */
+[data-brand="shemalewiki"] .glass,
+[data-brand="shemalewiki"] .glass-card,
+[data-brand="shemalewiki"] .navbar,
+[data-brand="shemalewiki"] .sticky-footer,
+[data-brand="shemalewiki"] .bottom-nav {
+  background: var(--glass-bg);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 0 24px rgba(231, 192, 132, 0.04);
+  position: relative;
+  isolation: isolate;
+}
+
+/* Moving sheen across glass cards on hover */
+[data-brand="shemalewiki"] .glass-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.10) 48%, transparent 60%);
+  background-size: 250% 250%;
+  background-position: 200% 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 4;
+}
+[data-brand="shemalewiki"] .glass-card:hover::after {
+  opacity: 1;
+  animation: swSheen 1.1s ease forwards;
+}
+@keyframes swSheen {
+  from { background-position: 200% 0; }
+  to   { background-position: -60% 0; }
+}
+
+/* ── Premium gradient buttons + shimmer ── */
+[data-brand="shemalewiki"] .btn-primary {
+  background: var(--accent-grad);
+  color: #1a0f0a;
+  border: none;
+  font-weight: 700;
+  box-shadow: 0 6px 22px rgba(231, 192, 132, 0.28);
+  position: relative;
+  overflow: hidden;
+}
+[data-brand="shemalewiki"] .btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.45) 50%, transparent 80%);
+  transform: translateX(-120%);
+}
+[data-brand="shemalewiki"] .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(231, 192, 132, 0.42);
+  color: #1a0f0a;
+}
+[data-brand="shemalewiki"] .btn-primary:hover::after {
+  animation: swShimmer 0.9s ease;
+}
+@keyframes swShimmer { to { transform: translateX(120%); } }
+
+[data-brand="shemalewiki"] .btn-outline {
+  border: 1px solid var(--accent-primary);
+  color: var(--accent-primary);
+}
+[data-brand="shemalewiki"] .btn-outline:hover {
+  background: var(--accent-grad);
+  color: #1a0f0a;
+  border-color: transparent;
+}
+
+/* ── Hero polish ── */
+[data-brand="shemalewiki"] .hero-section { position: relative; }
+[data-brand="shemalewiki"] .hero-eyebrow {
+  letter-spacing: 0.32em;
+  color: var(--accent-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+[data-brand="shemalewiki"] .hero-title {
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+[data-brand="shemalewiki"] .hero-title .highlight,
+[data-brand="shemalewiki"] .text-gradient {
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+/* Staggered hero entrance */
+[data-brand="shemalewiki"] .hero-section > * {
+  animation: swRise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+[data-brand="shemalewiki"] .hero-section > *:nth-child(1) { animation-delay: 0.05s; }
+[data-brand="shemalewiki"] .hero-section > *:nth-child(2) { animation-delay: 0.15s; }
+[data-brand="shemalewiki"] .hero-section > *:nth-child(3) { animation-delay: 0.25s; }
+[data-brand="shemalewiki"] .hero-section > *:nth-child(4) { animation-delay: 0.35s; }
+[data-brand="shemalewiki"] .hero-section > *:nth-child(5) { animation-delay: 0.45s; }
+@keyframes swRise {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Navbar brand + link underline micro-interaction ── */
+[data-brand="shemalewiki"] .navbar {
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+[data-brand="shemalewiki"] .nav-brand {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+[data-brand="shemalewiki"] .nav-links a { position: relative; }
+[data-brand="shemalewiki"] .nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 0;
+  background: var(--accent-grad);
+  transition: width 0.3s ease;
+}
+[data-brand="shemalewiki"] .nav-links a:hover { color: var(--text-primary); }
+[data-brand="shemalewiki"] .nav-links a:hover::after { width: 100%; }
+
+/* ── Profile cards ── */
+[data-brand="shemalewiki"] .profile-card-img {
+  border-bottom: 1px solid var(--glass-border);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-brand="shemalewiki"] .glass-card.profile-card:hover { transform: translateY(-6px); border-color: rgba(231, 192, 132, 0.5); box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55), var(--shadow-glow); }
+[data-brand="shemalewiki"] .glass-card.profile-card:hover .profile-card-img { transform: scale(1.06); }
+[data-brand="shemalewiki"] .profile-card-content { position: relative; z-index: 5; }
+[data-brand="shemalewiki"] .profile-card-title { color: var(--text-primary); }
+
+/* ── Filter pills ── */
+[data-brand="shemalewiki"] .filter-pill {
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  color: var(--text-secondary);
+  backdrop-filter: blur(8px);
+}
+[data-brand="shemalewiki"] .filter-pill:hover {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+  box-shadow: 0 0 18px rgba(231, 192, 132, 0.18);
+}
+[data-brand="shemalewiki"] .filter-pill.active {
+  background: var(--accent-grad);
+  color: #1a0f0a;
+  border-color: transparent;
+  font-weight: 700;
+}
+
+/* ── Search input focus ring ── */
+[data-brand="shemalewiki"] .search-input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(231, 192, 132, 0.18);
+}
+
+/* ── Tags ── */
+[data-brand="shemalewiki"] .tag {
+  border-radius: 999px;
+  background: var(--tag-bg);
+  border: 1px solid var(--tag-border);
+  color: var(--accent-primary);
+  backdrop-filter: blur(6px);
+}
+
+/* ── Section titles use the accent gradient ── */
+[data-brand="shemalewiki"] .section-title {
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Scroll-reveal utility (progressive enhancement) ── */
+.sw-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--sw-delay, 0s);
+}
+.sw-reveal.sw-in { opacity: 1; transform: none; }
+
+/* ── Reduced-motion: kill all vanguard motion, keep content visible ── */
+@media (prefers-reduced-motion: reduce) {
+  [data-brand="shemalewiki"] body::before { animation: none; }
+  [data-brand="shemalewiki"] .glass-card::after,
+  [data-brand="shemalewiki"] .btn-primary::after { animation: none !important; }
+  [data-brand="shemalewiki"] .hero-section > * { animation: none !important; opacity: 1 !important; transform: none !important; }
+  [data-brand="shemalewiki"] .profile-card-img { transition: none !important; }
+  .sw-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
 }

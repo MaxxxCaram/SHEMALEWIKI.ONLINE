@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Search, MapPin, ArrowLeft, Building2 } from 'lucide-react';
 import { supabase } from '../supabase';
 import LazyImage from '../components/LazyImage';
+import useScrollReveal from '../useScrollReveal';
 import { isLoadablePhoto } from '../utils/photoFilter';
 
 // City → slug matching CityGuide.jsx routing
@@ -19,6 +20,9 @@ export default function ProfilesList() {
   const [loading, setLoading] = useState(true);
 
   const displayCountry = country ? country.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : '';
+
+  // Vanguard scroll-reveal for ShemaleWiki cards (re-runs when profiles/cities change)
+  useScrollReveal([profiles, cityCounts]);
 
   useEffect(() => {
     fetchProfiles();
@@ -133,7 +137,7 @@ export default function ProfilesList() {
               <Link
                 key={city}
                 to={`/${continent}/${country}/${slug}`}
-                className="glass-card"
+                className="glass-card sw-reveal"
                 style={{
                   padding: '1.25rem',
                   display: 'flex',
@@ -198,8 +202,8 @@ export default function ProfilesList() {
         </div>
       ) : (
         <div className="profiles-grid">
-          {profiles.map(profile => (
-            <Link to={`/profile/${profile.id}`} key={profile.id} className="glass-card profile-card">
+          {profiles.map((profile, i) => (
+            <Link to={`/profile/${profile.id}`} key={profile.id} className="glass-card profile-card sw-reveal" style={{ '--sw-delay': `${i * 0.05}s` }}>
               <LazyImage
                 src={(profile.photos || []).find(p => p.local_path === 'cover')?.photo_url || profile.photos?.[0]?.photo_url}
                 alt={profile.name}

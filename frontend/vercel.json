@@ -19,14 +19,6 @@
     { "source": "/api/auth/magic-link(.*)", "destination": "/api/auth/magic-link.js" },
     { "source": "/api/profiles(.*)", "destination": "/api/profiles.js" },
     { "source": "/api/profiles/(.*)", "destination": "/api/profiles.js" },
-    { "source": "/vivas/_expo/(.*)", "destination": "/vivas/_expo/$1" },
-    { "source": "/vivas/assets/(.*)", "destination": "/vivas/assets/$1" },
-    { "source": "/vivas/favicon.ico", "destination": "/vivas/favicon.ico" },
-    { "source": "/vivas/(.*)", "destination": "/vivas/index.html" },
-    { "source": "/vivas", "destination": "/vivas/index.html" },
-    { "source": "/_expo/(.*)", "destination": "/vivas/_expo/$1" },
-    { "source": "/assets/node_modules/(.*)", "destination": "/vivas/assets/node_modules/$1" },
-    { "source": "/favicon-vivas.ico", "destination": "/vivas/favicon.ico" },
     { "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|logosw|icons|city-guides|downloads|mision).*)", "destination": "/index.html" }
   ],
   "headers": [

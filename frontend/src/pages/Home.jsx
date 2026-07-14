@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Search, MapPin, Star, Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
+import useScrollReveal from '../useScrollReveal';
 import { supabase } from '../supabase';
 
 /* ── Brand detection ── */
@@ -56,6 +57,9 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Vanguard scroll-reveal for ShemaleWiki feature cards + city block
+  useScrollReveal([profiles]);
 
   const canonPath = brand === 'buscatrans' ? '/es/' : '/';
   const lang = brand === 'buscatrans' ? 'es' : 'en';
@@ -235,11 +239,11 @@ export default function Home() {
           </div>
         ) : profiles.length > 0 ? (
           <div className="profiles-grid">
-            {profiles.map((p) => {
+            {profiles.map((p, i) => {
               const photo = getProfilePhoto(p);
               const link = getProfileLink(p);
               return (
-                <Link to={link} key={p.id} className="glass-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Link to={link} key={p.id} className="glass-card sw-reveal" style={{ textDecoration: 'none', color: 'inherit', '--sw-delay': `${i * 0.06}s` }}>
                   <div style={{ 
                     height: '280px', 
                     background: photo ? `url(${photo}) center/cover` : 'var(--card-bg)',
@@ -273,11 +277,11 @@ export default function Home() {
         )}
 
         {/* ── CITY MAP SECTION ── */}
-        <div className="section-header">
+        <div className="section-header sw-reveal">
           <h2 className="section-title">{content.citiesTitle}</h2>
           <Link to={brand === 'buscatrans' ? '/es/europe' : '/europe'} className="section-link">{content.citiesLink}</Link>
         </div>
-        <div className="map-placeholder">
+        <div className="map-placeholder sw-reveal">
           <MapPin size={48} style={{ opacity: 0.3 }} />
           <p style={{ marginTop: '0.5rem' }}>
             {brand === 'buscatrans' ? 'Mapa interactivo de ciudades' : 'Interactive world map'}

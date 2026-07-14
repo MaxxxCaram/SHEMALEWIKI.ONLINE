@@ -64,9 +64,9 @@ export default function AgeVerification({ onVerify }) {
     setDeclined(true);
   };
 
-  const cardBg = bt ? 'rgba(30, 15, 53, 0.9)' : 'rgba(17, 17, 17, 0.9)';
-  const cardBorder = bt ? 'rgba(192, 38, 211, 0.2)' : 'rgba(255,255,255,0.08)';
-  const btnBg = bt ? 'linear-gradient(135deg, #c026d3, #e040a0)' : 'linear-gradient(135deg, #c9a227, #e8c84a)';
+  const cardBg = bt ? 'rgba(30, 15, 53, 0.9)' : 'rgba(28, 22, 24, 0.72)';
+  const cardBorder = bt ? 'rgba(192, 38, 211, 0.2)' : 'rgba(231, 192, 132, 0.28)';
+  const btnBg = bt ? 'linear-gradient(135deg, #c026d3, #e040a0)' : 'linear-gradient(135deg, #e7c084 0%, #d99a7c 50%, #c75d6b 100%)';
   const declineBg = 'rgba(255,255,255,0.06)';
 
   if (declined) {
