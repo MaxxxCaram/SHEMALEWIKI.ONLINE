@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import useScrollReveal from '../useScrollReveal';
 import { supabase } from '../supabase';
+import { getProxiedImageUrl } from '../utils';
+import WorldMap from '../components/WorldMap';
 
 /* ── Brand detection ── */
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
@@ -73,59 +75,68 @@ export default function Home() {
     (async () => {
       try {
         // 1. Get profile_ids that have at least one REAL photo in Supabase Storage
-        //    (web.archive.org URLs are blocked by the browser, so we exclude them)
+        //    (Storage = best quality; we route everything else through the
+        //    /api/image proxy which serves it from our own domain, bypassing CORB).
         const { data: photoRows, error: e0 } = await supabase
           .from('photos')
-          .select('profile_id, photo_url')
+          .select('profile_id, photo_url, local_path')
           .not('photo_url', 'is', null)
-          .limit(2000);
+          .limit(5000);
 
         if (e0) throw e0;
 
-        // Aceptar fotos que CARGAN en el browser: Supabase Storage + static2.eros.bz
-        // (Spain tiene 138 perfiles con foto cargable entre ambos; NL solo kinky.nl bloqueado)
-        const LOADABLE = ['qtuzpswxzengqoqqwtpt.supabase.co/storage', 'static2.eros.bz'];
-        const validIds = Array.from(
-          new Set(
-            (photoRows || [])
-              .filter(p => p.profile_id && p.photo_url && LOADABLE.some(h => p.photo_url.includes(h)))
-              .map(p => p.profile_id)
-          )
-        );
+        // Prefer Storage photos (quality). Keep any http(s) url — the proxy
+        // handles CORB for archive.org / distintas.net / kinky.nl.
+        const hasStorage = (p) =>
+          (p.photos || []).some(ph =>
+            ph.photo_url && ph.photo_url.includes('qtuzpswxzengqoqqwtpt.supabase.co/storage'));
+        const hasAnyPhoto = (p) =>
+          (p.photos || []).some(ph => isLoadablePhoto(ph.photo_url));
+
+        // Dedup profile_ids, prefer those with Storage photos.
+        const ids = Array.from(new Set((photoRows || []).map(p => p.profile_id).filter(Boolean)));
 
         let arr = [];
-        if (validIds.length > 0) {
-          // 2. Fetch those profiles (with their photos embedded)
+        if (ids.length > 0) {
+          // 2. Fetch those profiles (with their photos embedded), prefer Storage.
           const { data: withPhotos, error: e1 } = await supabase
             .from('profiles')
             .select('*, photos(photo_url, local_path)')
-            .in('id', validIds.slice(0, 100))
+            .in('id', ids.slice(0, 200))
             .not('cam_chat', 'eq', 'rejected')
             .order('created_at', { ascending: false })
-            .limit(12);
+            .limit(60);
 
           if (e1) throw e1;
-          arr = Array.isArray(withPhotos) ? withPhotos : [];
+          const pool = Array.isArray(withPhotos) ? withPhotos : [];
+          // Sort: Storage-first (quality), then any loadable photo.
+          const ranked = pool
+            .sort((a, b) => Number(hasStorage(b)) - Number(hasStorage(a)));
+          arr = ranked.slice(0, 12);
         }
 
-        // 3. If we still need more to fill the grid, grab recent approved profiles
+        // 3. If we still need more to fill the grid, grab recent approved
+        //    profiles (photo optional — card shows local placeholder).
         if (arr.length < 12) {
           const { data: recent, error: e2 } = await supabase
             .from('profiles')
             .select('*, photos(photo_url, local_path)')
             .not('cam_chat', 'eq', 'rejected')
             .order('created_at', { ascending: false })
-            .limit(12);
+            .limit(200);
           if (!e2 && Array.isArray(recent)) {
             const have = new Set(arr.map(p => p.id));
             for (const p of recent) {
-              if (!have.has(p.id)) arr.push(p);
+              if (have.has(p.id)) continue;
+              arr.push(p);
               if (arr.length >= 12) break;
             }
           }
         }
 
-        setProfiles(arr.slice(0, 12));
+        // Final: keep up to 12 profiles (photo optional now).
+        const final = arr.slice(0, 12);
+        setProfiles(final);
       } catch (err) {
         console.error('Home fetch failed:', err);
       } finally {
@@ -152,14 +163,14 @@ export default function Home() {
 
   const getProfilePhoto = (p) => {
     if (p.photos && p.photos.length > 0) {
-      // Preferir fotos de Supabase Storage (cargan en el navegador).
-      // web.archive.org no permite hotlinking y el browser las bloquea.
       const storagePhotos = p.photos.filter(ph =>
         ph.photo_url && ph.photo_url.includes('qtuzpswxzengqoqqwtpt.supabase.co/storage')
       );
       const pool = storagePhotos.length > 0 ? storagePhotos : p.photos;
       const cover = pool.find(ph => ph.local_path === 'cover');
-      return cover ? cover.photo_url : pool[0].photo_url;
+      const raw = cover ? cover.photo_url : pool[0].photo_url;
+      // Route through our edge image proxy to bypass CORB / hotlink blocks.
+      return raw ? getProxiedImageUrl(raw) : null;
     }
     return null;
   };
@@ -278,16 +289,13 @@ export default function Home() {
           </div>
         )}
 
-        {/* ── CITY MAP SECTION ── */}
+        {/* ── INTERACTIVE WORLD MAP ── */}
         <div className="section-header sw-reveal">
           <h2 className="section-title">{content.citiesTitle}</h2>
           <Link to={brand === 'buscatrans' ? '/es/europe' : '/europe'} className="section-link">{content.citiesLink}</Link>
         </div>
-        <div className="map-placeholder sw-reveal">
-          <MapPin size={48} style={{ opacity: 0.3 }} />
-          <p style={{ marginTop: '0.5rem' }}>
-            {brand === 'buscatrans' ? 'Mapa interactivo de ciudades' : 'Interactive world map'}
-          </p>
+        <div className="sw-reveal" style={{ marginTop: '1rem' }}>
+          <WorldMap brand={brand} />
         </div>
       </div>
 

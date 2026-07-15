@@ -1,18 +1,21 @@
-// Photo URL filter: only keep images that actually load in the browser.
+// Photo URL filter: keep ALL external images.
 //
 // The DB stores profile photos from several sources:
 //   - qtuzpswxzengqoqqwtpt.supabase.co/storage  -> Supabase Storage (loads ✅)
 //   - static2.eros.bz                            -> external CDN (loads ✅)
-//   - web.archive.org/web/.../cdn.shemalewiki.com/...  -> Wayback snapshot of
-//     shemalewiki.com originals. The browser blocks these (no hotlinking /
-//     mixed-content / archive.org referer policy), so they render as broken.
-//   - *.shemalewiki.com                          -> original source, also blocked.
+//   - web.archive.org/web/.../cdn.shemalewiki.com/...  -> Wayback snapshot
+//   - distintas.net / www.kinky.nl                  -> older CDNs
 //
-// Per the same fix applied to shemalewiki (Home.jsx): only show photos that
-// load. We exclude the two hosts the browser refuses to render.
-const BROKEN_HOSTS = ['web.archive.org', 'shemalewiki.com', 'cdn.shemalewiki.com'];
-
+// The browser blocks hotlinked external images (CORB / referrer policy / 403).
+// To bypass this we route EVERY external url through our edge proxy
+// `/api/image` (see getProxiedImageUrl in utils.js), which fetches the
+// image server-side and serves it from our own domain. So we no longer
+// need to reject any host here — the proxy handles the blocking.
+//
+// We only drop empty / obviously-invalid values.
 export const isLoadablePhoto = (url) => {
-  const u = (url || '').toLowerCase();
-  return !BROKEN_HOSTS.some((h) => u.includes(h));
+  const u = (url || '').trim().toLowerCase();
+  if (!u) return false;
+  if (!/^https?:\/\//.test(u)) return false; // must be an http(s) url
+  return true;
 };

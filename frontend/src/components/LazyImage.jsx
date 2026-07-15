@@ -5,7 +5,7 @@ import { getProxiedImageUrl } from '../utils';
  * Lazy-loaded image with blur-up placeholder and graceful fallback.
  * Uses IntersectionObserver to only load when visible.
  */
-export default function LazyImage({ src, alt, className, style, fallback }) {
+export default function LazyImage({ src, alt, className, style, fallback, placeholder }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [inView, setInView] = useState(false);
@@ -30,8 +30,8 @@ export default function LazyImage({ src, alt, className, style, fallback }) {
   }, []);
 
   const displaySrc = error
-    ? (fallback || getProxiedImageUrl(null))
-    : (inView ? getProxiedImageUrl(src) : null);
+    ? (fallback || placeholder || getProxiedImageUrl(null))
+    : (inView && src ? getProxiedImageUrl(src) : (placeholder || null));
 
   return (
     <div ref={imgRef} className={`lazy-img-wrapper ${className || ''}`} style={style}>

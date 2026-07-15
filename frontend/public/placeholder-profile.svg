@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1030"/>
+      <stop offset="100%" stop-color="#0d0a1a"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#bg)"/>
+  <circle cx="200" cy="190" r="70" fill="none" stroke="#7c3aed" stroke-width="3" opacity="0.6"/>
+  <path d="M150 290 q50 -60 100 0" fill="none" stroke="#7c3aed" stroke-width="3" opacity="0.6" stroke-linecap="round"/>
+  <text x="200" y="370" font-family="Arial, sans-serif" font-size="22" fill="#a78bfa" text-anchor="middle" opacity="0.8">ShemaleWiki</text>
+  <text x="200" y="400" font-family="Arial, sans-serif" font-size="14" fill="#6b5b95" text-anchor="middle" opacity="0.7">Foto próximamente</text>
+</svg>

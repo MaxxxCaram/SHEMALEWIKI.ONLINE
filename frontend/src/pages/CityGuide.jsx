@@ -587,12 +587,13 @@ export default function CityGuide() {
 
         if (error) throw error;
         if (data) {
-          // Filter out watermarked shemalewiki.com photos
+          // Keep ALL profiles (show even without photo — card renders a clean
+          // local placeholder). Still drop clearly-broken photo urls.
           const arr = Array.isArray(data) ? data : [];
           const cleaned = arr.map(p => ({
             ...p,
             photos: (p.photos || []).filter(ph => isLoadablePhoto(ph.photo_url))
-          })).filter(p => p.photos.length > 0); // Only show profiles WITH photos per Maxi's directive
+          }));
           setProfiles(cleaned);
           // Get total count separately
           const { count } = await supabase
@@ -866,9 +867,14 @@ export default function CityGuide() {
               {profiles.map(profile => (
                 <Link to={`/profile/${profile.id}`} key={profile.id} className="glass-card">
                   <LazyImage
-                    src={(profile.photos || []).find(p => p.local_path === 'cover')?.photo_url || profile.photos?.[0]?.photo_url}
+                    src={(profile.photos || []).find(p => p.local_path === 'cover')?.photo_url
+                      ? getProxiedImageUrl((profile.photos || []).find(p => p.local_path === 'cover')?.photo_url)
+                      : (profile.photos?.[0]?.photo_url
+                          ? getProxiedImageUrl(profile.photos?.[0]?.photo_url)
+                          : undefined)}
                     alt={profile.name}
                     className="profile-card-img"
+                    placeholder="/placeholder-profile.svg"
                   />
                   <div className="profile-card-content">
                     <h3 className="profile-card-title">{profile.name}</h3>
