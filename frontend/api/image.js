@@ -43,11 +43,23 @@ export default async function handler(req, res) {
       timeout: 8000
     });
 
+    const imgBuf = Buffer.from(response.data);
+
+    // Detect & block the "No Photo" placeholder (grey 3891-byte image).
+    // Supabase stores thousands of these instead of real photos. We swap
+    // them for our clean local fallback so the UI never shows the grey blob.
+    const crypto = require('crypto');
+    const NOPHOTO_MD5 = '31771ae7ecb111a486dae2fbda2f792b';
+    const md5 = crypto.createHash('md5').update(imgBuf).digest('hex');
+    if (md5 === NOPHOTO_MD5) {
+      return serveFallback(res);
+    }
+
     const contentType = response.headers['content-type'] || 'image/jpeg';
     res.setHeader('Content-Type', contentType);
     // Cache the image for 1 day
     res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
-    return res.status(200).send(Buffer.from(response.data));
+    return res.status(200).send(imgBuf);
   } catch (err) {
     console.error(`Image proxy failed for URL: ${url}. Error: ${err.message}`);
     return serveFallback(res);
@@ -55,23 +67,26 @@ export default async function handler(req, res) {
 };
 
 async function serveFallback(res) {
+  // Serve our clean local placeholder (no external dependency).
   try {
-    const response = await axios.get(FALLBACK_URL, {
-      responseType: 'arraybuffer',
-      timeout: 6000
-    });
-    res.setHeader('Content-Type', 'image/png');
-    res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
-    return res.status(200).send(Buffer.from(response.data));
-  } catch (err) {
-    console.error('Fallback image fetch failed:', err.message);
-    // Return a raw 1x1 transparent PNG if fallback is completely unreachable
-    const transparentPng = Buffer.from(
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
-      'base64'
-    );
-    res.setHeader('Content-Type', 'image/png');
-    res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
-    return res.status(200).send(transparentPng);
+    const fs = require('fs');
+    const path = require('path');
+    const svgPath = path.join(process.cwd(), 'public', 'placeholder-profile.svg');
+    if (fs.existsSync(svgPath)) {
+      const svg = fs.readFileSync(svgPath);
+      res.setHeader('Content-Type', 'image/svg+xml');
+      res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+      return res.status(200).send(svg);
+    }
+  } catch (e) {
+    console.error('Local placeholder read failed:', e.message);
   }
+  // Last resort: 1x1 transparent PNG
+  const transparentPng = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+    'base64'
+  );
+  res.setHeader('Content-Type', 'image/png');
+  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+  return res.status(200).send(transparentPng);
 }
