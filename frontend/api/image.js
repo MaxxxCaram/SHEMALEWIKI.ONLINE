@@ -67,19 +67,15 @@ export default async function handler(req, res) {
 };
 
 async function serveFallback(res) {
-  // Serve our clean local placeholder (no external dependency).
+  // Redirect to our clean local placeholder served by the same app (no ext dep).
   try {
-    const fs = require('fs');
-    const path = require('path');
-    const svgPath = path.join(process.cwd(), 'public', 'placeholder-profile.svg');
-    if (fs.existsSync(svgPath)) {
-      const svg = fs.readFileSync(svgPath);
-      res.setHeader('Content-Type', 'image/svg+xml');
-      res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
-      return res.status(200).send(svg);
-    }
+    const selfUrl = `https://${res.req.headers.host}/placeholder-profile.svg`;
+    const response = await axios.get(selfUrl, { responseType: 'arraybuffer', timeout: 5000 });
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+    return res.status(200).send(Buffer.from(response.data));
   } catch (e) {
-    console.error('Local placeholder read failed:', e.message);
+    console.error('Local placeholder fetch failed:', e.message);
   }
   // Last resort: 1x1 transparent PNG
   const transparentPng = Buffer.from(
