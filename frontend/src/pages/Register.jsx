@@ -244,6 +244,11 @@ export default function Register() {
 
       setCreatedProfile(data.profile);
 
+      if (data.token) {
+        localStorage.setItem('dashboard_user_id', data.profile.id);
+        localStorage.setItem('dashboard_token', data.token);
+      }
+
       // 2. Upload photos AFTER profile created (FK satisfied)
       if (photoFiles.length > 0) {
         // Upload one at a time with compression (Vercel 4.5MB limit)
@@ -254,7 +259,13 @@ export default function Register() {
               const formData = new FormData();
               formData.append('profile_id', profileId);
               formData.append('files', compressed);
-              const r = await fetch('/api/upload-photos', { method: 'POST', body: formData });
+              const r = await fetch('/api/upload-photos', { 
+                method: 'POST', 
+                headers: {
+                  'Authorization': f'Bearer {data.token || ""}'
+                },
+                body: formData 
+              });
               if (r.ok) {
                 const d = await r.json();
                 console.log('Photo uploaded:', d.count);

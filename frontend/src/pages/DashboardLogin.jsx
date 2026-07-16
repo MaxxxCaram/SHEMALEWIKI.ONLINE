@@ -109,6 +109,7 @@ export default function DashboardLogin() {
       }
 
       localStorage.setItem('dashboard_user_id', data.profile.id);
+      localStorage.setItem('dashboard_token', data.token);
       navigate('/dashboard');
     } catch (err) {
       setLoginError('Ocurrió un error. Verificá tu conexión.');

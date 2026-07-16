@@ -1,45 +1,44 @@
-// Admin Panel — auth server-side, password never sent to frontend
-// Uses a shared secret verified by the server, returns JWT-like token
-// The secret is configurable via Vercel env: ADMIN_SECRET
+import crypto from 'crypto';
 
-const ADMIN_SECRET = process.env.ADMIN_SECRET || 'CHANGE_ME_SETUP_ADMIN_SECRET';
-const SESSION_TTL = 24 * 60 * 60 * 1000; // 24h
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qtuzpswxzengqoqqwtpt.supabase.co';
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
-// Generate simple token (not real JWT, but opaque enough for this scale)
-// Uses crypto for HMAC: secret + timestamp + random => token
-import { createHmac, randomBytes } from 'crypto';
+const SESSION_TTL = 3600 * 1000 * 24; // 24 hours
 
 function generateToken() {
-  const rand = randomBytes(32).toString('hex');
-  const ts = Date.now().toString();
-  const hmac = createHmac('sha256', ADMIN_SECRET).update(`${rand}:${ts}`).digest('hex');
-  return `${rand}.${ts}.${hmac}`;
+  const ts = Date.now();
+  const hmac = crypto.createHmac('sha256', ADMIN_SECRET)
+    .update(`admin:${ts}`)
+    .digest('hex');
+  return `admin.${ts}.${hmac}`;
 }
 
 function verifyToken(tokenStr) {
   if (!tokenStr || typeof tokenStr !== 'string') return false;
   const parts = tokenStr.split('.');
   if (parts.length !== 3) return false;
-  const [rand, ts, hmac] = parts;
-  const expected = createHmac('sha256', ADMIN_SECRET).update(`${rand}:${ts}`).digest('hex');
-  if (hmac !== expected) return false;
-  const age = Date.now() - parseInt(ts);
-  return age < SESSION_TTL; // expires after 24h
+  
+  const [role, ts, sig] = parts;
+  if (role !== 'admin') return false;
+
+  const expected = crypto.createHmac('sha256', ADMIN_SECRET)
+    .update(`admin:${ts}`)
+    .digest('hex');
+
+  if (sig !== expected) return false;
+
+  const age = Date.now() - parseInt(ts, 10);
+  return age < SESSION_TTL;
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-admin-secret');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
-
-  const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qtuzpswxzengqoqqwtpt.supabase.co';
-  const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-
-  if (!SERVICE_KEY) {
-    return res.status(500).json({ error: 'Server config error: SERVICE_KEY missing' });
-  }
+  if (!SERVICE_KEY || !ADMIN_SECRET) return res.status(500).json({ error: 'Server configuration missing' });
 
   const headers = {
     'apikey': SERVICE_KEY,
@@ -47,8 +46,10 @@ export default async function handler(req, res) {
     'Content-Type': 'application/json',
   };
 
-  // ====== POST /api/admin/login — authenticate ======
-  if (req.method === 'POST' && req.url.includes('/login')) {
+  const originalPath = req.headers['x-matched-path'] || req.url || '';
+  const isLoginPath = originalPath.includes('/login') || (req.method === 'POST' && req.body && req.body.secret && !req.body.profileId && !req.body.action);
+
+  if (req.method === 'POST' && isLoginPath) {
     try {
       const { secret } = req.body || {};
       if (!secret) {
@@ -64,60 +65,51 @@ export default async function handler(req, res) {
     }
   }
 
-  // ====== GET /api/admin — list profiles (authenticated) ======
   if (req.method === 'GET') {
-    // Check auth: token in header OR legacy admin_secret header
+    if (isLoginPath) {
+      return res.status(405).json({ error: 'Method not allowed on login endpoint' });
+    }
+
     const authHeader = req.headers.authorization || '';
     const secretHeader = req.headers['x-admin-secret'] || '';
 
-    if (!authHeader && !secretHeader) {
-      return res.status(401).json({ error: 'Authentication required. POST to /api/admin/login first.' });
+    let isAuthed = false;
+    if (authHeader.startsWith('Bearer ')) {
+      isAuthed = verifyToken(authHeader.substring(7));
+    } else if (secretHeader) {
+      isAuthed = (secretHeader === ADMIN_SECRET);
     }
 
-    let validAuth = false;
-    if (authHeader.startsWith('Bearer ') && verifyToken(authHeader.substring(7))) {
-      validAuth = true;
-    } else if (secretHeader === ADMIN_SECRET) {
-      // Legacy fallback: raw secret in header (deprecated, migrate to token)
-      validAuth = true;
-    }
-
-    if (!validAuth) {
-      return res.status(403).json({ error: 'Invalid authentication' });
+    if (!isAuthed) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     try {
-      const filter = req.query?.status || '';
-      let url = `${SUPABASE_URL}/rest/v1/profiles?select=*&order=created_at.desc&limit=50`;
-      if (filter) url += `&status=eq.${filter}`;
-
-      const resp = await fetch(url, { headers: { ...headers, 'Prefer': 'return=representation' } });
-      if (!resp.ok) {
-        const err = await resp.text();
-        return res.status(resp.status).json({ error: err });
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/profiles?select=*,photos(*)&order=created_at.desc`, { headers });
+      if (!r.ok) {
+        const errText = await r.text();
+        return res.status(500).json({ error: `Supabase error: ${errText}` });
       }
-      const profiles = await resp.json();
-      return res.status(200).json({ profiles });
+      const data = await r.json();
+      return res.status(200).json(data);
     } catch (err) {
       return res.status(500).json({ error: err.message });
     }
   }
 
-  // ====== POST /api/admin — approve/reject/delete (authenticated) ======
   if (req.method === 'POST') {
-    // Check auth
     const authHeader = req.headers.authorization || '';
     const secretHeader = req.headers['x-admin-secret'] || '';
 
-    let validAuth = false;
-    if (authHeader.startsWith('Bearer ') && verifyToken(authHeader.substring(7))) {
-      validAuth = true;
-    } else if (secretHeader === ADMIN_SECRET) {
-      validAuth = true;
+    let isAuthed = false;
+    if (authHeader.startsWith('Bearer ')) {
+      isAuthed = verifyToken(authHeader.substring(7));
+    } else if (secretHeader) {
+      isAuthed = (secretHeader === ADMIN_SECRET);
     }
 
-    if (!validAuth) {
-      return res.status(403).json({ error: 'Authentication required' });
+    if (!isAuthed) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     try {
@@ -127,34 +119,36 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'profileId and action required' });
       }
 
-      // Require secret for destructive actions
-      if (action === 'delete') {
-        if (actionSecret !== ADMIN_SECRET) {
-          return res.status(403).json({ error: 'Secret required to delete' });
-        }
-        const resp = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${profileId}`, {
-          method: 'DELETE',
+      if (action === 'approve') {
+        const r = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(profileId)}`, {
+          method: 'PATCH',
           headers,
+          body: JSON.stringify({ status: 'approved' })
         });
-        if (!resp.ok) {
-          const err = await resp.text();
-          return res.status(resp.status).json({ error: err });
-        }
-        return res.status(200).json({ success: true, action: 'deleted' });
+        if (!r.ok) return res.status(500).json({ error: await r.text() });
+        return res.status(200).json({ success: true });
       }
 
-      const status = action === 'approve' ? 'approved' : 'rejected';
-      const resp = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${profileId}`, {
-        method: 'PATCH',
-        headers: { ...headers, 'Prefer': 'return=representation' },
-        body: JSON.stringify({ cam_chat: status }),
-      });
-      if (!resp.ok) {
-        const err = await resp.text();
-        return res.status(resp.status).json({ error: err });
+      if (action === 'reject') {
+        const r = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(profileId)}`, {
+          method: 'PATCH',
+          headers,
+          body: JSON.stringify({ status: 'rejected' })
+        });
+        if (!r.ok) return res.status(500).json({ error: await r.text() });
+        return res.status(200).json({ success: true });
       }
-      const data = await resp.json();
-      return res.status(200).json({ success: true, action: status, profile: data[0] });
+
+      if (action === 'delete') {
+        const r = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(profileId)}`, {
+          method: 'DELETE',
+          headers
+        });
+        if (!r.ok) return res.status(500).json({ error: await r.text() });
+        return res.status(200).json({ success: true });
+      }
+
+      return res.status(400).json({ error: 'Invalid action' });
     } catch (err) {
       return res.status(500).json({ error: err.message });
     }

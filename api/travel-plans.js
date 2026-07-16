@@ -1,30 +1,46 @@
 /**
  * Travel Plans API — Vercel Serverless Function
- * 
- * GET  /api/travel-plans?profile_id=X     → list user's plans
- * GET  /api/travel-plans/active?city=X    → active travelers for a city (public)
- * POST /api/travel-plans                  → create/update plans for a profile
- * 
- * Backend: Supabase Storage bucket `travel-plans`
- * - {profile_id}.json → { plans: [...], profile_id }
- * - _index.json → { profiles: { [id]: { cities: [...], updated_at } } }
- * 
- * Supabase bug: bucket listing always returns 400. We use _index.json instead.
- * 
- * Cron activation: POST /api/travel-plans with X-Internal-Secret header
- * activates plans whose arrival is within 48h, deactivates expired ones.
  */
 
+import crypto from 'crypto';
+
 const SUPABASE_URL = 'https://qtuzpswxzengqoqqwtpt.supabase.co';
-const INTERNAL_SECRET = process.env.TRAVEL_INTERNAL_SECRET || 'vivas-travel-2026-internal';
+const INTERNAL_SECRET = process.env.TRAVEL_INTERNAL_SECRET;
 
 function getServiceKey() {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
   if (!key) throw new Error('SUPABASE_SERVICE_ROLE_KEY not set');
   return key;
 }
 
-// ─── Storage helpers ───
+function verifyUserToken(headers, userId) {
+  const authHeader = headers.authorization || '';
+  let tokenStr = '';
+  if (authHeader.startsWith('Bearer ')) {
+    tokenStr = authHeader.substring(7);
+  } else {
+    return false;
+  }
+
+  if (!tokenStr || typeof tokenStr !== 'string') return false;
+  const parts = tokenStr.split('.');
+  if (parts.length !== 3) return false;
+  const [tokenUserId, ts, sig] = parts;
+  if (tokenUserId !== userId) return false;
+
+  const ADMIN_SECRET = process.env.ADMIN_SECRET;
+  if (!ADMIN_SECRET) return false;
+
+  const expected = crypto.createHmac('sha256', ADMIN_SECRET)
+    .update(`${userId}:${ts}`)
+    .digest('hex');
+
+  if (sig !== expected) return false;
+
+  const SESSION_TTL = 30 * 24 * 60 * 60 * 1000;
+  const age = Date.now() - parseInt(ts, 10);
+  return age < SESSION_TTL;
+}
 
 function sbAuth(serviceKey) {
   return { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` };
@@ -55,8 +71,6 @@ async function writeFile(serviceKey, filename, data) {
   return { success: true };
 }
 
-// ─── Index management ───
-
 async function getIndex(serviceKey) {
   const data = await readFile(serviceKey, '_index.json');
   return data || { profiles: {}, updated_at: new Date().toISOString() };
@@ -71,8 +85,6 @@ async function updateIndex(serviceKey, profileId, cities) {
   index.updated_at = new Date().toISOString();
   await writeFile(serviceKey, '_index.json', index);
 }
-
-// ─── Plan status ───
 
 function computePlanStatus(plan) {
   const now = new Date();
@@ -91,12 +103,10 @@ function hoursUntilVisible(plan) {
   return Math.max(0, Math.ceil((target - Date.now()) / (1000 * 60 * 60)));
 }
 
-// ─── Handler ───
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Internal-Secret');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Internal-Secret, Authorization');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
@@ -105,8 +115,12 @@ export default async function handler(req, res) {
     const url = new URL(req.url, `https://${req.headers.host || 'shemalewiki.online'}`);
     const path = url.pathname.replace('/api/travel-plans', '');
 
-    // ─── INTERNAL CRON: Activate/deactivate plans ───
-    if (req.method === 'POST' && req.headers['x-internal-secret'] === INTERNAL_SECRET && (!req.body || !req.body.profile_id)) {
+    if (req.method === 'POST' && (!req.body || !req.body.profile_id)) {
+      const xSecret = req.headers['x-internal-secret'];
+      if (!INTERNAL_SECRET || !xSecret || xSecret !== INTERNAL_SECRET) {
+        return res.status(401).json({ error: 'Unauthorized: Invalid cron trigger secret' });
+      }
+
       const index = await getIndex(serviceKey);
       const now = new Date();
       let activated = 0, expired = 0, checked = 0;
@@ -145,7 +159,6 @@ export default async function handler(req, res) {
       return res.json({ activated, expired, checked, timestamp: now.toISOString() });
     }
 
-    // ─── PUBLIC: Get active travelers for a city ───
     if (req.method === 'GET' && path === '/active') {
       try {
         const city = url.searchParams.get('city');
@@ -180,13 +193,11 @@ export default async function handler(req, res) {
       } catch (innerErr) {
         return res.status(500).json({ 
           error: 'Active query failed', 
-          detail: innerErr?.message || 'unknown',
-          stack: innerErr?.stack?.split('\n').slice(0, 3).join(' | ')
+          detail: innerErr?.message || 'unknown'
         });
       }
     }
 
-    // ─── GET: User's travel plans ───
     if (req.method === 'GET') {
       const profileId = url.searchParams.get('profile_id');
       if (!profileId) return res.status(400).json({ error: 'profile_id required' });
@@ -206,11 +217,14 @@ export default async function handler(req, res) {
       return res.json(data);
     }
 
-    // ─── POST/PUT: Save user's travel plans ───
     if (req.method === 'POST' || req.method === 'PUT') {
       const { profile_id, plans } = req.body || {};
       if (!profile_id) return res.status(400).json({ error: 'profile_id required' });
       if (!Array.isArray(plans)) return res.status(400).json({ error: 'plans array required' });
+
+      if (!verifyUserToken(req.headers, profile_id)) {
+        return res.status(401).json({ error: 'Unauthorized: Invalid or missing session token' });
+      }
 
       const cities = [];
       for (const plan of plans) {
@@ -225,14 +239,12 @@ export default async function handler(req, res) {
 
       const planData = { profile_id, plans, updated_at: new Date().toISOString() };
 
-      // Save plan file + update index SEQUENTIALLY (index may fail silently in parallel)
       await writeFile(serviceKey, `${profile_id}.json`, planData);
       
       try {
         await updateIndex(serviceKey, profile_id, cities);
       } catch (e) {
         console.error('Index update failed (non-fatal):', e.message);
-        // Non-fatal: plan data is saved, index will be rebuilt on next save
       }
 
       return res.json({ success: true, profile_id, plan_count: plans.length });

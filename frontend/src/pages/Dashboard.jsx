@@ -103,9 +103,13 @@ export default function Dashboard() {
 
     try {
       const userId = localStorage.getItem('dashboard_user_id');
+      const token = localStorage.getItem('dashboard_token') || '';
       const r = await fetch(`${API_BASE}/api/update-profile`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ userId, profile })
       });
 
@@ -146,8 +150,12 @@ export default function Dashboard() {
         formData.append('files', compressed);
 
         try {
+          const token = localStorage.getItem('dashboard_token') || '';
           const uploadRes = await fetch('/api/upload-photos', {
             method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
             body: formData,
           });
 
@@ -193,9 +201,13 @@ export default function Dashboard() {
     setUploadMessage('');
 
     try {
+      const token = localStorage.getItem('dashboard_token') || '';
       const res = await fetch('/api/manage-photos', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ profile_id: profile.id, photo_url: newVideoLink.trim() }),
       });
       if (!res.ok) {
@@ -218,7 +230,13 @@ export default function Dashboard() {
 
   const handleDeleteMedia = async (photoId) => {
     try {
-      const res = await fetch(`/api/manage-photos?photoId=${photoId}`, { method: 'DELETE' });
+      const token = localStorage.getItem('dashboard_token') || '';
+      const res = await fetch(`/api/manage-photos?photoId=${photoId}`, { 
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({ error: 'Unknown error' }));
         throw new Error(errData.error || 'Failed to remove');
@@ -234,9 +252,13 @@ export default function Dashboard() {
 
   const handleSetCover = async (photoId) => {
     try {
+      const token = localStorage.getItem('dashboard_token') || '';
       const res = await fetch('/api/manage-photos', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ action: 'set-cover', profile_id: profile.id, photo_id: photoId }),
       });
       if (!res.ok) {
