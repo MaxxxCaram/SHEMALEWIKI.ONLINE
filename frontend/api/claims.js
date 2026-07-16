@@ -2,7 +2,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qtuzpswxzengqoqqwtpt.s
 
 const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
     const origin = req.headers.origin || '';
     if (ALLOWED_ORIGINS.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
