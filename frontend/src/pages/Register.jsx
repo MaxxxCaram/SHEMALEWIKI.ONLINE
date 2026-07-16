@@ -262,7 +262,7 @@ export default function Register() {
               const r = await fetch('/api/upload-photos', { 
                 method: 'POST', 
                 headers: {
-                  'Authorization': f'Bearer {data.token || ""}'
+                  'Authorization': `Bearer ${data.token || ''}`
                 },
                 body: formData 
               });
