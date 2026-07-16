@@ -93,8 +93,26 @@ export default function Home() {
         const hasAnyPhoto = (p) =>
           (p.photos || []).some(ph => isLoadablePhoto(ph.photo_url));
 
-        // Dedup profile_ids, prefer those with Storage photos.
-        const ids = Array.from(new Set((photoRows || []).map(p => p.profile_id).filter(Boolean)));
+        // Dedup profile_ids. CRITICAL: prioritize profiles that have a REAL
+        // photo in Supabase Storage (archive.org snapshots are dead/404 now).
+        const rows = photoRows || [];
+        const idsStorageFirst = Array.from(
+          new Set(
+            rows
+              .filter(p => p.photo_url && p.photo_url.includes('qtuzpswxzengqoqqwtpt.supabase.co/storage'))
+              .map(p => p.profile_id)
+              .filter(Boolean)
+          )
+        );
+        const idsOther = Array.from(
+          new Set(
+            rows
+              .filter(p => !(p.photo_url && p.photo_url.includes('qtuzpswxzengqoqqwtpt.supabase.co/storage')))
+              .map(p => p.profile_id)
+              .filter(Boolean)
+          )
+        );
+        const ids = [...idsStorageFirst, ...idsOther];
 
         let arr = [];
         if (ids.length > 0) {
