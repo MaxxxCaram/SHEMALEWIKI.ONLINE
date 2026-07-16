@@ -4,7 +4,7 @@
  * Requires: SUPABASE_SERVICE_ROLE_KEY env var on Vercel
  */
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!key) return res.status(500).json({ error: 'Server misconfiguration — SERVICE_ROLE_KEY missing' });
 
-    const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qtuzpswxzengqoqqwtpt.supabase.co';
+    const SUPABASE_URL = 'https://qtuzpswxzengqoqqwtpt.supabase.co';
 
     // Update profile
     const r = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}`, {

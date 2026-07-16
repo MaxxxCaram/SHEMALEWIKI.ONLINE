@@ -2,7 +2,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qtuzpswxzengqoqqwtpt.s
 
 const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
     const origin = req.headers.origin || '';
     if (ALLOWED_ORIGINS.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
@@ -30,36 +30,21 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Missing required fields: name_on_site, email, phone' });
         }
 
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ error: 'Invalid email format' });
-        }
-
-        // Validate phone (at least 7 digits)
-        const phoneDigits = phone.replace(/\D/g, '');
-        if (phoneDigits.length < 7) {
-            return res.status(400).json({ error: 'Invalid phone number' });
-        }
-
-        // Sanitize inputs
-        const sanitize = (str) => String(str).trim().slice(0, 500);
-
         const claimId = `claim_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
 
         const row = {
             id: claimId,
-            name: `CLAIM: ${sanitize(name_on_site)}`,
-            email: sanitize(email).toLowerCase(),
-            phone: sanitize(phone),
+            name: `CLAIM: ${name_on_site.trim()}`,
+            email: email.trim().toLowerCase(),
+            phone: phone.trim(),
             location: 'Claims | Pending',
             bio: [
-                `Name on site: ${sanitize(name_on_site)}`,
-                `Email: ${sanitize(email)}`,
-                `Phone: ${sanitize(phone)}`,
-                `Country: ${sanitize(country || 'N/A')}`,
-                `City: ${sanitize(city || 'N/A')}`,
-                `Message: ${sanitize(contact_details || 'N/A')}`
+                `Name on site: ${name_on_site}`,
+                `Email: ${email}`,
+                `Phone: ${phone}`,
+                `Country: ${country || 'N/A'}`,
+                `City: ${city || 'N/A'}`,
+                `Message: ${contact_details || 'N/A'}`
             ].join('\n').slice(0, 2000),
             description: 'CLAIM_REQUEST_PENDING'
         };

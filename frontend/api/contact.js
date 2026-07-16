@@ -7,37 +7,14 @@ const SMTP_HOST = 'smtp.hostinger.com';
 const SMTP_PORT = 465;
 const SMTP_USER = 'ads@shemalewiki.online';
 const SMTP_PASS = process.env.ADS_EMAIL_PASSWORD;
+if (!SMTP_PASS) {
+  console.error('ADS_EMAIL_PASSWORD not set');
+}
 const NOTIFY_EMAIL = 'ads@shemalewiki.online';
 
-// CORS: only allow official domains
-const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
-
-// Rate limiting
-const rateLimit = {};
-const RATE_LIMIT_WINDOW = 3600000; // 1 hour
-const RATE_LIMIT_MAX = 5; // 5 per hour
-
-function checkRateLimit(ip) {
-  const now = Date.now();
-  if (!rateLimit[ip]) rateLimit[ip] = [];
-  rateLimit[ip] = rateLimit[ip].filter(t => now - t < RATE_LIMIT_WINDOW);
-  if (rateLimit[ip].length >= RATE_LIMIT_MAX) return false;
-  rateLimit[ip].push(now);
-  return true;
-}
-
-function getClientIp(req) {
-  return req.headers['x-forwarded-for']?.split(',')[0]?.trim()
-    || req.headers['x-real-ip']
-    || 'unknown';
-}
-
 export default async function handler(req, res) {
-  // CORS: validate origin
-  const origin = req.headers.origin || '';
-  if (ALLOWED_ORIGINS.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
+  // CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -47,17 +24,6 @@ export default async function handler(req, res) {
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  // Check SMTP config
-  if (!SMTP_PASS) {
-    return res.status(503).json({ error: 'Email service not configured' });
-  }
-
-  // Rate limiting
-  const ip = getClientIp(req);
-  if (!checkRateLimit(ip)) {
-    return res.status(429).json({ error: 'Too many requests. Please wait an hour.' });
   }
 
   try {

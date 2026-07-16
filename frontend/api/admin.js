@@ -2,10 +2,12 @@
 // Uses a shared secret verified by the server, returns JWT-like token
 // The secret is configurable via Vercel env: ADMIN_SECRET
 
-import { createHmac, randomBytes } from 'crypto';
-
-const ADMIN_SECRET = process.env.ADMIN_SECRET;
+const ADMIN_SECRET = process.env.ADMIN_SECRET || 'CHANGE_ME_SETUP_ADMIN_SECRET';
 const SESSION_TTL = 24 * 60 * 60 * 1000; // 24h
+
+// Generate simple token (not real JWT, but opaque enough for this scale)
+// Uses crypto for HMAC: secret + timestamp + random => token
+import { createHmac, randomBytes } from 'crypto';
 
 function generateToken() {
   const rand = randomBytes(32).toString('hex');
@@ -25,13 +27,8 @@ function verifyToken(tokenStr) {
   return age < SESSION_TTL; // expires after 24h
 }
 
-const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
-
 export default async function handler(req, res) {
-  const origin = req.headers.origin || '';
-  if (ALLOWED_ORIGINS.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-admin-secret');
 
@@ -50,9 +47,26 @@ export default async function handler(req, res) {
     'Content-Type': 'application/json',
   };
 
+  // ====== POST /api/admin/login — authenticate ======
+  if (req.method === 'POST' && req.url.includes('/login')) {
+    try {
+      const { secret } = req.body || {};
+      if (!secret) {
+        return res.status(400).json({ error: 'Secret required' });
+      }
+      if (secret !== ADMIN_SECRET) {
+        return res.status(401).json({ error: 'Invalid secret' });
+      }
+      const token = generateToken();
+      return res.status(200).json({ success: true, token, expires: new Date(Date.now() + SESSION_TTL).toISOString() });
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
+    }
+  }
+
   // ====== GET /api/admin — list profiles (authenticated) ======
   if (req.method === 'GET') {
-    // Check auth
+    // Check auth: token in header OR legacy admin_secret header
     const authHeader = req.headers.authorization || '';
     const secretHeader = req.headers['x-admin-secret'] || '';
 
@@ -64,6 +78,7 @@ export default async function handler(req, res) {
     if (authHeader.startsWith('Bearer ') && verifyToken(authHeader.substring(7))) {
       validAuth = true;
     } else if (secretHeader === ADMIN_SECRET) {
+      // Legacy fallback: raw secret in header (deprecated, migrate to token)
       validAuth = true;
     }
 
@@ -88,30 +103,9 @@ export default async function handler(req, res) {
     }
   }
 
-  // ====== POST /api/admin/login — authenticate ======
-  // Distinguish login POST from action POST by body shape:
-  // login body = {secret: string} (no profileId, no action)
-  // action body = {profileId, action}
+  // ====== POST /api/admin — approve/reject/delete (authenticated) ======
   if (req.method === 'POST') {
-    const body = req.body || {};
-    // === LOGIN ===
-    if (body.secret && !body.profileId && !body.action) {
-      try {
-        const { secret } = body;
-        if (!secret) {
-          return res.status(400).json({ error: 'Secret required' });
-        }
-        if (secret !== ADMIN_SECRET) {
-          return res.status(401).json({ error: 'Invalid secret' });
-        }
-        const token = generateToken();
-        return res.status(200).json({ success: true, token, expires: new Date(Date.now() + SESSION_TTL).toISOString() });
-      } catch (err) {
-        return res.status(500).json({ error: err.message });
-      }
-    }
-
-    // === ACTION (approve/reject/delete) — authenticated ===
+    // Check auth
     const authHeader = req.headers.authorization || '';
     const secretHeader = req.headers['x-admin-secret'] || '';
 
@@ -127,7 +121,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      const { profileId, action, secret: actionSecret } = body;
+      const { profileId, action, secret: actionSecret } = req.body || {};
 
       if (!profileId || !action) {
         return res.status(400).json({ error: 'profileId and action required' });
