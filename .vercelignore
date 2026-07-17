@@ -1,10 +1,4 @@
-node_modules/
-.git/
 backend/
 scripts/
-git_export/
-shemalewiki_recovery/
-docs/
-frontend-bt/
-frontend-work/
-recuperar_shemalewiki.py
+.git/
+*.md
