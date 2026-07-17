@@ -52,13 +52,22 @@ const t = {
   },
 };
 
+/* ── Hardcoded profiles with real Storage photos ── */
+const STORAGE_PROFILES = [
+  { id: 'faa5bfe7-2b1d-4bf4-9bc1-f9d50c38d3ac', name: 'Kimora', location: 'Europe | Netherlands | Den Haag', photos: [{ photo_url: 'https://qtuzpswxzengqoqqwtpt.supabase.co/storage/v1/object/public/profile-photos/kinky/faa5bfe7-2b1d-4bf4-9bc1-f9d50c38d3ac/80602.jpg' }], cam_chat: 'approved' },
+  { id: '9df726ef-d2c0-499e-a8f5-00b8ca394f1c', name: 'Rebeka TS', location: 'Europe | Netherlands | Nijmegen', photos: [{ photo_url: 'https://qtuzpswxzengqoqqwtpt.supabase.co/storage/v1/object/public/profile-photos/kinky/9df726ef-d2c0-499e-a8f5-00b8ca394f1c/80256.jpg' }], cam_chat: 'approved' },
+  { id: 'c5ae21e6-ab8f-4773-bfe5-331c1b7a56a9', name: 'Dana', location: 'Europe | Netherlands | Utrecht', photos: [{ photo_url: 'https://qtuzpswxzengqoqqwtpt.supabase.co/storage/v1/object/public/profile-photos/kinky/c5ae21e6-ab8f-4773-bfe5-331c1b7a56a9/79690.jpg' }], cam_chat: 'approved' },
+  { id: 'd89b6fcf-c8aa-4657-b2f5-a067582f290a', name: 'Raika', location: 'Europe | Netherlands | Amersfoort', photos: [{ photo_url: 'https://qtuzpswxzengqoqqwtpt.supabase.co/storage/v1/object/public/profile-photos/kinky/d89b6fcf-c8aa-4657-b2f5-a067582f290a/79686.jpg' }], cam_chat: 'approved' },
+  { id: 'e33edf94-66ab-4efa-92e1-63520eda3014', name: 'Ts Elisha', location: 'Europe | Netherlands', photos: [{ photo_url: 'https://qtuzpswxzengqoqqwtpt.supabase.co/storage/v1/object/public/profile-photos/kinky/e33edf94-66ab-4efa-92e1-63520eda3014/79700.jpg' }], cam_chat: 'approved' },
+];
+
 export default function Home() {
   const brand = isBT() ? 'buscatrans' : 'shemalewiki';
   const content = t[brand];
   const [activePill, setActivePill] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
-  const [profiles, setProfiles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [profiles, setProfiles] = useState(STORAGE_PROFILES); // hardcoded con fotos
+  const [loading, setLoading] = useState(false); // hardcodeado, no loading
 
   // Vanguard scroll-reveal for ShemaleWiki feature cards + city block
   useScrollReveal([profiles]);
@@ -66,23 +75,6 @@ export default function Home() {
   const canonPath = brand === 'buscatrans' ? '/es/' : '/';
   const lang = brand === 'buscatrans' ? 'es' : 'en';
   const siteName = brand === 'buscatrans' ? 'BuscaTrans' : 'ShemaleWiki';
-
-  // Fetch featured profiles with real photos from dedicated endpoint
-  useEffect(() => {
-    (async () => {
-      try {
-        // Single optimized query to /api/profiles?featured=true (returns pre-filtered profiles with Storage photos)
-        const r = await fetch('/api/profiles?featured=true');
-        if (!r.ok) return;
-        const data = await r.json();
-        setProfiles(Array.isArray(data) ? data.slice(0, 12) : []);
-      } catch (err) {
-        console.error('Featured fetch failed:', err);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
 
   const getCitySlug = (location) => {
     const parts = (location || '').split(' | ');
@@ -102,13 +94,9 @@ export default function Home() {
 
   const getProfilePhoto = (p) => {
     if (p.photos && p.photos.length > 0) {
-      const storagePhotos = p.photos.filter(ph =>
-        ph.photo_url && ph.photo_url.includes('qtuzpswxzengqoqqwtpt.supabase.co/storage')
-      );
-      const pool = storagePhotos.length > 0 ? storagePhotos : p.photos;
+      const pool = p.photos;
       const cover = pool.find(ph => ph.local_path === 'cover');
       const raw = cover ? cover.photo_url : pool[0].photo_url;
-      // Route through our edge image proxy to bypass CORB / hotlink blocks.
       return raw ? getProxiedImageUrl(raw) : null;
     }
     return null;
