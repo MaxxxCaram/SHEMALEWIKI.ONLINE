@@ -12,6 +12,22 @@ export default async function handler(req, res) {
     try {
         const { search, limit, offset, filter } = req.query || {};
 
+        // featured=true: devuelve solo perfiles con fotos Storage (máx 12)
+        if (filter === 'featured') {
+            const photosQ = await fetch(`${SUPABASE_URL}/rest/v1/photos?select=profile_id&photo_url=ilike.*storage/v1/object/public*&limit=1000`, {
+                headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` }
+            });
+            const photoRows = await photosQ.json();
+            const profileIds = [...new Set(photoRows.map(p => p.profile_id).filter(Boolean))];
+            if (profileIds.length === 0) return res.status(200).json([]);
+            const profilesQ = await fetch(
+                `${SUPABASE_URL}/rest/v1/profiles?select=*,photos(photo_url,local_path)&id=in.(${profileIds.map(encodeURIComponent).join(',')})&limit=12`,
+                { headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` } }
+            );
+            const data = await profilesQ.json();
+            return res.status(200).json(Array.isArray(data) ? data : []);
+        }
+
         let query = `${SUPABASE_URL}/rest/v1/profiles?select=*,photos(*)`;
 
         if (filter === 'approved') {
