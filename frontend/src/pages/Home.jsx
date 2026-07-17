@@ -71,8 +71,8 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       try {
-        // Single optimized query to /api/featured (returns pre-filtered profiles with Storage photos)
-        const r = await fetch('/api/featured');
+        // Single optimized query to /api/profiles?featured=true (returns pre-filtered profiles with Storage photos)
+        const r = await fetch('/api/profiles?featured=true');
         if (!r.ok) return;
         const data = await r.json();
         setProfiles(Array.isArray(data) ? data.slice(0, 12) : []);
