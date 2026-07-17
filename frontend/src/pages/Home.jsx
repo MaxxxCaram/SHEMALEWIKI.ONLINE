@@ -67,96 +67,17 @@ export default function Home() {
   const lang = brand === 'buscatrans' ? 'es' : 'en';
   const siteName = brand === 'buscatrans' ? 'BuscaTrans' : 'ShemaleWiki';
 
-  // Fetch real approved profiles that HAVE photos. The DB stores 42k+ photos
-  // in Supabase Storage, linked from the `photos` table by profile_id. Most
-  // recent profiles lack photos, so we query the photo table first to get the
-  // profile_ids that actually have images, then fetch those profiles.
+  // Fetch featured profiles with real photos from dedicated endpoint
   useEffect(() => {
     (async () => {
       try {
-        // 1. Get profile_ids that have at least one REAL photo in Supabase Storage
-        //    (Storage = best quality; we route everything else through the
-        //    /api/image proxy which serves it from our own domain, bypassing CORB).
-        const { data: photoRows, error: e0 } = await supabase
-          .from('photos')
-          .select('profile_id, photo_url, local_path')
-          .not('photo_url', 'is', null)
-          .limit(5000);
-
-        if (e0) throw e0;
-
-        // Prefer Storage photos (quality). Keep any http(s) url — the proxy
-        // handles CORB for archive.org / distintas.net / kinky.nl.
-        const hasStorage = (p) =>
-          (p.photos || []).some(ph =>
-            ph.photo_url && ph.photo_url.includes('qtuzpswxzengqoqqwtpt.supabase.co/storage'));
-        const hasAnyPhoto = (p) =>
-          (p.photos || []).some(ph => isLoadablePhoto(ph.photo_url));
-
-        // Dedup profile_ids. CRITICAL: prioritize profiles that have a REAL
-        // photo in Supabase Storage (archive.org snapshots are dead/404 now).
-        const rows = photoRows || [];
-        const idsStorageFirst = Array.from(
-          new Set(
-            rows
-              .filter(p => p.photo_url && p.photo_url.includes('qtuzpswxzengqoqqwtpt.supabase.co/storage'))
-              .map(p => p.profile_id)
-              .filter(Boolean)
-          )
-        );
-        const idsOther = Array.from(
-          new Set(
-            rows
-              .filter(p => !(p.photo_url && p.photo_url.includes('qtuzpswxzengqoqqwtpt.supabase.co/storage')))
-              .map(p => p.profile_id)
-              .filter(Boolean)
-          )
-        );
-        const ids = [...idsStorageFirst, ...idsOther];
-
-        let arr = [];
-        if (ids.length > 0) {
-          // 2. Fetch those profiles (with their photos embedded), prefer Storage.
-          const { data: withPhotos, error: e1 } = await supabase
-            .from('profiles')
-            .select('*, photos(photo_url, local_path)')
-            .in('id', ids.slice(0, 200))
-            .not('cam_chat', 'eq', 'rejected')
-            .order('created_at', { ascending: false })
-            .limit(60);
-
-          if (e1) throw e1;
-          const pool = Array.isArray(withPhotos) ? withPhotos : [];
-          // Sort: Storage-first (quality), then any loadable photo.
-          const ranked = pool
-            .sort((a, b) => Number(hasStorage(b)) - Number(hasStorage(a)));
-          arr = ranked.slice(0, 12);
-        }
-
-        // 3. If we still need more to fill the grid, grab recent approved
-        //    profiles (photo optional — card shows local placeholder).
-        if (arr.length < 12) {
-          const { data: recent, error: e2 } = await supabase
-            .from('profiles')
-            .select('*, photos(photo_url, local_path)')
-            .not('cam_chat', 'eq', 'rejected')
-            .order('created_at', { ascending: false })
-            .limit(200);
-          if (!e2 && Array.isArray(recent)) {
-            const have = new Set(arr.map(p => p.id));
-            for (const p of recent) {
-              if (have.has(p.id)) continue;
-              arr.push(p);
-              if (arr.length >= 12) break;
-            }
-          }
-        }
-
-        // Final: keep up to 12 profiles (photo optional now).
-        const final = arr.slice(0, 12);
-        setProfiles(final);
+        // Single optimized query to /api/featured (returns pre-filtered profiles with Storage photos)
+        const r = await fetch('/api/featured');
+        if (!r.ok) return;
+        const data = await r.json();
+        setProfiles(Array.isArray(data) ? data.slice(0, 12) : []);
       } catch (err) {
-        console.error('Home fetch failed:', err);
+        console.error('Featured fetch failed:', err);
       } finally {
         setLoading(false);
       }
