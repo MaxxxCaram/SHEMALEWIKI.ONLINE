@@ -19,6 +19,7 @@
     { "source": "/api/auth/magic-link(.*)", "destination": "/api/auth/magic-link.js" },
     { "source": "/api/profiles(.*)", "destination": "/api/profiles.js" },
     { "source": "/api/profiles/(.*)", "destination": "/api/profiles.js" },
+    { "source": "/api/featured(.*)", "destination": "/api/featured.js" },
     { "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|logosw|icons|city-guides|downloads|mision).*)", "destination": "/index.html" }
   ],
   "headers": [
