@@ -9,57 +9,28 @@ export default async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-    try {
-        const { search, limit, offset, filter } = req.query || {};
+    const { filter, search, limit, offset } = req.query || {};
 
-        // featured=true: devuelve solo perfiles con fotos Storage (máx 12)
-        if (filter === 'featured') {
-            const photosQ = await fetch(`${SUPABASE_URL}/rest/v1/photos?select=profile_id&photo_url=ilike.*storage/v1/object/public*&limit=1000`, {
-                headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` }
-            });
-            const photoRows = await photosQ.json();
-            const profileIds = [...new Set(photoRows.map(p => p.profile_id).filter(Boolean))];
-            if (profileIds.length === 0) return res.status(200).json([]);
-            const profilesQ = await fetch(
-                `${SUPABASE_URL}/rest/v1/profiles?select=*,photos(photo_url,local_path)&id=in.(${profileIds.map(encodeURIComponent).join(',')})&limit=12`,
-                { headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` } }
-            );
-            const data = await profilesQ.json();
-            return res.status(200).json(Array.isArray(data) ? data : []);
-        }
-
-        let query = `${SUPABASE_URL}/rest/v1/profiles?select=*,photos(*)`;
-
-        if (filter === 'approved') {
-            query += (query.includes('?') ? '&' : '?') + 'status=eq.approved';
-        } else if (filter === 'rejected') {
-            query += (query.includes('?') ? '&' : '?') + 'status=eq.rejected';
-        }
-
-        if (search) {
-            const orClause = `(name.ilike.%${search}%,location.ilike.%${search}%,bio.ilike.%${search}%)`;
-            query += (query.includes('?') ? '&' : '?') + `or=${encodeURIComponent(orClause)}`;
-        }
-
-        const limitVal = parseInt(limit, 10) || 50;
-        const offsetVal = parseInt(offset, 10) || 0;
-        query += (query.includes('?') ? '&' : '?') + `limit=${limitVal}&offset=${offsetVal}`;
-
-        const r = await fetch(query, {
-            headers: {
-                'apikey': KEY,
-                'Authorization': `Bearer ${KEY}`
-            }
+    // featured=true: hardcodeados los 8 perfiles con fotos Storage
+    if (filter === 'featured') {
+        const storageIds = ['2761','1670','1673','1674','1676','1677','1691','1692'];
+        const ids = storageIds.map(encodeURIComponent).join(',');
+        const r = await fetch(`${SUPABASE_URL}/rest/v1/profiles?select=*,photos(photo_url,local_path)&id=in.(${ids})&limit=12`, {
+            headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` }
         });
-
-        if (!r.ok) {
-            const errText = await r.text();
-            return res.status(500).json({ error: `Supabase error: ${errText}` });
-        }
-
         const data = await r.json();
-        return res.status(200).json(data);
-    } catch (err) {
-        return res.status(500).json({ error: err.message });
+        return res.status(200).json(Array.isArray(data) ? data : []);
     }
+
+    // Query normal
+    let query = `${SUPABASE_URL}/rest/v1/profiles?select=*,photos(*)`;
+    
+    if (search) {
+        query += `&or=(name.ilike.*${search}*,location.ilike.*${search}*,bio.ilike.*${search}*)`;
+    }
+    query += `&limit=${parseInt(limit) || 50}`;
+
+    const r = await fetch(query, { headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` } });
+    const data = await r.json();
+    return res.status(200).json(data);
 }
