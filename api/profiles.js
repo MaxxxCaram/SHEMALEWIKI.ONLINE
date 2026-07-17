@@ -1,5 +1,5 @@
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qtuzpswxzengqoqqwtpt.supabase.co';
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTN9.wrong';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -8,7 +8,6 @@ export default async function handler(req, res) {
 
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
-    if (!SERVICE_KEY) return res.status(500).json({ error: 'Server configuration missing' });
 
     try {
         const { search, limit, offset, filter } = req.query || {};
@@ -32,8 +31,8 @@ export default async function handler(req, res) {
 
         const r = await fetch(query, {
             headers: {
-                'apikey': SERVICE_KEY,
-                'Authorization': `Bearer ${SERVICE_KEY}`
+                'apikey': KEY,
+                'Authorization': `Bearer ${KEY}`
             }
         });
 
